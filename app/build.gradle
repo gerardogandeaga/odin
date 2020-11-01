@@ -1,5 +1,5 @@
 apply plugin: 'com.android.application'
-
+apply plugin: 'com.google.gms.google-services'
 // Butterknife plugins
 apply plugin: 'com.jakewharton.butterknife'
 
@@ -34,7 +34,17 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
-    // Custom dependencies go below here, make sure to inlude the link to the dependency
+    // Custom dependencies go below here, make sure to include the link to the dependency
+
+    // Import the Firebase BoM
+    implementation platform('com.google.firebase:firebase-bom:25.12.0')
+    // Google analystics
+    implementation 'com.google.firebase:firebase-analytics'
+    // Additional Firebase dependencies
+    implementation 'com.google.firebase:firebase-core:18.0.0'       //Analytics
+    implementation 'com.google.firebase:firebase-auth:20.0.0'       //Authentication
+    implementation 'com.google.firebase:firebase-firestore:22.0.0'  //Cloud Firestore
+    implementation 'com.google.firebase:firebase-storage:19.2.0'    //Storage
 
     // Butterknife -> https://github.com/JakeWharton/butterknife
     implementation 'com.jakewharton:butterknife:10.2.3'
