@@ -53,10 +53,7 @@ public class AccountCreationConfirmation extends AppCompatActivity {
         //final Intent backToWelcomeScreen = new Intent(AccountCreationConfirmation.this, WelcomeScreen.class);
 
         // Begin firebase authentication
-<<<<<<< HEAD
         // Un-comment the following lines to enable firebase authentication
-=======
->>>>>>> added the following activities and layouts:
 
         /*mAuth.createUserWithEmailAndPassword(myConfirmedEmailAddress, myConfirmedPassword)
                 .addOnCompleteListener(AccountCreationConfirmation.this, new OnCompleteListener<AuthResult>() {
@@ -86,12 +83,6 @@ public class AccountCreationConfirmation extends AppCompatActivity {
                 */
 
         // End of firebase authentication
-
-<<<<<<< HEAD
-=======
-        // Enables Always-on
-        //setAmbientEnabled();
->>>>>>> added the following activities and layouts:
     }
 }
 
