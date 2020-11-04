@@ -2,8 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.group8.odin">
 
-    <!-- Permissions -->
-    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <uses-feature android:name="android.hardware.type.watch" /> <!-- Permissions -->
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
         android:allowBackup="true"
@@ -12,8 +14,40 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <!--
+        Commented out by: Matt
+        Commented on: 2020-11-04
+        <uses-library
+            android:name="com.google.android.wearable"
+            android:required="true" />
+        -->
 
+        <!--
+               Set to true if your app is Standalone, that is, it does not require the handheld
+               app to run.
+        -->
+        <meta-data
+            android:name="com.google.android.wearable.standalone"
+            android:value="true" />
 
+        <activity
+            android:name=".common.models.AccountCreationConfirmation"
+            android:label="@string/title_activity_account_confirmation"></activity>
+        <activity
+            android:name=".common.models.SignUp"
+            android:label="@string/title_activity_sign_up" />
+        <activity
+            android:name=".common.models.WelcomeScreen"
+            android:label="@string/title_activity_welcome_screen">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <!--
+        Commented out by: Matt
+        Commented out on: 2020-11-04
         <activity android:name=".examinee.activities.ExamineeHomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -21,7 +55,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
+        -->
     </application>
 
 </manifest>

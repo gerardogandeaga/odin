@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".common.models.SignUp">
+
+    <!--
+    Created by: Matthew Tong
+    Created on: 2020-11-04
+    Description: Layout for Sign Up Screen
+    -->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/textTitleFirstName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="First name"
+            android:textColor="@android:color/black"
+            android:textSize="5pt"
+            android:layout_marginTop="100dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"/>
+
+        <EditText
+            android:id="@+id/editTextFirstName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:hint="Type your first name"
+            android:textColor="@color/colorTextField"
+            android:textStyle="italic"
+            android:textSize="6pt"/>
+
+        <TextView
+            android:id="@+id/textTitleLastName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Last name"
+            android:layout_marginTop="36dp"
+            android:textColor="@android:color/black"
+            android:textSize="5pt"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            />
+
+        <EditText
+            android:id="@+id/editTextLastName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:hint="Type your last name"
+            android:textColor="@color/colorTextField"
+            android:textStyle="italic"
+            android:textSize="6pt"/>
+
+        <TextView
+            android:id="@+id/textTitleEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Email"
+            android:layout_marginTop="36dp"
+            android:textColor="@android:color/black"
+            android:textSize="5pt"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"/>
+
+        <EditText
+            android:id="@+id/editTextEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:hint="Type your email address"
+            android:textColor="@color/colorTextField"
+            android:textStyle="italic"
+            android:textSize="6pt"/>
+
+        <TextView
+            android:id="@+id/textTitlePassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Password (8 or more characters, including at least 1 capital letter)"
+            android:layout_marginTop="36dp"
+            android:textColor="@android:color/black"
+            android:textSize="5pt"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"/>
+
+        <EditText
+            android:id="@+id/editPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textVisiblePassword"
+            android:hint="Type your password"
+            android:textColor="@color/colorTextField"
+            android:textStyle="italic"
+            android:textSize="6pt"/>
+
+        <TextView
+            android:id="@+id/textTitleConfirmaPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Confirm Password"
+            android:layout_marginTop="36dp"
+            android:textColor="@android:color/black"
+            android:textSize="5pt"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"/>
+
+        <EditText
+            android:id="@+id/editConfirmPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textVisiblePassword"
+            android:hint="Confirm your password"
+            android:textColor="@color/colorTextField"
+            android:textStyle="italic"
+            android:textSize="6pt"/>
+
+        <Button
+            android:id="@+id/btnSubmitAccountCreation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Create"
+            android:layout_marginTop="72dp"
+            android:textAllCaps="false"
+            android:backgroundTint="@color/colorAccent"
+            android:onClick="onBtnSubmitAccountCreationClick"/>
+
+    </LinearLayout>
+
+</LinearLayout>
+
+<!--
+TODO: SignUp
+create back button -> welcome screen
+add input check on all input fields
+-->
