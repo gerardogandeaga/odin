@@ -64,6 +64,10 @@ public class ExamineeExamRegistrationFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
 
+        getActivity().setTitle("Exam Registration");
+
+        mFirestore = FirebaseFirestore.getInstance();
+
         // Handle on back button pressed in the fragment
         getActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
             @Override
@@ -83,9 +87,9 @@ public class ExamineeExamRegistrationFragment extends Fragment {
         });
     }
 
+
     private void getExamSession() {
-        mFirestore = FirebaseFirestore.getInstance();
-        DocumentReference examDocRef = mFirestore.collection(OdinFirebase.FirestoreCollections.EXAM_SESSIONS).document("test_exam");
+        DocumentReference examDocRef = mFirestore.collection(OdinFirebase.FirestoreCollections.EXAM_SESSIONS).document(mEtExamId.getText().toString().trim());
         // Get the exam document
         examDocRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -102,8 +106,7 @@ public class ExamineeExamRegistrationFragment extends Fragment {
     }
 
     private void registerExamToUserProfile(DocumentSnapshot snapshot) {
-        DocumentReference userDocRef = mFirestore.collection(OdinFirebase.FirestoreCollections.USERS).document("PEXPr1CcCysorRApWSK7");
-        userDocRef
+        OdinFirebase.UserProfileContext.getUserProfileReference()
                 // Update user profile in the cloud
                 .update(OdinFirebase.FirestoreUserProfile.EXAM_IDS, FieldValue.arrayUnion(snapshot.getId())) // Add exam session id to the exam_ids array
                 .addOnSuccessListener(new OnSuccessListener<Void>() {

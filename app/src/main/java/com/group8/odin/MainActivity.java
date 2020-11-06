@@ -97,11 +97,9 @@ public class MainActivity extends AppCompatActivity {
 
         // Match the request 'pic id with requestCode
         if (requestCode == PIC_ID) {
-
             // BitMap is data structure of image file
             // which store the image in memory
-            Bitmap photo = (Bitmap) data.getExtras()
-                    .get("data");
+            Bitmap photo = (Bitmap) data.getExtras().get("data");
 
             // Set the image in imageview for display
             mImgResult.setImageBitmap(photo);

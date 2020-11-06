@@ -22,18 +22,26 @@
             android:textSize="16sp"/>
 
         <TextView
-            android:id="@+id/tvExamStartTime"
+            android:id="@+id/tvExamId"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Exam Start Time"
+            android:text="Id"
             android:textStyle="normal"
             android:textSize="13sp"/>
 
         <TextView
-            android:id="@+id/tvExamEndTime"
+            android:id="@+id/tvExamTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Exam End Time"
+            android:text="Exam Time"
+            android:textStyle="normal"
+            android:textSize="13sp"/>
+
+        <TextView
+            android:id="@+id/tvAuthTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Exam Authentication Time"
             android:textStyle="normal"
             android:textSize="13sp"/>
 

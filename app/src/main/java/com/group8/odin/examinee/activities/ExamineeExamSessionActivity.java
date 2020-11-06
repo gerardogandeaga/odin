@@ -1,26 +1,26 @@
 package com.group8.odin.examinee.activities;
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.group8.odin.R;
+import com.group8.odin.examinee.fragments.ExamineeAuthPhotoSubmissionFragment;
 import com.group8.odin.examinee.fragments.ExamineeDashboardFragment;
-import com.group8.odin.examinee.fragments.ExamineeExamRegistrationFragment;
-import com.group8.odin.common.models.UserProfile;
-
 
 /*
  * Created by: Gerardo Gandeaga
- * Created on: 2020-10-31
- * Description:
+ * Created on: 2020-11-05
+ * Description: This activity will handle the fragments of the application throughout the exam session.
  */
-public class ExamineeHomeActivity extends  AppCompatActivity {
+public class ExamineeExamSessionActivity extends AppCompatActivity {
     private FragmentManager mFragmentManager;
     private FragmentTransaction mFragmentTransaction;
 
@@ -31,20 +31,12 @@ public class ExamineeHomeActivity extends  AppCompatActivity {
 
         // Setup fragment manager
         mFragmentManager = getSupportFragmentManager();
-        showExamineeDashboard();
+        showAuthPhotoSubmission();
     }
 
-
-    public void showExamineeDashboard() {
+    private void showAuthPhotoSubmission() {
         mFragmentTransaction = mFragmentManager.beginTransaction();
-        ExamineeDashboardFragment fragment = new ExamineeDashboardFragment();
-        mFragmentTransaction.replace(R.id.container, fragment);
-        mFragmentTransaction.commit();
-    }
-
-    public void showExamineeExamRegistration() {
-        mFragmentTransaction = mFragmentManager.beginTransaction();
-        ExamineeExamRegistrationFragment fragment = new ExamineeExamRegistrationFragment();
+        ExamineeAuthPhotoSubmissionFragment fragment = new ExamineeAuthPhotoSubmissionFragment();
         mFragmentTransaction.replace(R.id.container, fragment);
         mFragmentTransaction.commit();
     }

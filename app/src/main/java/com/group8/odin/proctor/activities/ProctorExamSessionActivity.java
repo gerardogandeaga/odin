@@ -8,16 +8,15 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.group8.odin.R;
-import com.group8.odin.examinee.fragments.ExamineeDashboardFragment;
+import com.group8.odin.proctor.fragments.ProctorAuthPhotosFragment;
 import com.group8.odin.proctor.fragments.ProctorDashboardFragment;
-import com.group8.odin.proctor.fragments.ProctorExamCreationFragment;
 
 /*
  * Created by: Gerardo Gandeaga
- * Created on: 2020-11-01
+ * Created on: 2020-11-06
  * Description:
  */
-public class ProctorHomeActivity extends AppCompatActivity {
+public class ProctorExamSessionActivity extends AppCompatActivity {
     private FragmentManager mFragmentManager;
     private FragmentTransaction mFragmentTransaction;
 
@@ -25,22 +24,14 @@ public class ProctorHomeActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_container);
-        setTitle("Proctor Dashboard");
 
         mFragmentManager = getSupportFragmentManager();
-        showProctorDashboard();
+        showAuthPhotos();
     }
 
-    public void showProctorDashboard() {
+    public void showAuthPhotos() {
         mFragmentTransaction = mFragmentManager.beginTransaction();
-        ProctorDashboardFragment fragment = new ProctorDashboardFragment();
-        mFragmentTransaction.replace(R.id.container, fragment);
-        mFragmentTransaction.commit();
-    }
-
-    public void showProctorExamCreation() {
-        mFragmentTransaction = mFragmentManager.beginTransaction();
-        ProctorExamCreationFragment fragment = new ProctorExamCreationFragment();
+        ProctorAuthPhotosFragment fragment = new ProctorAuthPhotosFragment();
         mFragmentTransaction.replace(R.id.container, fragment);
         mFragmentTransaction.commit();
     }

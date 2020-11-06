@@ -47,6 +47,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth:20.0.0'       //Authentication
     implementation 'com.google.firebase:firebase-firestore:22.0.0'  //Cloud Firestore
     implementation 'com.google.firebase:firebase-storage:19.2.0'    //Storage
+    implementation 'com.firebaseui:firebase-ui-storage:4.3.2'       //
 
     // Butterknife -> https://github.com/JakeWharton/butterknife
     implementation 'com.jakewharton:butterknife:10.2.3'
@@ -59,4 +60,8 @@ dependencies {
     // Material Design Lib -> https://github.com/material-components/material-components-android
     implementation 'com.google.android.material:material:1.2.1'
     compileOnly 'com.google.android.wearable:wearable:2.8.1'
+
+    // Glide -> https://github.com/bumptech/glide
+    implementation 'com.github.bumptech.glide:glide:4.11.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
 }

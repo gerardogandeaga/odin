@@ -1,5 +1,7 @@
-package com.group8.odin.examinee.fragments;
+package com.group8.odin.proctor.fragments;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -23,38 +25,38 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.group8.odin.OdinFirebase;
 import com.group8.odin.R;
 import com.group8.odin.R2;
-import com.group8.odin.examinee.activities.ExamineeExamSessionActivity;
-import com.group8.odin.examinee.list_items.RegisteredExamItem;
-import com.group8.odin.examinee.activities.ExamineeHomeActivity;
 import com.group8.odin.common.models.ExamSession;
-import com.group8.odin.common.models.UserProfile;
+import com.group8.odin.examinee.list_items.RegisteredExamItem;
+import com.group8.odin.proctor.activities.ProctorExamSessionActivity;
+import com.group8.odin.proctor.activities.ProctorHomeActivity;
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IAdapter;
 import com.mikepenz.fastadapter.adapters.ItemAdapter;
 import com.mikepenz.fastadapter.listeners.OnClickListener;
-
-import java.util.HashMap;
-import java.util.Map;
+import com.mikepenz.fastadapter.listeners.OnLongClickListener;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /*
  * Created by: Gerardo Gandeaga
- * Created on: 2020-11-01
- * Description: Examinee dashboard fragment. Fragment will display the exams that the
- * examinee is registered to.
+ * Created on: 2020-11-05
+ * Description:
  */
-public class ExamineeDashboardFragment extends Fragment {
-    private FirebaseFirestore mFirestore;
-
-    // View references
+public class ProctorDashboardFragment extends Fragment {
     @BindView(R2.id.recycler_view)
-    RecyclerView mRvRegisteredExams;
+    RecyclerView mRvCreatedExams;
     @BindView(R2.id.fabAction)
-    ExtendedFloatingActionButton mFabRegister;
+    ExtendedFloatingActionButton mFabCreateExam;
 
     private ItemAdapter mItemAdapter;
+    private FirebaseFirestore mFirestore;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mFirestore = FirebaseFirestore.getInstance();
+    }
 
     @Nullable
     @Override
@@ -67,41 +69,45 @@ public class ExamineeDashboardFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
 
-        getActivity().setTitle("Examinee Dashboard");
+        getActivity().setTitle("Proctor Dashboard");
 
-        // Setup recycler view with fastadapter
+        // Setup recycler view with fast adapter
         mItemAdapter = new ItemAdapter();
         FastAdapter<RegisteredExamItem> fastAdapter = FastAdapter.with(mItemAdapter);
 
+        GridLayoutManager gridLayout = new GridLayoutManager(getActivity(), 1);
+
+        mRvCreatedExams.setLayoutManager(gridLayout);
+        mRvCreatedExams.setAdapter(fastAdapter); // bind adapter
+
+        // Open the auth photo bucket
         fastAdapter.withOnClickListener(new OnClickListener<RegisteredExamItem>() {
             @Override
             public boolean onClick(View v, IAdapter<RegisteredExamItem> adapter, RegisteredExamItem item, int position) {
-                // set exam context
                 OdinFirebase.ExamSessionContext = item.getExamSession();
-                // go to exam session activity
-                Intent examSession = new Intent(getActivity(), ExamineeExamSessionActivity.class);
-                startActivity(examSession);
+                Intent examSessionIntent = new Intent(getActivity(), ProctorExamSessionActivity.class);
+                startActivity(examSessionIntent);
+                return true;
+            }
+        });
+        // Copy id into clipboard so user can share it
+        fastAdapter.withOnLongClickListener(new OnLongClickListener<RegisteredExamItem>() {
+            @Override
+            public boolean onLongClick(View v, IAdapter<RegisteredExamItem> adapter, RegisteredExamItem item, int position) {
+                ClipboardManager clipboard = getActivity().getSystemService(ClipboardManager.class);
+                clipboard.setPrimaryClip(ClipData.newPlainText("examid", item.getExamSession().getExamId()));
+                Toast.makeText(getActivity(), "Exam Id Copied to Clipboard.", Toast.LENGTH_SHORT).show();
                 return true;
             }
         });
 
-        GridLayoutManager gridLayout = new GridLayoutManager(getActivity(), 1);
-
-        mRvRegisteredExams.setLayoutManager(gridLayout);
-        mRvRegisteredExams.setAdapter(fastAdapter); // bind adapter
-
-        // adapter button clicks
-
-        // Get reference to Firestore
-        mFirestore = FirebaseFirestore.getInstance();
-
         // Setup floating action button
-        mFabRegister.setText("Register an Exam");
-        mFabRegister.setOnClickListener(new View.OnClickListener() {
+        mFabCreateExam.setText("Create an Exam");
+        mFabCreateExam.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // Load and go to examinee registration fragment
-                ((ExamineeHomeActivity)getActivity()).showExamineeExamRegistration();
+                ((ProctorHomeActivity)getActivity()).showProctorExamCreation();
             }
         });
 

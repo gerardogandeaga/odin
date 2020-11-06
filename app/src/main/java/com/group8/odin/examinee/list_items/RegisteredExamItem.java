@@ -5,8 +5,10 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
+import com.group8.odin.OdinFirebase;
 import com.group8.odin.R;
 import com.group8.odin.common.models.ExamSession;
+import com.group8.odin.common.models.UserProfile;
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.items.AbstractItem;
 
@@ -51,9 +53,10 @@ public class RegisteredExamItem extends AbstractItem<RegisteredExamItem, Registe
 
     // List item view
     protected static class ViewHolder extends FastAdapter.ViewHolder<RegisteredExamItem> {
-        @BindView(R.id.tvExamTitle)     TextView examTitle;
-        @BindView(R.id.tvExamStartTime) TextView examStartTime;
-        @BindView(R.id.tvExamEndTime)   TextView examEndTime;
+        @BindView(R.id.tvExamTitle) TextView examTitle;
+        @BindView(R.id.tvExamId)    TextView examId;
+        @BindView(R.id.tvExamTime)  TextView examTime;
+        @BindView(R.id.tvAuthTime)  TextView authTime;
 
         public ViewHolder(View view) {
             super(view);
@@ -65,16 +68,22 @@ public class RegisteredExamItem extends AbstractItem<RegisteredExamItem, Registe
         public void bindView(RegisteredExamItem item, List<Object> payloads) {
             // populate the item with content
             examTitle.setText(item.examSession.getTitle());
-            examStartTime.setText(item.examSession.getStartTime().toDate().toString());
-            examEndTime.setText(item.examSession.getEndTime().toDate().toString());
+            if (OdinFirebase.UserProfileContext.getRole() == UserProfile.Role.EXAMINEE) {
+                examId.setVisibility(View.GONE);
+            }
+            else {
+                examId.setText("Exam ID: " + item.examSession.getExamId());
+            }
+            examTime.setText("Exam Begins on " + item.examSession.getExamStartTime().toString());
+            authTime.setText("ID check at " + item.examSession.getAuthStartTime().toString());
         }
 
         @Override
         public void unbindView(RegisteredExamItem item) {
             // remove content from the item view
             examTitle.setText(null);
-            examStartTime.setText(null);
-            examEndTime.setText(null);
+            examTime.setText(null);
+            authTime.setText(null);
         }
     }
 }
