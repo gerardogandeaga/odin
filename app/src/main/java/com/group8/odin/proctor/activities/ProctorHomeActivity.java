@@ -15,7 +15,7 @@ import com.group8.odin.proctor.fragments.ProctorExamCreationFragment;
 /*
  * Created by: Gerardo Gandeaga
  * Created on: 2020-11-01
- * Description:
+ * Description: Activity to show the proctor's dashboard
  */
 public class ProctorHomeActivity extends AppCompatActivity {
     private FragmentManager mFragmentManager;

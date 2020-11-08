@@ -1,16 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    Created by: Matthew Tong
+    Created on: 2020-11-04
+    Description: Layout for Sign Up Screen
+    Updated by: Shreya Jain
+    Updated on: 2020-11-07
+    Description: Added Back Button
+    -->
+
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-
-    <!--
-    Created by: Matthew Tong
-    Created on: 2020-11-04
-    Description: Layout for Sign Up Screen
-    -->
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -95,7 +99,7 @@
             android:layout_marginTop="16dp"
             android:paddingLeft="5dp"
             android:paddingRight="5dp"
-            android:text="Password (8 or more characters, including at least 1 capital letter)"
+            android:text="Password (8 or more characters, including at least 1 capital letter, 1 numeric character, 1 lowercase character, 1 special character from @$%#"
             android:textColor="@android:color/black"
             android:textSize="6pt" />
 
@@ -138,12 +142,13 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="72dp"
         android:backgroundTint="@color/colorPrimary"
         android:text="Create"
         android:textAllCaps="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
@@ -165,14 +170,20 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Are you a proctor?"
+        app:layout_constraintBottom_toTopOf="@+id/btnSubmitAccountCreation"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <Button
+        android:id="@+id/btnBackToLogin"
+        android:layout_width="378dp"
+        android:layout_height="50dp"
+        android:text="Back"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+        app:layout_constraintTop_toBottomOf="@+id/btnSubmitAccountCreation" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <!--
-    TODO: SignUp
-    create back button -> welcome screen
-    add input check on all input fields
-    -->

@@ -18,7 +18,7 @@ import com.group8.odin.common.models.UserProfile;
 /*
  * Created by: Gerardo Gandeaga
  * Created on: 2020-10-31
- * Description:
+ * Description: Examinee home (dashboard) activity
  */
 public class ExamineeHomeActivity extends  AppCompatActivity {
     private FragmentManager mFragmentManager;

@@ -41,7 +41,7 @@ import butterknife.ButterKnife;
 /*
  * Created by: Gerardo Gandeaga
  * Created on: 2020-11-05
- * Description:
+ * Description: Fragment to handle the proctor's dashboard that displays all the exams created by them
  */
 public class ProctorDashboardFragment extends Fragment {
     @BindView(R2.id.recycler_view)

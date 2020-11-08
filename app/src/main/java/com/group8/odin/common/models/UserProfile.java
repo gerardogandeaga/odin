@@ -29,7 +29,6 @@ public class UserProfile {
     public UserProfile() {}
 
     // Create user from firebase reference and load the related data from firebase
-    // DONT USE UNTIL WE START CONNECTING TO FIRESTORE
     public UserProfile(DocumentSnapshot userProfileDocument) {
         userId = userProfileDocument.getId();
         name = userProfileDocument.get(OdinFirebase.FirestoreUserProfile.NAME).toString();
@@ -41,8 +40,6 @@ public class UserProfile {
     }
 
     // Setters and getters
-
-
     public UserProfile setUserId(String userId) {
         this.userId = userId;
         return this;

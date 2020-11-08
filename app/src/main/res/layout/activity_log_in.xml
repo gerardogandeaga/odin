@@ -10,6 +10,8 @@
     Created by: Matthew Tong
     Created on: 2020-11-04
     Description: Layout for Welcome Screen
+    Updated by: Shreya Jain
+    Updated on: 2020-11-07
     -->
 
     <LinearLayout
@@ -74,23 +76,12 @@
             android:textSize="6pt"
             android:textStyle="italic"/>
         <Button
-            android:id="@+id/btnForgotPassword"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAlignment="textEnd"
-            android:background="@android:color/transparent"
-            android:text="Forgot password?"
-            android:textAllCaps="false"
-            android:textColor="@color/colorTextField"
-            android:textSize="5pt"
-            android:textStyle="italic" />
-        <Button
             android:id="@+id/btnLogin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:text="Login"
-            android:backgroundTint="@color/colorAccent"/>
+            android:backgroundTint="@color/colorPrimary"/>
 
         <Button
             android:id="@+id/btnSignUp"

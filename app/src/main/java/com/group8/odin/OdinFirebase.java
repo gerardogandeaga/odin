@@ -7,7 +7,7 @@ import com.group8.odin.common.models.UserProfile;
 /*
  * Created by: Gerardo Gandeaga
  * Created on: 2020-10-31
- * Description:
+ * Description: Driver class for Firebase connections
  */
 public class OdinFirebase {
     // Consistent references throughout the application
@@ -22,7 +22,6 @@ public class OdinFirebase {
     }
 
     // Field names
-
     public static class FirestoreUserProfile {
         public static final String NAME = "full_name";
         public static final String EMAIL = "email";

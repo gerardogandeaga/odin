@@ -76,7 +76,7 @@ public class ExamineeAuthPhotoSubmissionFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
 
-        getActivity().setTitle("Auth Photo Submission");
+        getActivity().setTitle("Authentication Photo Submission");
 
         // Camera activity
         mBtnCamera.setOnClickListener(new View.OnClickListener() {
@@ -98,7 +98,7 @@ public class ExamineeAuthPhotoSubmissionFragment extends Fragment {
                         .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                             @Override
                             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                Toast.makeText(getActivity(), "Auth Photo Uploaded!", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getActivity(), "Photo Uploaded!", Toast.LENGTH_SHORT).show();
                                 mPbProgress.setVisibility(View.VISIBLE);
                             }
                         })

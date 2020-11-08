@@ -14,7 +14,7 @@ import com.group8.odin.proctor.fragments.ProctorDashboardFragment;
 /*
  * Created by: Gerardo Gandeaga
  * Created on: 2020-11-06
- * Description:
+ * Description: Activity that would display authentication photos to the proctor
  */
 public class ProctorExamSessionActivity extends AppCompatActivity {
     private FragmentManager mFragmentManager;
