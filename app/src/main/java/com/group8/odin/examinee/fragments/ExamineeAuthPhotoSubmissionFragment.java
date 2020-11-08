@@ -1,8 +1,11 @@
 package com.group8.odin.examinee.fragments;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -17,6 +20,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
@@ -30,6 +35,8 @@ import com.google.firebase.storage.UploadTask;
 import com.group8.odin.OdinFirebase;
 import com.group8.odin.R;
 import com.group8.odin.R2;
+import com.group8.odin.common.activities.LoginActivity;
+import com.group8.odin.examinee.activities.ExamineeHomeActivity;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -45,6 +52,9 @@ import butterknife.ButterKnife;
  * Created by: Gerardo Gandeaga
  * Created on: 2020-11-06
  * Description: Authentication photo submission screen.
+ * Updated by: Shreya Jain
+ * Updated on: 2020-11-08
+ * Description: Added permissions check
  */
 public class ExamineeAuthPhotoSubmissionFragment extends Fragment {
     @BindView(R2.id.imgResultPhoto) ImageView mImgAuthPhotoResult;
@@ -53,6 +63,8 @@ public class ExamineeAuthPhotoSubmissionFragment extends Fragment {
     @BindView(R2.id.pbProgress)     ProgressBar mPbProgress;
 
     public static final int PIC_ID = 123;
+    public static final int PERMISSIONS_REQUEST_CODE = 100;
+    public int permissionsStatus = 0;
 
     private FirebaseStorage mStorage;
     private StorageReference mReference; // will point to exam session bucket
@@ -60,10 +72,84 @@ public class ExamineeAuthPhotoSubmissionFragment extends Fragment {
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mStorage = FirebaseStorage.getInstance();
-        mReference = mStorage.getReference();
+        if(checkPermission()) {
+            super.onCreate(savedInstanceState);
+            mStorage = FirebaseStorage.getInstance();
+            mReference = mStorage.getReference();
+        } else {
+            requestPermissions(
+                    new String[]{Manifest.permission
+                            .CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE},
+                    PERMISSIONS_REQUEST_CODE);
+        }
     }
+
+    // function to check permissions
+    private boolean checkPermission() {
+        if ((ContextCompat.checkSelfPermission(getActivity(),
+                Manifest.permission.CAMERA) + ContextCompat
+                .checkSelfPermission(getActivity(),
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE) + ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE))
+                != PackageManager.PERMISSION_GRANTED) {
+
+            if (ActivityCompat.shouldShowRequestPermissionRationale
+                    (getActivity(), Manifest.permission.CAMERA) ||
+                    ActivityCompat.shouldShowRequestPermissionRationale
+                            (getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) ||
+                    ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    requestPermissions(
+                            new String[]{Manifest.permission
+                                    .CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE},
+                            PERMISSIONS_REQUEST_CODE);
+                    return true;
+                }
+
+            } else {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    requestPermissions(
+                            new String[]{Manifest.permission
+                                    .CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE},
+                            PERMISSIONS_REQUEST_CODE);
+                    return true;
+                }
+            }
+        } else {
+            // Permissions are already granted
+            return true;
+        }
+        return true; //General value to return in case of if-else failure so app doesn't crash.
+    }
+
+
+    // Function to initiate after permissions are given by user
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String[] permissions, int[] grantResults) {
+
+        switch (requestCode) {
+            case PERMISSIONS_REQUEST_CODE:
+                if (grantResults.length > 0) {
+                    boolean cameraPermission = grantResults[1] == PackageManager.PERMISSION_GRANTED;
+                    boolean writeExternalFile = grantResults[0] == PackageManager.PERMISSION_GRANTED;
+                    boolean readExternalFile = grantResults[2] == PackageManager.PERMISSION_GRANTED;
+                    if(cameraPermission && writeExternalFile && readExternalFile)
+                    {
+                        Toast.makeText(getActivity(), "Permission Granted!", Toast.LENGTH_SHORT).show();
+                        permissionsStatus = 1;
+                    }
+                }
+                else {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        requestPermissions(
+                                new String[]{Manifest.permission
+                                        .WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE},
+                                PERMISSIONS_REQUEST_CODE);
+                    }
+                }
+        }
+    }
+
 
     @Nullable
     @Override
@@ -82,7 +168,11 @@ public class ExamineeAuthPhotoSubmissionFragment extends Fragment {
         mBtnCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                invokeCameraActivity();
+                if (permissionsStatus == 1)
+                    invokeCameraActivity();
+                else {
+                    Toast.makeText(getActivity(), "Permission Denied. Please grant permissions and try again.", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
