@@ -156,19 +156,19 @@ public class LoginActivity extends AppCompatActivity {
                 Manifest.permission.CAMERA) + ContextCompat
                 .checkSelfPermission(LoginActivity.this,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE) + ContextCompat.checkSelfPermission(LoginActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE))
-            != PackageManager.PERMISSION_GRANTED) {
+                != PackageManager.PERMISSION_GRANTED) {
 
             if (ActivityCompat.shouldShowRequestPermissionRationale
                     (LoginActivity.this, Manifest.permission.CAMERA) ||
                     ActivityCompat.shouldShowRequestPermissionRationale
                             (LoginActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) ||
-                        ActivityCompat.shouldShowRequestPermissionRationale(LoginActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                    ActivityCompat.shouldShowRequestPermissionRationale(LoginActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     requestPermissions(
                             new String[]{Manifest.permission
                                     .CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE},
                             PERMISSIONS_REQUEST_CODE);
-                    return false;
+                    return true;
                 }
 
             } else {
@@ -177,7 +177,7 @@ public class LoginActivity extends AppCompatActivity {
                             new String[]{Manifest.permission
                                     .CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE},
                             PERMISSIONS_REQUEST_CODE);
-                    return false;
+                    return true;
                 }
             }
         } else {
@@ -214,9 +214,18 @@ public class LoginActivity extends AppCompatActivity {
                 }
         }
     }
+
+    // send user out of application
+    @Override
+    public void onBackPressed(){
+        Intent exit = new Intent(Intent.ACTION_MAIN);
+        exit.addCategory(Intent.CATEGORY_HOME);
+        exit.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(exit);
+    }
 }
 
 /*TODO: LoginScreen
  *       create fragment for login
  *       create fragment for forgot password
-*/
+ */

@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -23,6 +24,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.group8.odin.OdinFirebase;
 import com.group8.odin.R;
 import com.group8.odin.R2;
+import com.group8.odin.common.activities.LoginActivity;
 import com.group8.odin.examinee.activities.ExamineeExamSessionActivity;
 import com.group8.odin.examinee.list_items.RegisteredExamItem;
 import com.group8.odin.examinee.activities.ExamineeHomeActivity;
@@ -105,6 +107,13 @@ public class ExamineeDashboardFragment extends Fragment {
         });
 
         loadExamSessions();
+
+
+        // Logout of odin
+        getActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() { startActivity(new Intent(getActivity(), LoginActivity.class)); }
+        });
     }
 
     // Load user exam sessions
