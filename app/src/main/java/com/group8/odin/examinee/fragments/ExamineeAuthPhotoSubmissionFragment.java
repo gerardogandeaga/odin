@@ -73,6 +73,7 @@ public class ExamineeAuthPhotoSubmissionFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         if(checkPermission()) {
+            permissionsStatus = 1;
             super.onCreate(savedInstanceState);
             mStorage = FirebaseStorage.getInstance();
             mReference = mStorage.getReference();
