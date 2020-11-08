@@ -38,7 +38,7 @@ import butterknife.ButterKnife;
 /*
  * Created by: Gerardo Gandeaga
  * Created on: 2020-11-06
- * Description:
+ * Description: Fragment that would pull all the photos and display them to the proctor on call for a particular exam session
  */
 public class ProctorAuthPhotosFragment extends Fragment {
     @BindView(R.id.recycler_view)

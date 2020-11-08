@@ -30,6 +30,7 @@ public class ExamSession {
         authEndTime = Utils.getDate(((Timestamp)examSessionDocument.get(OdinFirebase.FirestoreExamSession.AUTH_END_TIME)).getSeconds());
     }
 
+    //Setters and getters
     public ExamSession setExamId(String examId) {
         this.examId = examId;
         return this;

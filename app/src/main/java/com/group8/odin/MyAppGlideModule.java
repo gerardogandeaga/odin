@@ -14,7 +14,7 @@ import java.io.InputStream;
 /*
  * Created by: Gerardo Gandeaga
  * Created on: 2020-11-06
- * Description:
+ * Description: Glide module to list and show all the authentication pictures from the firebase storage
  */
 @GlideModule
 public class MyAppGlideModule extends AppGlideModule {

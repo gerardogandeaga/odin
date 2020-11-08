@@ -42,8 +42,7 @@ import butterknife.ButterKnife;
 /*
  * Created by: Gerardo Gandeaga
  * Created on: 2020-11-01
- * Description: Examinee dashboard fragment. Fragment will display the exams that the
- * examinee is registered to.
+ * Description: Examinee dashboard fragment. Fragment will display the exams that the examinee is registered to.
  */
 public class ExamineeDashboardFragment extends Fragment {
     private FirebaseFirestore mFirestore;

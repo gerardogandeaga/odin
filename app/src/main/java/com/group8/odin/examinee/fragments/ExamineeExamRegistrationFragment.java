@@ -25,6 +25,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.group8.odin.OdinFirebase;
 import com.group8.odin.R;
 import com.group8.odin.R2;
+import com.group8.odin.common.models.UserProfile;
 import com.group8.odin.examinee.activities.ExamineeHomeActivity;
 
 import butterknife.BindView;
@@ -33,7 +34,10 @@ import butterknife.ButterKnife;
 /*
  * Created by: Gerardo Gandeaga
  * Created on: 2020-11-01
- * Description:
+ * Description: Fragment to handle registration of exam from the examinee dashboard
+ * Updated by: Shreya Jain
+ * Updated on: 2020-11-07
+ * Description: Real time syncing of examinee dashboard and user profile
  */
 public class ExamineeExamRegistrationFragment extends Fragment {
     private Context mContext;
@@ -113,7 +117,16 @@ public class ExamineeExamRegistrationFragment extends Fragment {
                     @Override
                     public void onSuccess(Void aVoid) {
                         Toast.makeText(getActivity(), "Registered for exam!", Toast.LENGTH_SHORT).show();
-                        ((ExamineeHomeActivity)getActivity()).showExamineeDashboard();
+
+                        //Syncing user profile again to reflect updated changes
+                        OdinFirebase.UserProfileContext.getUserProfileReference()
+                                .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                            @Override
+                            public void onSuccess(DocumentSnapshot snapshot) {
+                                OdinFirebase.UserProfileContext = new UserProfile(snapshot);
+                                ((ExamineeHomeActivity)getActivity()).showExamineeDashboard();
+                            }
+                        });
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {

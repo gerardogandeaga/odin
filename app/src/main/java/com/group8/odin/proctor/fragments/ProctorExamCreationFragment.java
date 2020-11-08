@@ -21,11 +21,13 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.group8.odin.OdinFirebase;
 import com.group8.odin.R;
 import com.group8.odin.R2;
+import com.group8.odin.common.models.UserProfile;
 import com.group8.odin.proctor.activities.ProctorHomeActivity;
 
 import java.util.Calendar;
@@ -39,7 +41,11 @@ import butterknife.ButterKnife;
 /*
  * Created by: Gerardo Gandeaga
  * Created on: 2020-11-05
- * Description:
+ * Description: Fragment to add an exam session in firestore and reload list of exam sessions
+ * Updated by: Shreya Jain
+ * Updated on: 2020-11-07
+ * Description: error handling, real time syncing of user profile and its associated exam sessions
+ * Bug: The date set is one month behind. Eg: November 30, 2020 would be equivalent to 2020-10-30. -> Fixed On: 2020-11-07 by Shreya Jain
  */
 public class ProctorExamCreationFragment extends Fragment {
     // Bind views
@@ -115,7 +121,10 @@ public class ProctorExamCreationFragment extends Fragment {
                 DatePickerDialog dialog = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                        mEtExamDate.setText(day + "-" + month + "-" + year);
+                        mYear = year;
+                        mDay = day;
+                        mMonth = month;
+                        mEtExamDate.setText(day + "-" + (month+1) + "-" + year); //Since date picker has months [0..11] ~ [Jan .. Dec]
                         mExamDateSet = true;
                     }
                 }, mYear, mMonth, mDay);
@@ -192,17 +201,18 @@ public class ProctorExamCreationFragment extends Fragment {
         });
 
 
-        // TODO: create exam in firestore
+        // Adds an exam to firestore
         mBtnCreateExam.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (checkFieldsAreValid()) {
                     // Convert times to dates
+                    //The year is taken as (Year+1900) by the date picker.
                     Date examStart, examEnd, authStart, authEnd;
-                    examStart = new Date(mYear, mMonth, mDay, mStartExamHour, mStartExamMinute);
-                    examEnd = new Date(mYear, mMonth, mDay, mEndExamHour, mEndExamMinute);
-                    authStart = new Date(mYear, mMonth, mDay, mStartAuthHour, mStartAuthMinute);
-                    authEnd = new Date(mYear, mMonth, mDay, mEndAuthHour, mEndAuthMinute);
+                    examStart = new Date(mYear - 1900, mMonth, mDay, mStartExamHour, mStartExamMinute);
+                    examEnd = new Date(mYear - 1900, mMonth, mDay, mEndExamHour, mEndExamMinute);
+                    authStart = new Date(mYear -1900, mMonth, mDay, mStartAuthHour, mStartAuthMinute);
+                    authEnd = new Date(mYear -1900, mMonth, mDay, mEndAuthHour, mEndAuthMinute);
 
                     // Add a new document with a generated id.
                     Map<String, Object> data = new HashMap<>();
@@ -223,20 +233,19 @@ public class ProctorExamCreationFragment extends Fragment {
                             .addOnFailureListener(new OnFailureListener() {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
-                                    // todo: Shreya can you add some failure handling?
+                                    Toast.makeText(getActivity(), "Exam creation failed! Please try again.", Toast.LENGTH_SHORT).show();
                                 }
                             });
 
                 }
-
-                // todo upload to firestore
             }
         });
     }
 
     // Function will check if we have a valid start and end time respective to each other
     private boolean validStartEndTimes(int startHour, int startMin, int endHour, int endMin) {
-        if (startHour == endHour) return startMin <= endMin;
+        if (startHour == endHour)
+            return startMin <= endMin;
         return startHour < endHour;
     }
 
@@ -290,13 +299,22 @@ public class ProctorExamCreationFragment extends Fragment {
                     @Override
                     public void onSuccess(Void aVoid) {
                         Toast.makeText(getActivity(), "Exam added to profile!", Toast.LENGTH_SHORT).show();
-                        ((ProctorHomeActivity)getActivity()).showProctorDashboard();
+
+                        //Syncing user profile again to reflect updated changes
+                        OdinFirebase.UserProfileContext.getUserProfileReference()
+                                .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                            @Override
+                            public void onSuccess(DocumentSnapshot snapshot) {
+                                OdinFirebase.UserProfileContext = new UserProfile(snapshot);
+                                ((ProctorHomeActivity)getActivity()).showProctorDashboard();
+                            }
+                        });
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(getActivity(), "Something went wrong...", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "Something went wrong...Please refresh.", Toast.LENGTH_SHORT).show();
                     }
                 });
     }

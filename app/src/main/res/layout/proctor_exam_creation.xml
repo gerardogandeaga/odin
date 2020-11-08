@@ -1,4 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    Created by: Gerardo Gandeaga
+    Created on: 2020-11-04
+    Description: Layout for Exam Creation Screen
+    Updated by: Shreya Jain
+    Updated On: 2020-11-07
+    Description: Fixed design bugs
+    -->
+
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -44,7 +54,7 @@
         android:layout_marginTop="32dp"
         android:layout_marginEnd="16dp"
         android:ems="10"
-        android:hint="Exam Title"
+        android:hint="Exam Date"
         android:inputType="textPersonName"
         app:layout_constraintEnd_toStartOf="@+id/btnExamDate"
         app:layout_constraintStart_toStartOf="parent"
@@ -116,13 +126,14 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
+        android:layout_marginTop="57dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
         android:text="Create Exam"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/etAuthTime" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
