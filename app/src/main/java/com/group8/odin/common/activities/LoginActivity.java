@@ -48,7 +48,7 @@ import butterknife.ButterKnife;
     Description: Activity for Login Screen
     Updated by: Shreya Jain
     Updated On: 2020-11-07
-    Description: Fixed design bugs, removed redundant part, added permissions check
+    Description: Fixed design bugs, removed redundant part
 */
 public class LoginActivity extends AppCompatActivity {
     private static final int PERMISSIONS_REQUEST_CODE = 100;
@@ -66,7 +66,6 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        if (checkPermission()) {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_log_in);
             ButterKnife.bind(this);
@@ -142,78 +141,8 @@ public class LoginActivity extends AppCompatActivity {
                     startActivity(intent);
                 }
             });
-        } else {
-            requestPermissions(
-                    new String[]{Manifest.permission
-                            .CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE},
-                    PERMISSIONS_REQUEST_CODE);
-        }
     }
-
-    // function to check permissions
-    private boolean checkPermission() {
-        if ((ContextCompat.checkSelfPermission(LoginActivity.this,
-                Manifest.permission.CAMERA) + ContextCompat
-                .checkSelfPermission(LoginActivity.this,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE) + ContextCompat.checkSelfPermission(LoginActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE))
-                != PackageManager.PERMISSION_GRANTED) {
-
-            if (ActivityCompat.shouldShowRequestPermissionRationale
-                    (LoginActivity.this, Manifest.permission.CAMERA) ||
-                    ActivityCompat.shouldShowRequestPermissionRationale
-                            (LoginActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) ||
-                    ActivityCompat.shouldShowRequestPermissionRationale(LoginActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    requestPermissions(
-                            new String[]{Manifest.permission
-                                    .CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE},
-                            PERMISSIONS_REQUEST_CODE);
-                    return true;
-                }
-
-            } else {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    requestPermissions(
-                            new String[]{Manifest.permission
-                                    .CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE},
-                            PERMISSIONS_REQUEST_CODE);
-                    return true;
-                }
-            }
-        } else {
-            // Permissions are already granted
-            return true;
-        }
-        return true; //General value to return in case of if-else failure so app doesn't crash.
-    }
-
-
-    // Function to initiate after permissions are given by user
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           String[] permissions, int[] grantResults) {
-
-        switch (requestCode) {
-            case PERMISSIONS_REQUEST_CODE:
-                if (grantResults.length > 0) {
-                    boolean cameraPermission = grantResults[1] == PackageManager.PERMISSION_GRANTED;
-                    boolean writeExternalFile = grantResults[0] == PackageManager.PERMISSION_GRANTED;
-                    boolean readExternalFile = grantResults[2] == PackageManager.PERMISSION_GRANTED;
-                    if(cameraPermission && writeExternalFile && readExternalFile)
-                    {
-                        Toast.makeText(this, "Permission Granted!", Toast.LENGTH_SHORT).show();
-                    }
-                }
-                else {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        requestPermissions(
-                                new String[]{Manifest.permission
-                                        .WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE},
-                                PERMISSIONS_REQUEST_CODE);
-                    }
-                }
-        }
-    }
+    
 
     // send user out of application
     @Override
