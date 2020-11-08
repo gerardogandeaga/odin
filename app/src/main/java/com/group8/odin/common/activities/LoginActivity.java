@@ -168,7 +168,7 @@ public class LoginActivity extends AppCompatActivity {
                             new String[]{Manifest.permission
                                     .CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE},
                             PERMISSIONS_REQUEST_CODE);
-                    return false;
+                    return true;
                 }
 
             } else {
@@ -177,7 +177,7 @@ public class LoginActivity extends AppCompatActivity {
                             new String[]{Manifest.permission
                                     .CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE},
                             PERMISSIONS_REQUEST_CODE);
-                    return false;
+                    return true;
                 }
             }
         } else {
