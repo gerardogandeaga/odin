@@ -72,12 +72,14 @@ public class ExamineeAuthPhotoSubmissionFragment extends Fragment {
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
+        permissionsStatus = 0;
         if(checkPermission()) {
             permissionsStatus = 1;
             super.onCreate(savedInstanceState);
             mStorage = FirebaseStorage.getInstance();
             mReference = mStorage.getReference();
         } else {
+            permissionsStatus = 0;
             requestPermissions(
                     new String[]{Manifest.permission
                             .CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE},
@@ -139,9 +141,12 @@ public class ExamineeAuthPhotoSubmissionFragment extends Fragment {
                         Toast.makeText(getActivity(), "Permission Granted!", Toast.LENGTH_SHORT).show();
                         permissionsStatus = 1;
                     }
+                    else
+                        permissionsStatus = 0;
                 }
                 else {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        permissionsStatus = 0;
                         requestPermissions(
                                 new String[]{Manifest.permission
                                         .WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE},
@@ -169,10 +174,10 @@ public class ExamineeAuthPhotoSubmissionFragment extends Fragment {
         mBtnCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (permissionsStatus == 1)
+                if (permissionsStatus == 1) {
                     invokeCameraActivity();
-                else {
-                    Toast.makeText(getActivity(), "Permission Denied. Please grant permissions and try again.", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getActivity(), "Permission Denied. Please grant permissions and try again!", Toast.LENGTH_SHORT).show();
                 }
             }
         });
