@@ -99,7 +99,7 @@
             android:layout_marginTop="16dp"
             android:paddingLeft="5dp"
             android:paddingRight="5dp"
-            android:text="Password (8 or more characters, including at least 1 capital letter, 1 numeric character, 1 lowercase character, 1 special character from @$%#"
+            android:text="Password (8 or more characters, including at least 1 capital letter, 1 numeric character, 1 lowercase character, 1 special character from @$%#)"
             android:textColor="@android:color/black"
             android:textSize="6pt" />
 
