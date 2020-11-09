@@ -20,7 +20,7 @@
         android:id="@+id/linearLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="140dp"
+        android:layout_marginTop="100dp"
         android:orientation="vertical"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
@@ -142,7 +142,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="72dp"
+        android:layout_marginBottom="16dp"
         android:backgroundTint="@color/colorPrimary"
         android:text="Create"
         android:textAllCaps="false"
@@ -169,6 +169,7 @@
         android:id="@+id/cbProctor"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="1dp"
         android:text="Are you a proctor?"
         app:layout_constraintBottom_toTopOf="@+id/btnSubmitAccountCreation"
         app:layout_constraintEnd_toEndOf="parent"
@@ -176,14 +177,5 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout"
         app:layout_constraintVertical_bias="0.0" />
-
-    <Button
-        android:id="@+id/btnBackToLogin"
-        android:layout_width="378dp"
-        android:layout_height="50dp"
-        android:text="Back"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnSubmitAccountCreation" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

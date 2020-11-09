@@ -45,27 +45,17 @@ import java.util.regex.Pattern;
 */
 
 public class SignUpActivity extends AppCompatActivity {
-    @BindView(R.id.editTextFirstName)
-    EditText mEtFirstName;
-    @BindView(R.id.editTextLastName)
-    EditText mEtLastName;
-    @BindView(R.id.editTextEmail)
-    EditText mEtEmail;
-    @BindView(R.id.editPassword)
-    EditText mEtPassword;
+    @BindView(R.id.editTextFirstName)   EditText mEtFirstName;
+    @BindView(R.id.editTextLastName)    EditText mEtLastName;
+    @BindView(R.id.editTextEmail)       EditText mEtEmail;
+    @BindView(R.id.editPassword)        EditText mEtPassword;
+    @BindView(R.id.editConfirmPassword) EditText mEtConfirmPassword;
     //Declaring a regular expression for email as per RFC standards
     private static final String EMAIL_REGEX = "(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])";
-    @BindView(R.id.cbProctor)
-    CheckBox mCbRole;
-    @BindView(R.id.btnSubmitAccountCreation)
-    Button mBtnSubmit;
+    @BindView(R.id.cbProctor)                CheckBox mCbRole;
+    @BindView(R.id.btnSubmitAccountCreation) Button mBtnSubmit;
     private static final Pattern EMAIL_PATTERN = Pattern.compile(EMAIL_REGEX);
 
-    // user credentials
-    private static String UserFirstName;
-    private static String UserLastName;
-    private static String UserEmailAddress;
-    private static String UserPassword;
     //Declaring a regular expression for passwords as per the rules:
     /*
     * Minimum 1 lowercase letter
@@ -75,15 +65,9 @@ public class SignUpActivity extends AppCompatActivity {
     * Length should be 8 to 20
      */
     private static final String PASSWORD_REGEX = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{8,20}$";
-    private static boolean UserRole;
 
     private FirebaseFirestore mFirestore;
     private FirebaseAuth mAuth;
-    private static String ConfirmPassword;
-    @BindView(R.id.editConfirmPassword)
-    EditText mEtConfirmPassword;
-    @BindView(R.id.btnBackToLogin)
-    Button mBtnBack;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,85 +83,60 @@ public class SignUpActivity extends AppCompatActivity {
         mBtnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int errorFlag = 0;
+                String first, last, email, pass1, pass2;
 
                 //Checks for valid data
-                UserFirstName = mEtFirstName.getText().toString();
-                if(UserFirstName.isEmpty()){
-                    errorFlag = 1;
+                first = mEtFirstName.getText().toString().trim();
+                if(first.isEmpty()){
                     Toast.makeText(SignUpActivity.this, "First name cannot be empty. Please enter your first name.", Toast.LENGTH_SHORT).show();
-                    Intent i = getIntent();
-                    finish();
-                    startActivity(i);
+                    return;
                 }
 
-                UserLastName = mEtLastName.getText().toString();
-                if(UserLastName.isEmpty()){
-                    errorFlag = 1;
+                last = mEtLastName.getText().toString().trim();
+                if(last.isEmpty()){
                     Toast.makeText(SignUpActivity.this, "Last name cannot be empty. Please enter your last name.", Toast.LENGTH_SHORT).show();
-                    Intent i = getIntent();
-                    finish();
-                    startActivity(i);
+                    return;
                 }
 
-                UserEmailAddress = mEtEmail.getText().toString();
-                if(UserEmailAddress.isEmpty()){
-                    errorFlag = 1;
+                email = mEtEmail.getText().toString().trim();
+                if(email.isEmpty()){
                     Toast.makeText(SignUpActivity.this, "Email address cannot be empty. Please enter your email address.", Toast.LENGTH_SHORT).show();
-                    Intent i = getIntent();
-                    finish();
-                    startActivity(i);
+                    return;
                 }
 
-                Matcher matcher = EMAIL_PATTERN.matcher(UserEmailAddress);
+                Matcher matcher = EMAIL_PATTERN.matcher(email);
                 if(!(matcher.matches())){
-                    errorFlag = 1;
                     Toast.makeText(SignUpActivity.this, "Please enter a valid email address.", Toast.LENGTH_SHORT).show();
-                    Intent i = getIntent();
-                    finish();
-                    startActivity(i);
+                    return;
                 }
 
-                UserPassword = mEtPassword.getText().toString();
-                if(UserPassword.isEmpty()){
-                    errorFlag = 1;
+                pass1 = mEtPassword.getText().toString().trim();
+                if(pass1.isEmpty()){
                     Toast.makeText(SignUpActivity.this, "Password cannot be empty. Please enter your Password.", Toast.LENGTH_SHORT).show();
-                    Intent i = getIntent();
-                    finish();
-                    startActivity(i);
+                    return;
                 }
 
-                ConfirmPassword = mEtConfirmPassword.getText().toString();
-                if(ConfirmPassword.isEmpty()){
-                    errorFlag = 1;
+                pass2 = mEtConfirmPassword.getText().toString().trim();
+                if(pass2.isEmpty()){
                     Toast.makeText(SignUpActivity.this, "Kindly confirm your password.", Toast.LENGTH_SHORT).show();
-                    Intent i = getIntent();
-                    finish();
-                    startActivity(i);
+                    return;
                 }
 
-                if(!(UserPassword.equals(ConfirmPassword))){
-                    errorFlag = 1;
+                if(!(pass2.equals(pass1))){
                     Toast.makeText(SignUpActivity.this, "Passwords do not match. Please try again.", Toast.LENGTH_SHORT).show();
-                    Intent i = getIntent();
-                    finish();
-                    startActivity(i);
+                    return;
                 }
 
                 Pattern pattern = Pattern.compile(PASSWORD_REGEX);
-                Matcher matcher1 = pattern.matcher(UserPassword);
+                Matcher matcher1 = pattern.matcher(pass1);
                 if(!(matcher1.matches())){
-                    errorFlag = 1;
                     Toast.makeText(SignUpActivity.this, "Invalid Password. Please try again.", Toast.LENGTH_SHORT).show();
-                    Intent i = getIntent();
-                    finish();
-                    startActivity(i);
+                    return;
                 }
 
-                if(errorFlag == 0) {
-                    // Begin firebase authentication
-                    mAuth.createUserWithEmailAndPassword(mEtEmail.getText().toString().trim(), mEtPassword.getText().toString().trim())
-                            .addOnCompleteListener(SignUpActivity.this, new OnCompleteListener<AuthResult>() {
+                // Begin firebase authentication
+                mAuth.createUserWithEmailAndPassword(email, pass1)
+                        .addOnCompleteListener(SignUpActivity.this, new OnCompleteListener<AuthResult>() {
 
                                 @Override
                                 public void onComplete(@NonNull Task<AuthResult> task) {
@@ -187,7 +146,6 @@ public class SignUpActivity extends AppCompatActivity {
                                         FirebaseUser user = mAuth.getCurrentUser();
 
                                         // Write data to user profile
-
                                         Map<String, Object> data = new HashMap<>();
                                         data.put(OdinFirebase.FirestoreUserProfile.NAME, mEtFirstName.getText().toString().trim() + " " + mEtLastName.getText().toString().trim());
                                         data.put(OdinFirebase.FirestoreUserProfile.EMAIL, mEtEmail.getText().toString().trim());
@@ -218,16 +176,6 @@ public class SignUpActivity extends AppCompatActivity {
                                 }
                             });
                     // End of firebase authentication
-                }
-            }
-        });
-
-        //When back button is clicked
-        mBtnBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent backToLogin = new Intent(SignUpActivity.this, LoginActivity.class);
-                startActivity(backToLogin);
             }
         });
     }

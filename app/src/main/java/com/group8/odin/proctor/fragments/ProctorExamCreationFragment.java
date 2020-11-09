@@ -298,7 +298,7 @@ public class ProctorExamCreationFragment extends Fragment {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Toast.makeText(getActivity(), "Exam added to profile!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "Exam created!", Toast.LENGTH_SHORT).show();
 
                         //Syncing user profile again to reflect updated changes
                         OdinFirebase.UserProfileContext.getUserProfileReference()
