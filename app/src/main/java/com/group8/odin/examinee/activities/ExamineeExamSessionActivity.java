@@ -1,10 +1,6 @@
 package com.group8.odin.examinee.activities;
 
-import android.content.Context;
-import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,7 +9,6 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.group8.odin.R;
 import com.group8.odin.examinee.fragments.ExamineeAuthPhotoSubmissionFragment;
-import com.group8.odin.examinee.fragments.ExamineeDashboardFragment;
 
 /*
  * Created by: Gerardo Gandeaga
@@ -27,7 +22,7 @@ public class ExamineeExamSessionActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_container);
+        setContentView(R.layout.fragment_container_view);
 
         // Setup fragment manager
         mFragmentManager = getSupportFragmentManager();

@@ -3,13 +3,11 @@ package com.group8.odin.examinee.fragments;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,12 +33,8 @@ import com.google.firebase.storage.UploadTask;
 import com.group8.odin.OdinFirebase;
 import com.group8.odin.R;
 import com.group8.odin.R2;
-import com.group8.odin.common.activities.LoginActivity;
-import com.group8.odin.examinee.activities.ExamineeHomeActivity;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -160,7 +154,7 @@ public class ExamineeAuthPhotoSubmissionFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.examinee_auth_photo_submission, container, false);
+        return inflater.inflate(R.layout.examinee_auth_photo_submission_layout, container, false);
     }
 
     @Override

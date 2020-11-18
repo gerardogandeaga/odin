@@ -22,7 +22,8 @@ YOU MAY CHANGE THIS FOR TESTING BUT AKE SURE TO REVERT!!!!!!!!!!!!!
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".common.activities.LoginActivity">
+<!--        <activity android:name=".common.activities.LoginActivity">-->
+        <activity android:name=".proctor.activities.ProctorExamSessionActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -35,7 +36,7 @@ YOU MAY CHANGE THIS FOR TESTING BUT AKE SURE TO REVERT!!!!!!!!!!!!!
 
         <!-- proctor -->
         <activity android:name=".proctor.activities.ProctorHomeActivity"/>
-        <activity android:name=".proctor.activities.ProctorExamSessionActivity"/>
+<!--        <activity android:name=".proctor.activities.ProctorExamSessionActivity"/>-->
 
         <!-- examinee -->
         <activity android:name=".examinee.activities.ExamineeHomeActivity"/>
