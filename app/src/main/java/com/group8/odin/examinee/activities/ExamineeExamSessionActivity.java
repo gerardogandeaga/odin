@@ -1,28 +1,26 @@
 package com.group8.odin.examinee.activities;
 
-import android.content.Context;
-import android.content.Intent;
-import android.graphics.Bitmap;
+import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.group8.odin.R;
 import com.group8.odin.examinee.fragments.ExamineeAuthPhotoSubmissionFragment;
-import com.group8.odin.examinee.fragments.ExamineeDashboardFragment;
 
 /*
  * Created by: Gerardo Gandeaga
  * Created on: 2020-11-05
  * Description: This activity will handle the fragments of the application throughout the exam session.
  */
-public class ExamineeExamSessionActivity extends AppCompatActivity {
+public class ExamineeExamSessionActivity<override> extends AppCompatActivity {
     private FragmentManager mFragmentManager;
     private FragmentTransaction mFragmentTransaction;
+    private static int counter = 0;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -40,4 +38,25 @@ public class ExamineeExamSessionActivity extends AppCompatActivity {
         mFragmentTransaction.replace(R.id.container, fragment);
         mFragmentTransaction.commit();
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        counter++;
+        if (counter == 1){
+            //come to foreground;
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (counter > 0){
+            counter--;
+        }
+        if (counter == 0){
+            //go to background
+        }
+    }
 }
+
