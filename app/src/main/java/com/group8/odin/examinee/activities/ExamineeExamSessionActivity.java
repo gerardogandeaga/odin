@@ -32,6 +32,7 @@ import java.util.Date;
 public class ExamineeExamSessionActivity extends AppCompatActivity {
     private FragmentManager mFragmentManager;
     private FragmentTransaction mFragmentTransaction;
+    private static int counter = 0;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -65,6 +66,29 @@ public class ExamineeExamSessionActivity extends AppCompatActivity {
         long time = new Date().getTime();
         Timestamp temp = new Timestamp(time, 0);
         return temp;
+    }
+
+
+    //added by Marshall, it detect if the app goes foreground or background,
+    //but it does not contain what messages should be send
+    @Override
+    protected void onStart() {
+        super.onStart();
+        counter++;
+        if (counter == 1){
+            //come to foreground;
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (counter > 0){
+            counter--;
+        }
+        if (counter == 0){
+            //go to background
+        }
     }
 
 }
