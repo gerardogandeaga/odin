@@ -1,6 +1,5 @@
 package com.group8.odin.examinee.activities;
 
-import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -8,11 +7,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.group8.odin.R;
 import com.group8.odin.examinee.fragments.ExamineeDashboardFragment;
 import com.group8.odin.examinee.fragments.ExamineeExamRegistrationFragment;
-import com.group8.odin.common.models.UserProfile;
 
 
 /*
@@ -27,7 +24,7 @@ public class ExamineeHomeActivity extends  AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_container);
+        setContentView(R.layout.fragment_container_view);
 
         // Setup fragment manager
         mFragmentManager = getSupportFragmentManager();

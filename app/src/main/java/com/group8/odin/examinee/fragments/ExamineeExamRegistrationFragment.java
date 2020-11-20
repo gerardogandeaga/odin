@@ -59,7 +59,7 @@ public class ExamineeExamRegistrationFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.examinee_exam_registration, container, false);
+        return inflater.inflate(R.layout.examinee_exam_registration_layout, container, false);
     }
 
     // Work with attached view here

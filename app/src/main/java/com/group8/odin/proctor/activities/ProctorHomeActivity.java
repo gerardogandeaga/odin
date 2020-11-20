@@ -8,7 +8,6 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.group8.odin.R;
-import com.group8.odin.examinee.fragments.ExamineeDashboardFragment;
 import com.group8.odin.proctor.fragments.ProctorDashboardFragment;
 import com.group8.odin.proctor.fragments.ProctorExamCreationFragment;
 
@@ -24,7 +23,7 @@ public class ProctorHomeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_container);
+        setContentView(R.layout.fragment_container_view);
         setTitle("Proctor Dashboard");
 
         mFragmentManager = getSupportFragmentManager();

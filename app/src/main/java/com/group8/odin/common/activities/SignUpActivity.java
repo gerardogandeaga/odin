@@ -3,11 +3,9 @@ package com.group8.odin.common.activities;
 import android.content.Intent;
 import android.os.Bundle;
 //import android.support.wearable.activity.WearableActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.Checkable;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -72,7 +70,7 @@ public class SignUpActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sign_up);
+        setContentView(R.layout.common_signup_layout);
         ButterKnife.bind(this);
 
         setTitle("Sign Up");
@@ -127,12 +125,12 @@ public class SignUpActivity extends AppCompatActivity {
                     return;
                 }
 
-                Pattern pattern = Pattern.compile(PASSWORD_REGEX);
-                Matcher matcher1 = pattern.matcher(pass1);
-                if(!(matcher1.matches())){
-                    Toast.makeText(SignUpActivity.this, "Invalid Password. Please try again.", Toast.LENGTH_SHORT).show();
-                    return;
-                }
+//                Pattern pattern = Pattern.compile(PASSWORD_REGEX);
+//                Matcher matcher1 = pattern.matcher(pass1);
+//                if(!(matcher1.matches())){
+//                    Toast.makeText(SignUpActivity.this, "Invalid Password. Please try again.", Toast.LENGTH_SHORT).show();
+//                    return;
+//                }
 
                 // Begin firebase authentication
                 mAuth.createUserWithEmailAndPassword(email, pass1)

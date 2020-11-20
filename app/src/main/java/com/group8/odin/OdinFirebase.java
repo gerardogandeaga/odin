@@ -18,7 +18,7 @@ public class OdinFirebase {
     public static class FirestoreCollections {
         public static final String USERS ="users";
         public static final String EXAM_SESSIONS ="exam_sessions";
-        public static final String EXAMINEE_ACTIVITY_LOGS ="examinee_activity_logs";
+        public static final String ACTIVITY_LOGS ="activity_logs";
     }
 
     // Field names
@@ -35,5 +35,9 @@ public class OdinFirebase {
         public static final String EXAM_END_TIME = "exam_end_time";
         public static final String AUTH_START_TIME = "auth_start_time";
         public static final String AUTH_END_TIME = "auth_end_time";
+    }
+
+    public static class FirestoreActivityLog {
+        public static final String ACTIVITY = "activity";
     }
 }

@@ -60,7 +60,6 @@ public class UserProfile {
         this.examSessions = examSessions;
         return this;
     }
-
     public UserProfile setUserProfileReference(DocumentReference userProfileReference) {
         this.userProfileReference = userProfileReference;
         return this;
