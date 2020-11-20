@@ -20,6 +20,7 @@ import androidx.fragment.app.Fragment;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
@@ -211,8 +212,8 @@ public class ProctorExamCreationFragment extends Fragment {
                     Date examStart, examEnd, authStart, authEnd;
                     examStart = new Date(mYear - 1900, mMonth, mDay, mStartExamHour, mStartExamMinute);
                     examEnd = new Date(mYear - 1900, mMonth, mDay, mEndExamHour, mEndExamMinute);
-                    authStart = new Date(mYear -1900, mMonth, mDay, mStartAuthHour, mStartAuthMinute);
-                    authEnd = new Date(mYear -1900, mMonth, mDay, mEndAuthHour, mEndAuthMinute);
+                    authStart = new Date(mYear - 1900, mMonth, mDay, mStartAuthHour, mStartAuthMinute);
+                    authEnd = new Date(mYear - 1900, mMonth, mDay, mEndAuthHour, mEndAuthMinute);
 
                     // Add a new document with a generated id.
                     Map<String, Object> data = new HashMap<>();
@@ -222,12 +223,16 @@ public class ProctorExamCreationFragment extends Fragment {
                     data.put(OdinFirebase.FirestoreExamSession.AUTH_START_TIME, new Timestamp(authStart));
                     data.put(OdinFirebase.FirestoreExamSession.AUTH_END_TIME, new Timestamp(authEnd));
 
+                    final Map<String, Object> ghostData = new HashMap<>();
+
+                    // add exam session
                     mFirestore.collection(OdinFirebase.FirestoreCollections.EXAM_SESSIONS)
                             .add(data)
                             .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                                 @Override
                                 public void onSuccess(DocumentReference documentReference) {
                                     linkExamToProctorProfile(documentReference);
+                                    documentReference.collection(OdinFirebase.FirestoreCollections.ACTIVITY_LOGS).add(ghostData);
                                 }
                             })
                             .addOnFailureListener(new OnFailureListener() {

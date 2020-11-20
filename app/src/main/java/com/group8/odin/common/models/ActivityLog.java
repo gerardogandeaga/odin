@@ -28,7 +28,13 @@ public class ActivityLog {
 
     public void update(DocumentSnapshot activityLog) {
         activity = (ArrayList<Timestamp>) activityLog.get(OdinFirebase.FirestoreActivityLog.ACTIVITY);
-        status = activity.size() % 2 == 1;
+        if (activity != null) {
+            status = activity.size() % 2 == 1;
+        }
+    }
+
+    public boolean isValid() {
+        return activity != null;
     }
 
     public boolean getStatus() { return status; }
@@ -42,18 +48,18 @@ public class ActivityLog {
             String time = Utils.getTimeStringFromDate(Utils.getDate(timestamp.getSeconds()));
             // first entry is implicitly a login
             if (state == 0)
-                log.append(MessageFormat.format("({0}) {1} logged in\n", time, "name will go here"));
+                log.append(MessageFormat.format("({0}) Examinee logged in\n", time));
                 // odd entries are app sent to background
             else if (state % 2 == 1)
-                log.append(MessageFormat.format("({0}) {1} sent app to background\n", time, "name will go here"));
+                log.append(MessageFormat.format("({0}) Examinee sent app to background\n", time));
                 // even entries are app sent to foreground
             else if (state % 2 == 0)
-                log.append(MessageFormat.format("({0}) {1} re-entered the app\n", time, "name will go here"));
+                log.append(MessageFormat.format("({0}) Examinee re-entered the app\n", time));
 
             state++;
         }
 
-        return log.toString();
+        return log.toString().trim();
     }
 
     // custom activity log comparator
@@ -61,7 +67,15 @@ public class ActivityLog {
 
         @Override
         public int compare(Pair<UserProfile, ActivityLog> a, Pair<UserProfile, ActivityLog> b) {
-            return a.first.getName().compareTo(b.first.getName());
+            int comp = Boolean.compare(a.second.getStatus(), b.second.getStatus());
+            // if they have the same status value then compare by name
+            if (comp == 0) {
+                return a.first.getName().compareTo(b.first.getName());
+            }
+            // if they are different status values then compare by status
+            else {
+                return comp;
+            }
         }
     }
 }

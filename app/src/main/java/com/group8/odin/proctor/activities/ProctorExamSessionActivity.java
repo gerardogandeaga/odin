@@ -5,6 +5,7 @@ import android.util.Log;
 import android.util.Pair;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -31,7 +32,6 @@ import com.group8.odin.proctor.fragments.ProctorExamineeProfileFragment;
 import com.group8.odin.proctor.fragments.ProctorLiveMonitoringFragment;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
 
 /*
@@ -43,17 +43,18 @@ public class ProctorExamSessionActivity extends AppCompatActivity {
     private FirebaseFirestore mFirestore;
     private FragmentManager mFragmentManager;
 
-    // todo: remove test
-    private String EXAM_SESSION_ID = "4oY5scsnOGO99zmn8rNP";
-
     // fragments
     private ProctorExamineeProfileFragment mProctorExamineeProfileFragment;
     private ProctorLiveMonitoringFragment mProctorMonitoringFragment;
+    private ProctorAuthPhotosFragment mProctorAuthPhotoFragment;
     private FragmentTransaction mFragmentTransaction;
 
     // reference to all examinees in the exam session
     private HashMap<String, Pair<UserProfile, ActivityLog>> mExaminees;
-    private int mExpectedNumberOfExaminees, mCurrentExamineeCount;
+
+    // examinee profile context
+    private Pair<UserProfile, ActivityLog> mExamineeProfileContext;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -66,42 +67,29 @@ public class ProctorExamSessionActivity extends AppCompatActivity {
         mFragmentManager = getSupportFragmentManager();
         mProctorExamineeProfileFragment = new ProctorExamineeProfileFragment();
         mProctorMonitoringFragment = new ProctorLiveMonitoringFragment();
+        mProctorAuthPhotoFragment = new ProctorAuthPhotosFragment();
 
         // add fragments to memory
         mFragmentTransaction = mFragmentManager.beginTransaction();
         mFragmentTransaction.add(R.id.container, mProctorExamineeProfileFragment);
         mFragmentTransaction.add(R.id.container, mProctorMonitoringFragment);
+        mFragmentTransaction.add(R.id.container, mProctorAuthPhotoFragment);
         mFragmentTransaction.hide(mProctorExamineeProfileFragment);
         mFragmentTransaction.hide(mProctorMonitoringFragment);
+        mFragmentTransaction.hide(mProctorAuthPhotoFragment);
         mFragmentTransaction.commit();
 
-        showLiveMonitoring();
-
-        // todo: just for testing
-        DocumentReference examSession = mFirestore.collection(OdinFirebase.FirestoreCollections.EXAM_SESSIONS).document(EXAM_SESSION_ID);
-        examSession.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot snapshot) {
-                OdinFirebase.ExamSessionContext = new ExamSession(snapshot);
-                startListeningToActivityLogsCollection();
-                loadAllActivityLogs();
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(getApplicationContext(), "Failed to load exam session", Toast.LENGTH_SHORT).show();
-            }
-        });
+        startListeningToActivityLogsCollection();
+        showAuthPhotos();
     }
 
     // load activity logs
+    // todo: remove unused function
     private void loadAllActivityLogs() {
         CollectionReference activityLogs = mFirestore.collection(OdinFirebase.FirestoreCollections.EXAM_SESSIONS).document(OdinFirebase.ExamSessionContext.getExamId()).collection(OdinFirebase.FirestoreCollections.ACTIVITY_LOGS);
         activityLogs.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                mExpectedNumberOfExaminees = queryDocumentSnapshots.size();
-
                 // create activity log and user profile references
                 for (DocumentSnapshot snapshot : queryDocumentSnapshots.getDocuments()) {
                     // create activity log and load user profile
@@ -116,14 +104,18 @@ public class ProctorExamSessionActivity extends AppCompatActivity {
         });
     }
 
-    // load all examinee profiles once the proctor enter the session
+    // load a user profile, this will implicitly be an examinee profile
     private void loadUserProfile(String id, final ActivityLog activityLog) {
         DocumentReference userProfiles = mFirestore.collection(OdinFirebase.FirestoreCollections.USERS).document(id);
         userProfiles.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot snapshot) {
-                mExaminees.put(snapshot.getId(), Pair.create(new UserProfile(snapshot), activityLog));
+                UserProfile examinee = new UserProfile(snapshot);
+                mExaminees.put(snapshot.getId(), Pair.create(examinee, activityLog));
                 mProctorMonitoringFragment.updateRecyclerView();
+
+                // show auth photo in auth photo list
+                mProctorAuthPhotoFragment.addPhoto(examinee);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -146,15 +138,24 @@ public class ProctorExamSessionActivity extends AppCompatActivity {
 
                 // react to document changes
                 for (DocumentChange dc : snapshots.getDocumentChanges()) {
+                    String documentId = dc.getDocument().getId();
                     switch (dc.getType()) {
                         case ADDED:
-                            // examinee has logged in
-                            loadUserProfile(dc.getDocument().getId(), new ActivityLog(dc.getDocument()));
+                            ActivityLog log = new ActivityLog(dc.getDocument());
+                            if (log.isValid()) {
+                                // examinee has logged in
+                                loadUserProfile(documentId, log);
+                            }
                             break;
 
                         case MODIFIED:
                             // examinee has written activity to log
-                            updateList(mExaminees.get(dc.getDocument().getId()), dc.getDocument());
+                            updateList(mExaminees.get(documentId), dc.getDocument());
+
+                            // live update the profile fragment
+                            if (mExamineeProfileContext != null && documentId.equals(mExamineeProfileContext.first.getUserId())) {
+                                mProctorExamineeProfileFragment.update(dc.getDocument());
+                            }
                             break;
 
                         case REMOVED:
@@ -170,6 +171,9 @@ public class ProctorExamSessionActivity extends AppCompatActivity {
         });
     }
 
+    // get the examinee profile and activity proctor is currently viewing
+    public Pair<UserProfile, ActivityLog> getExamineeProfileContext() { return mExamineeProfileContext;}
+
     private void updateList(Pair<UserProfile, ActivityLog> examinee, DocumentSnapshot snapshot) {
         // update activity log
         examinee.second.update(snapshot);
@@ -177,30 +181,46 @@ public class ProctorExamSessionActivity extends AppCompatActivity {
         mProctorMonitoringFragment.updateRecyclerView();
     }
 
+    // convert hash-map to list
     public ArrayList<Pair<UserProfile, ActivityLog>> getExaminees() {
         ArrayList<Pair<UserProfile, ActivityLog>> examinees = new ArrayList<>(mExaminees.values());
         examinees.sort(new ActivityLog.Comparison());
-        System.out.println(examinees.get(0).first.getName());
         return examinees;
     }
 
+    // display a list of all auth photos
     public void showAuthPhotos() {
         mFragmentTransaction = mFragmentManager.beginTransaction();
-        ProctorAuthPhotosFragment fragment = new ProctorAuthPhotosFragment();
-        mFragmentTransaction.replace(R.id.container, fragment);
+        mFragmentTransaction.hide(mProctorMonitoringFragment);
+        mFragmentTransaction.show(mProctorAuthPhotoFragment);
+        mFragmentTransaction.hide(mProctorExamineeProfileFragment);
         mFragmentTransaction.commit();
     }
 
-    public void showExamineeProfile() {
+    // display the profile of the selected examinee
+    public void showExamineeProfile(Pair<UserProfile, ActivityLog> examinee) {
+        // MUST SET EXAMINEE CONTEXT FIRST
+        mExamineeProfileContext = examinee;
         mFragmentTransaction = mFragmentManager.beginTransaction();
         mFragmentTransaction.hide(mProctorMonitoringFragment);
+        mFragmentTransaction.hide(mProctorAuthPhotoFragment);
         mFragmentTransaction.show(mProctorExamineeProfileFragment);
         mFragmentTransaction.commit();
+
+        getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                showLiveMonitoring();
+            }
+        });
     }
 
+    // display a list of all examinee activities
     public void showLiveMonitoring() {
+        mExamineeProfileContext = null;
         mFragmentTransaction = mFragmentManager.beginTransaction();
         mFragmentTransaction.show(mProctorMonitoringFragment);
+        mFragmentTransaction.hide(mProctorAuthPhotoFragment);
         mFragmentTransaction.hide(mProctorExamineeProfileFragment);
         mFragmentTransaction.commit();
     }
