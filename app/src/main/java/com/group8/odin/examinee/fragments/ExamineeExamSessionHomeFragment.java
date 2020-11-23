@@ -68,7 +68,7 @@ public class ExamineeExamSessionHomeFragment extends Fragment {
         getActivity().setTitle(R.string.exam_progress);
         mTvExamName.setText(OdinFirebase.ExamSessionContext.getTitle());
         mTvExamID.setText(OdinFirebase.ExamSessionContext.getExamId());
-        mTvExamStartTime.setText(Utils.getDateTimeStringFromDate(OdinFirebase.ExamSessionContext.getExamStartTime()));
-        mTvExamEndTime.setText(Utils.getDateTimeStringFromDate(OdinFirebase.ExamSessionContext.getExamEndTime()));
+        mTvExamStartTime.setText("Start Time: " + Utils.getDateTimeStringFromDate(OdinFirebase.ExamSessionContext.getExamStartTime()));
+        mTvExamEndTime.setText("End Time: " + Utils.getDateTimeStringFromDate(OdinFirebase.ExamSessionContext.getExamEndTime()));
     }
 }

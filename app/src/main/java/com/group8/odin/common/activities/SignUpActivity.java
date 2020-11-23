@@ -129,6 +129,11 @@ public class SignUpActivity extends AppCompatActivity {
                     return;
                 }
 
+                if(pass1.length() < 6){
+                    Toast.makeText(SignUpActivity.this, R.string.password_length_error, Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
 //                Pattern pattern = Pattern.compile(PASSWORD_REGEX);
 //                Matcher matcher1 = pattern.matcher(pass1);
 //                if(!(matcher1.matches())){
