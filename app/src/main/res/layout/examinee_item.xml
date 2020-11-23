@@ -7,6 +7,10 @@
     android:orientation="horizontal"
     android:padding="8dp">
 
+    <!-- Created By: Gerardo Gandeaga
+        Updated by: Shreya Jain
+     -->
+
     <ImageView
         android:id="@+id/imgStatus"
         android:layout_width="24dp"
@@ -22,7 +26,7 @@
         android:layout_gravity="center_vertical"
         android:paddingStart="16dp"
         android:paddingEnd="8dp"
-        android:text="Examinee Name"
+        android:text="@string/examinee_name"
         android:textColor="@color/black"
         android:textSize="16dp"
         android:textStyle="bold" />

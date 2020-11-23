@@ -38,6 +38,8 @@ import java.util.HashMap;
  * Created by: Gerardo Gandeaga
  * Created on: 2020-11-06
  * Description: Activity that would display authentication photos to the proctor
+ * Updated by: Shreya Jain
+ * Updated on: 2020-11-22
  */
 public class ProctorExamSessionActivity extends AppCompatActivity {
     private FirebaseFirestore mFirestore;
@@ -99,7 +101,7 @@ public class ProctorExamSessionActivity extends AppCompatActivity {
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Toast.makeText(getApplicationContext(), "Could not get all documents for exam session -> " + OdinFirebase.ExamSessionContext.getExamId(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), R.string.doc_fetch_error + OdinFirebase.ExamSessionContext.getExamId(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -120,7 +122,7 @@ public class ProctorExamSessionActivity extends AppCompatActivity {
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Toast.makeText(getApplicationContext(), "Was not able to get user profile", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), R.string.auth_profile_fail, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -131,7 +133,7 @@ public class ProctorExamSessionActivity extends AppCompatActivity {
             @Override
             public void onEvent(@Nullable QuerySnapshot snapshots, @Nullable FirebaseFirestoreException error) {
                 if (error != null) {
-                    Toast.makeText(getApplicationContext(), "There was an error, see run log...", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), R.string.listening_error, Toast.LENGTH_SHORT).show();
                     Log.e("ProctorExamSessionActivity", error.toString());
                     return;
                 }
@@ -161,7 +163,7 @@ public class ProctorExamSessionActivity extends AppCompatActivity {
                         case REMOVED:
                             // shouldn't be possible
                             try {
-                                throw new Exception("Document was unexpectedly removed. id -> " + dc.getDocument().getId());
+                                throw new Exception(R.string.doc_remove_error + dc.getDocument().getId());
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }

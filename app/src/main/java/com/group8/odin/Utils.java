@@ -12,7 +12,7 @@ import java.util.TimeZone;
 /*
  * Created by: Gerardo Gandeaga
  * Created on: 2020-11-06
- * Description: Utility function to convert actual time to the formatted time expected.
+ * Description: Utility functions
  */
 public class Utils {
     public static Date getDate(long time) {

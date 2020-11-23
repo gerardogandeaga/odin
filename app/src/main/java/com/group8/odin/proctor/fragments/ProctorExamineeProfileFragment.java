@@ -52,6 +52,8 @@ import butterknife.ButterKnife;
 * Updated by: Gerardo Gandeaga
 * Created On: November 13, 2020
 * Description: Examinee summary view for proctor
+* Updated by: Shreya Jain
+* Updated on: 2020-11-22
  */
 
 public class ProctorExamineeProfileFragment extends Fragment {
@@ -150,7 +152,7 @@ public class ProctorExamineeProfileFragment extends Fragment {
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(getActivity(), "Was not able to get examinee profile", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), R.string.auth_profile_fail, Toast.LENGTH_SHORT).show();
                 }
             });
         }

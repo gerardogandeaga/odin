@@ -47,6 +47,8 @@ import butterknife.ButterKnife;
  * Updated on: 2020-11-07
  * Description: error handling, real time syncing of user profile and its associated exam sessions
  * Bug: The date set is one month behind. Eg: November 30, 2020 would be equivalent to 2020-10-30. -> Fixed On: 2020-11-07 by Shreya Jain
+ * Updated by: Shreya Jain
+ * Updated on: 2020-11-22
  */
 public class ProctorExamCreationFragment extends Fragment {
     // Bind views
@@ -93,7 +95,7 @@ public class ProctorExamCreationFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
 
-        getActivity().setTitle("Exam Session Creation");
+        getActivity().setTitle(R.string.exam_creation);
 
         // Handle on back button pressed in the fragment
         getActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
@@ -238,7 +240,7 @@ public class ProctorExamCreationFragment extends Fragment {
                             .addOnFailureListener(new OnFailureListener() {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
-                                    Toast.makeText(getActivity(), "Exam creation failed! Please try again.", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getActivity(), R.string.exam_create_error, Toast.LENGTH_SHORT).show();
                                 }
                             });
 
@@ -262,33 +264,33 @@ public class ProctorExamCreationFragment extends Fragment {
     // Checks if the exam creation fields are valid
     private boolean checkFieldsAreValid() {
         if (mEtExamTitle.getText().toString().trim().isEmpty()) {
-            Toast.makeText(getActivity(), "Need an Exam Title!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), R.string.exam_title_error, Toast.LENGTH_SHORT).show();
             return false;
         }
 
         if (!mExamDateSet) {
-            Toast.makeText(getActivity(), "Exam date not set!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), R.string.exam_date_error, Toast.LENGTH_SHORT).show();
             return false;
         }
         if (!mExamTimeSet) {
-            Toast.makeText(getActivity(), "Exam time not set!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), R.string.exam_time_error, Toast.LENGTH_SHORT).show();
             return false;
         }
         if (!mAuthTimeSet) {
-            Toast.makeText(getActivity(), "Auth time not set!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), R.string.auth_time_error, Toast.LENGTH_SHORT).show();
             return false;
         }
 
         if (!validStartEndTimes(mStartExamHour, mStartExamMinute, mEndExamHour, mEndExamMinute)) {
-            Toast.makeText(getActivity(), "Invalid exam times!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), R.string.time_error, Toast.LENGTH_SHORT).show();
             return false;
         }
         if (!validStartEndTimes(mStartAuthHour, mStartAuthMinute, mEndAuthHour, mEndAuthMinute)) {
-            Toast.makeText(getActivity(), "Invalid auth times!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), R.string.time_error, Toast.LENGTH_SHORT).show();
             return false;
         }
         if (!validExamAndAuthTimes()) {
-            Toast.makeText(getActivity(), "Invalid exam and auth times!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), R.string.time_logic_error, Toast.LENGTH_SHORT).show();
             return false;
         }
 
@@ -319,7 +321,7 @@ public class ProctorExamCreationFragment extends Fragment {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(getActivity(), "Something went wrong...Please refresh.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), R.string.general_error, Toast.LENGTH_SHORT).show();
                     }
                 });
     }

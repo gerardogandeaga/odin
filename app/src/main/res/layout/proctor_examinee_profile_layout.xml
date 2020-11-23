@@ -2,6 +2,8 @@
 <!--
 Created By: Shreya Jain
 Created On: November 13, 2020
+Updated by: Shreya Jain
+Updated on: 2020-11-21
 -->
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -26,7 +28,7 @@ Created On: November 13, 2020
             android:id="@+id/tvAuthTimeStamp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Submitted At: time stamp"
+            android:text="@string/submission_timestamp"
             android:textColor="@color/black"
             android:textStyle="bold"
             android:layout_marginEnd="16dp"
@@ -52,7 +54,7 @@ Created On: November 13, 2020
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="4dp"
-                    android:text="Information"
+                    android:text="@string/info"
                     android:textColor="@color/black"
                     android:textSize="16sp"
                     android:textStyle="bold" />
@@ -61,14 +63,14 @@ Created On: November 13, 2020
                     android:id="@+id/tvEmail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Email: sampleexaminee@gmail.com"
+                    android:text="@string/email_sample"
                     android:textColor="@color/black" />
 
                 <TextView
                     android:id="@+id/tvId"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="ID: 1234XCvbn4567B"
+                    android:text="@string/id_sample"
                     android:textColor="@color/black" />
 
             </LinearLayout>
@@ -94,7 +96,7 @@ Created On: November 13, 2020
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="4dp"
-                    android:text="Activity Log"
+                    android:text="@string/activity_log"
                     android:textColor="@color/black"
                     android:textSize="16sp"
                     android:textStyle="bold" />
@@ -103,7 +105,7 @@ Created On: November 13, 2020
                     android:id="@+id/tvActivityLog"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="(hh:mm:ss) Examinee logged in\n(hh:mm:ss) Examinee sent app to background"
+                    android:text="@string/examinee_activity"
                     android:textColor="@color/black" />
 
             </LinearLayout>

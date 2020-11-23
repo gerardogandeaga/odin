@@ -43,7 +43,7 @@ import java.util.regex.Pattern;
     Updated on: 2020-11-07
     Description: Added Validation Code, Design Modifications and back button
     Updated by: Shreya Jain
-    Updated on: 2020-11-20
+    Updated on: 2020-11-20 and 2020-11-21
 */
 
 public class SignUpActivity extends AppCompatActivity {
@@ -77,7 +77,7 @@ public class SignUpActivity extends AppCompatActivity {
         setContentView(R.layout.common_signup_layout);
         ButterKnife.bind(this);
 
-        setTitle("Sign Up");
+        setTitle(R.string.signup);
 
         mFirestore = FirebaseFirestore.getInstance();
 
@@ -90,49 +90,49 @@ public class SignUpActivity extends AppCompatActivity {
                 //Checks for valid data
                 first = mEtFirstName.getText().toString().trim();
                 if(first.isEmpty()){
-                    Toast.makeText(SignUpActivity.this, "First name cannot be empty. Please enter your first name.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SignUpActivity.this, R.string.first_name_error, Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 last = mEtLastName.getText().toString().trim();
                 if(last.isEmpty()){
-                    Toast.makeText(SignUpActivity.this, "Last name cannot be empty. Please enter your last name.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SignUpActivity.this, R.string.last_name_error, Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 email = mEtEmail.getText().toString().trim();
                 if(email.isEmpty()){
-                    Toast.makeText(SignUpActivity.this, "Email address cannot be empty. Please enter your email address.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SignUpActivity.this, R.string.email_error, Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 Matcher matcher = EMAIL_PATTERN.matcher(email);
                 if(!(matcher.matches())){
-                    Toast.makeText(SignUpActivity.this, "Please enter a valid email address.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SignUpActivity.this, R.string.email_error_valid, Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 pass1 = mEtPassword.getText().toString().trim();
                 if(pass1.isEmpty()){
-                    Toast.makeText(SignUpActivity.this, "Password cannot be empty. Please enter your Password.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SignUpActivity.this, R.string.password_error, Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 pass2 = mEtConfirmPassword.getText().toString().trim();
                 if(pass2.isEmpty()){
-                    Toast.makeText(SignUpActivity.this, "Kindly confirm your password.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SignUpActivity.this, R.string.confirm_pass_error, Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 if(!(pass2.equals(pass1))){
-                    Toast.makeText(SignUpActivity.this, "Passwords do not match. Please try again.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SignUpActivity.this, R.string.confirm_pass_error_valid, Toast.LENGTH_SHORT).show();
                     return;
                 }
 
 //                Pattern pattern = Pattern.compile(PASSWORD_REGEX);
 //                Matcher matcher1 = pattern.matcher(pass1);
 //                if(!(matcher1.matches())){
-//                    Toast.makeText(SignUpActivity.this, "Invalid Password. Please try again.", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(SignUpActivity.this, R.string.password_error_valid, Toast.LENGTH_SHORT).show();
 //                    return;
 //                }
 
@@ -158,7 +158,7 @@ public class SignUpActivity extends AppCompatActivity {
                                                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                                                     @Override
                                                     public void onComplete(@NonNull Task<Void> task) {
-                                                        Toast.makeText(SignUpActivity.this, "User profile created!", Toast.LENGTH_SHORT).show();
+                                                        Toast.makeText(SignUpActivity.this, R.string.create_success, Toast.LENGTH_SHORT).show();
 
                                                         Intent backToLogInScreen = new Intent(SignUpActivity.this, LoginActivity.class);
                                                         startActivity(backToLogInScreen);
@@ -167,12 +167,12 @@ public class SignUpActivity extends AppCompatActivity {
                                                 .addOnFailureListener(new OnFailureListener() {
                                                     @Override
                                                     public void onFailure(@NonNull Exception e) {
-                                                        Toast.makeText(SignUpActivity.this, "Could not create a user profile", Toast.LENGTH_SHORT).show();
+                                                        Toast.makeText(SignUpActivity.this, R.string.create_fail, Toast.LENGTH_SHORT).show();
                                                     }
                                                 });
                                     } else {
                                         //If sign up fails, display a message to the user.
-                                        Toast.makeText(SignUpActivity.this, "Account Creation failed. Please Retry.",
+                                        Toast.makeText(SignUpActivity.this, R.string.acc_create_fail,
                                                 Toast.LENGTH_SHORT).show();
                                     }
                                 }

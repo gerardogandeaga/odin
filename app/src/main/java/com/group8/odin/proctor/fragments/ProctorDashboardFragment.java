@@ -44,6 +44,8 @@ import butterknife.ButterKnife;
  * Created by: Gerardo Gandeaga
  * Created on: 2020-11-05
  * Description: Fragment to handle the proctor's dashboard that displays all the exams created by them
+ * Updated by: Shreya Jain
+ * Updated on: 2020-11-22
  */
 public class ProctorDashboardFragment extends Fragment {
     @BindView(R2.id.recycler_view)
@@ -71,7 +73,7 @@ public class ProctorDashboardFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
 
-        getActivity().setTitle("Proctor Dashboard");
+        getActivity().setTitle(R.string.dashboard);
 
         // Setup recycler view with fast adapter
         mItemAdapter = new ItemAdapter();
@@ -98,13 +100,13 @@ public class ProctorDashboardFragment extends Fragment {
             public boolean onLongClick(View v, IAdapter<RegisteredExamItem> adapter, RegisteredExamItem item, int position) {
                 ClipboardManager clipboard = getActivity().getSystemService(ClipboardManager.class);
                 clipboard.setPrimaryClip(ClipData.newPlainText("examid", item.getExamSession().getExamId()));
-                Toast.makeText(getActivity(), "Exam Id Copied to Clipboard.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), R.string.copy_message, Toast.LENGTH_SHORT).show();
                 return true;
             }
         });
 
         // Setup floating action button
-        mFabCreateExam.setText("Create an Exam");
+        mFabCreateExam.setText(R.string.create_exam);
         mFabCreateExam.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -7,6 +7,8 @@
     Updated by: Shreya Jain
     Updated On: 2020-11-07
     Description: Fixed design bugs
+    Updated by: Shreya Jain
+    Updated on: 2020-11-21
     -->
 
 <androidx.constraintlayout.widget.ConstraintLayout
@@ -21,7 +23,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="72dp"
-        android:text="Enter Exam Details"
+        android:text="@string/exam_details"
         android:textColor="#000000"
         android:textSize="26sp"
         android:textStyle="bold"
@@ -39,7 +41,7 @@
         android:layout_marginTop="200dp"
         android:layout_marginEnd="16dp"
         android:ems="10"
-        android:hint="Exam Title"
+        android:hint="@string/exam_title"
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
@@ -54,7 +56,7 @@
         android:layout_marginTop="32dp"
         android:layout_marginEnd="16dp"
         android:ems="10"
-        android:hint="Exam Date"
+        android:hint="@string/exam_date"
         android:inputType="textPersonName"
         app:layout_constraintEnd_toStartOf="@+id/btnExamDate"
         app:layout_constraintStart_toStartOf="parent"
@@ -65,7 +67,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
-        android:text="Exam Date"
+        android:text="@string/exam_date"
         app:layout_constraintBottom_toBottomOf="@+id/etExamDate"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/etExamDate" />
@@ -78,7 +80,7 @@
         android:layout_marginTop="32dp"
         android:layout_marginEnd="16dp"
         android:ems="10"
-        android:hint="Exam Time (From - To)"
+        android:hint="@string/exam_time_hint"
         android:inputType="textPersonName"
         app:layout_constraintEnd_toStartOf="@+id/btnExamTime"
         app:layout_constraintHorizontal_bias="0.0"
@@ -90,7 +92,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
-        android:text="Exam Time"
+        android:text="@string/exam_time"
         app:layout_constraintBottom_toBottomOf="@+id/etExamTime"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/etExamTime" />
@@ -103,7 +105,7 @@
         android:layout_marginTop="32dp"
         android:layout_marginEnd="16dp"
         android:ems="10"
-        android:hint="Auth Time (From - To)"
+        android:hint="@string/auth_time_hint"
         android:inputType="textPersonName"
         app:layout_constraintEnd_toStartOf="@+id/btnAuthTime"
         app:layout_constraintHorizontal_bias="0.0"
@@ -115,7 +117,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
-        android:text="Auth Time"
+        android:text="@string/auth_time"
         app:layout_constraintBottom_toBottomOf="@+id/etAuthTime"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/etAuthTime"
@@ -128,7 +130,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="57dp"
         android:layout_marginEnd="16dp"
-        android:text="Create Exam"
+        android:text="@string/create"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"

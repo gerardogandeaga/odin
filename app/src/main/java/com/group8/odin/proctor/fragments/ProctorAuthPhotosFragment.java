@@ -81,10 +81,10 @@ public class ProctorAuthPhotosFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
 
-        getActivity().setTitle("Auth Photo Submissions");
+        getActivity().setTitle(R.string.photo_submission);
 
         // Hide action button
-        mFabAction.setText("Live Proctoring");
+        mFabAction.setText(R.string.live_proctor);
         mFabAction.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -118,32 +118,4 @@ public class ProctorAuthPhotosFragment extends Fragment {
         });
         super.onHiddenChanged(hidden);
     }
-
-    // Retrieves and displays photos from the storage bucket in firebase storage
-//    private void loadPhotosFromStorage() {
-//        mReference.listAll()
-//                .addOnSuccessListener(new OnSuccessListener<ListResult>() {
-//                    @Override
-//                    public void onSuccess(ListResult listResult) {
-//                        loadAllInRecycler(listResult);
-//                        Toast.makeText(getActivity(), "Listed photos", Toast.LENGTH_SHORT).show();
-//                    }
-//                })
-//                .addOnFailureListener(new OnFailureListener() {
-//                    @Override
-//                    public void onFailure(@NonNull Exception e) {
-//                        Toast.makeText(getActivity(), "Could not load photos...", Toast.LENGTH_SHORT).show();
-//                    }
-//                });
-//    }
-//
-//    private void loadAllInRecycler(ListResult listResult) {
-//        // Recycler list items
-//        ArrayList<AuthPhotoItem> items = new ArrayList<>();
-//        for (StorageReference ref : listResult.getItems()) {
-//            items.add(new AuthPhotoItem().setPhotoReference(ref).setName());
-//        }
-//
-//        mItemAdapter.add(items);
-//    }
 }

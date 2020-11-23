@@ -47,6 +47,7 @@ import java.util.Map;
  * Updated by: Raj Patel
  * Updated by: Marshall Tang
  * Description: This activity will handle the fragments of the application throughout the exam session.
+ * Updated by: Shreya Jain
  */
 public class ExamineeExamSessionActivity extends AppCompatActivity {
     private FirebaseFirestore mFirestore;
@@ -102,7 +103,7 @@ public class ExamineeExamSessionActivity extends AppCompatActivity {
     protected void onResume() {
         if (InExam) {
             if (mFirestore == null) mFirestore = FirebaseFirestore.getInstance();
-            System.out.println("Activity has resumed");
+            System.out.println(R.string.resume);
             updateActivityLog();
         }
         super.onResume();
@@ -112,7 +113,7 @@ public class ExamineeExamSessionActivity extends AppCompatActivity {
     protected void onPause() {
         if (InExam) {
             if (mFirestore == null) mFirestore = FirebaseFirestore.getInstance();
-            System.out.println("Activity has paused");
+            System.out.println(R.string.pause);
             updateActivityLog();
         }
         super.onPause();

@@ -6,6 +6,10 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <!-- Created by: Gerardo Gandeaga
+        Updated by: Shreya Jain
+    -->
+
     <ProgressBar
         android:id="@+id/pbProgress"
         style="?android:attr/progressBarStyleHorizontal"
@@ -36,7 +40,7 @@
             android:layout_height="match_parent"
             android:layout_marginEnd="8dp"
             android:layout_weight="1"
-            android:text="Camera" />
+            android:text="@string/camera" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnSubmit"
@@ -44,7 +48,7 @@
             android:layout_height="match_parent"
             android:layout_marginStart="8dp"
             android:layout_weight="1"
-            android:text="Submit" />
+            android:text="@string/submit" />
 
     </LinearLayout>
 

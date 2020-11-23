@@ -38,6 +38,8 @@ import butterknife.ButterKnife;
  * Updated by: Shreya Jain
  * Updated on: 2020-11-07
  * Description: Real time syncing of examinee dashboard and user profile
+ * Updated by: Shreya Jain
+ * Updated on: 2020-11-22
  */
 public class ExamineeExamRegistrationFragment extends Fragment {
     private Context mContext;
@@ -68,7 +70,7 @@ public class ExamineeExamRegistrationFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
 
-        getActivity().setTitle("Exam Registration");
+        getActivity().setTitle(R.string.exam_register);
 
         mFirestore = FirebaseFirestore.getInstance();
 
@@ -76,7 +78,7 @@ public class ExamineeExamRegistrationFragment extends Fragment {
         getActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                // return to the exminee dashboard
+                // return to the examinee's dashboard
                 ((ExamineeHomeActivity)getActivity()).showExamineeDashboard();
             }
         });
@@ -99,11 +101,19 @@ public class ExamineeExamRegistrationFragment extends Fragment {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
-                    // Register exam session to user profile
-                    registerExamToUserProfile(task.getResult());
+                    DocumentSnapshot doc = task.getResult();
+                    if(doc.exists()){
+                        // Register exam session to user profile
+                        registerExamToUserProfile(task.getResult());
+                    }
+                    else {
+                        Toast.makeText(getContext(), R.string.exam_not_found, Toast.LENGTH_SHORT).show();
+                        ((ExamineeHomeActivity)getActivity()).showExamineeDashboard();
+                    }
                 }
                 else {
-                    Toast.makeText(mContext, "Could not get exam session", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), R.string.get_exam_error, Toast.LENGTH_LONG).show();
+                    ((ExamineeHomeActivity)getActivity()).showExamineeDashboard();
                 }
             }
         });
@@ -116,7 +126,7 @@ public class ExamineeExamRegistrationFragment extends Fragment {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Toast.makeText(getActivity(), "Registered for exam!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), R.string.register_success, Toast.LENGTH_SHORT).show();
 
                         //Syncing user profile again to reflect updated changes
                         OdinFirebase.UserProfileContext.getUserProfileReference()
@@ -132,7 +142,7 @@ public class ExamineeExamRegistrationFragment extends Fragment {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(getActivity(), "Something went wrong...", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), R.string.general_error, Toast.LENGTH_SHORT).show();
                     }
                 });
     }

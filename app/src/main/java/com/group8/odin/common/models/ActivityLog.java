@@ -15,7 +15,7 @@ import java.util.Comparator;
 /*
  * Created by: Gerardo Gandeaga
  * Created on: 17/11/20
- * Description:
+ * Description: Object representation of activity logs
  */
 public class ActivityLog {
     private ArrayList<Timestamp> activity;

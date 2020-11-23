@@ -50,6 +50,7 @@ import butterknife.ButterKnife;
  * Updated by: Shreya Jain
  * Updated on: 2020-11-08
  * Description: Added permissions check
+ * Updated by: Shreya Jain
  */
 public class ExamineeAuthPhotoSubmissionFragment extends Fragment {
     @BindView(R2.id.imgResultPhoto) ImageView mImgAuthPhotoResult;
@@ -132,7 +133,7 @@ public class ExamineeAuthPhotoSubmissionFragment extends Fragment {
                     boolean readExternalFile = grantResults[2] == PackageManager.PERMISSION_GRANTED;
                     if(cameraPermission && writeExternalFile && readExternalFile)
                     {
-                        Toast.makeText(getActivity(), "Permission Granted!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), R.string.permissions_success, Toast.LENGTH_SHORT).show();
                         permissionsStatus = 1;
                     }
                     else
@@ -162,7 +163,7 @@ public class ExamineeAuthPhotoSubmissionFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
 
-        getActivity().setTitle("Authentication Photo Submission");
+        getActivity().setTitle(R.string.auth_photo_submission);
 
         // Camera activity
         mBtnCamera.setOnClickListener(new View.OnClickListener() {
@@ -171,7 +172,7 @@ public class ExamineeAuthPhotoSubmissionFragment extends Fragment {
                 if (permissionsStatus == 1) {
                     invokeCameraActivity();
                 } else {
-                    Toast.makeText(getActivity(), "Permission Denied. Please grant permissions and try again!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), R.string.permissions_denied, Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -188,7 +189,7 @@ public class ExamineeAuthPhotoSubmissionFragment extends Fragment {
                         .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                             @Override
                             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                Toast.makeText(getActivity(), "Photo Uploaded! Entering Exam Session...", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getActivity(), R.string.upload_success, Toast.LENGTH_SHORT).show();
                                 mPbProgress.setVisibility(View.VISIBLE);
                                 ((ExamineeExamSessionActivity) getActivity()).showExamSessionHome();
                             }
@@ -225,7 +226,7 @@ public class ExamineeAuthPhotoSubmissionFragment extends Fragment {
         }
         catch (IOException e) {
             e.printStackTrace();
-            Toast.makeText(getActivity(), "Camera could not start...", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), R.string.camera_error, Toast.LENGTH_SHORT).show();
         }
 
         if (tmpPhotoFile != null) {

@@ -5,6 +5,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical">
 
+    <!-- Created by: Gerardo Gandeaga
+        Updated by: Shreya Jain
+    -->
     <ImageView
         android:id="@+id/imgAuthPhoto"
         android:layout_width="match_parent"
@@ -19,6 +22,6 @@
         android:textStyle="bold"
         android:textColor="@color/black"
         android:padding="4dp"
-        android:text="Examinee Name"/>
+        android:text="@string/examinee_name"/>
 
 </LinearLayout>

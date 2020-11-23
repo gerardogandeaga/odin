@@ -7,6 +7,8 @@
     Updated by: Shreya Jain
     Updated on: 2020-11-07
     Description: Added Back Button
+    Updated by: Shreya Jain
+    Updated on: 2020-11-22
     -->
 
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -36,7 +38,7 @@
             android:layout_marginTop="16dp"
             android:paddingLeft="5dp"
             android:paddingRight="5dp"
-            android:text="First name"
+            android:text="@string/first_name"
             android:textColor="@android:color/black"
             android:textSize="6pt" />
 
@@ -44,7 +46,7 @@
             android:id="@+id/editTextFirstName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Type your first name"
+            android:hint="@string/first_name_hint"
             android:inputType="textPersonName"
             android:textColor="@color/colorTextField"
             android:textSize="6pt"
@@ -57,7 +59,7 @@
             android:layout_marginTop="16dp"
             android:paddingLeft="5dp"
             android:paddingRight="5dp"
-            android:text="Last name"
+            android:text="@string/last_name"
             android:textColor="@android:color/black"
             android:textSize="6pt" />
 
@@ -65,7 +67,7 @@
             android:id="@+id/editTextLastName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Type your last name"
+            android:hint="@string/last_name_hint"
             android:inputType="textPersonName"
             android:textColor="@color/colorTextField"
             android:textSize="6pt"
@@ -78,7 +80,7 @@
             android:layout_marginTop="16dp"
             android:paddingLeft="5dp"
             android:paddingRight="5dp"
-            android:text="Email"
+            android:text="@string/email"
             android:textColor="@android:color/black"
             android:textSize="6pt" />
 
@@ -86,7 +88,7 @@
             android:id="@+id/editTextEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Type your email address"
+            android:hint="@string/email_hint"
             android:inputType="textPersonName"
             android:textColor="@color/colorTextField"
             android:textSize="6pt"
@@ -99,7 +101,7 @@
             android:layout_marginTop="16dp"
             android:paddingLeft="5dp"
             android:paddingRight="5dp"
-            android:text="Password (8 or more characters, including at least 1 capital letter, 1 numeric character, 1 lowercase character, 1 special character from @$%#)"
+            android:text="@string/password_detail"
             android:textColor="@android:color/black"
             android:textSize="6pt" />
 
@@ -107,7 +109,7 @@
             android:id="@+id/editPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Type your password"
+            android:hint="@string/password_hint"
             android:inputType="textVisiblePassword"
             android:textColor="@color/colorTextField"
             android:textSize="6pt"
@@ -120,7 +122,7 @@
             android:layout_marginTop="16dp"
             android:paddingLeft="5dp"
             android:paddingRight="5dp"
-            android:text="Confirm Password"
+            android:text="@string/confirm_pass"
             android:textColor="@android:color/black"
             android:textSize="6pt" />
 
@@ -128,7 +130,7 @@
             android:id="@+id/editConfirmPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Confirm your password"
+            android:hint="@string/confirm_pass_hint"
             android:inputType="textVisiblePassword"
             android:textColor="@color/colorTextField"
             android:textSize="6pt"
@@ -144,7 +146,7 @@
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
         android:backgroundTint="@color/colorPrimary"
-        android:text="Create"
+        android:text="@string/create"
         android:textAllCaps="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -155,7 +157,7 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Create your Account"
+        android:text="@string/create_acc"
         android:textColor="#000000"
         android:textSize="24sp"
         android:textStyle="bold"
@@ -170,7 +172,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="1dp"
-        android:text="Are you a proctor?"
+        android:text="@string/role_ques"
         app:layout_constraintBottom_toTopOf="@+id/btnSubmitAccountCreation"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"

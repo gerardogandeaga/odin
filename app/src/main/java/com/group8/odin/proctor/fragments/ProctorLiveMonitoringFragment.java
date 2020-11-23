@@ -45,6 +45,8 @@ import io.grpc.okhttp.internal.framed.Header;
  * Updated by: Gerardo Gandeaga
  * Created on: 17/11/20
  * Description: Displays a list of examinees
+ * Updated by: Shreya Jain
+ * Updated on: 2020-11-22
  */
 public class ProctorLiveMonitoringFragment extends Fragment {
     @BindView(R.id.fabAction) ExtendedFloatingActionButton mFab;
@@ -148,13 +150,14 @@ public class ProctorLiveMonitoringFragment extends Fragment {
     @Override
     public void onHiddenChanged(boolean hidden) {
         if (!hidden) {
-            getActivity().setTitle("Live Monitoring");
+            getActivity().setTitle(R.string.live_monitor);
             mActivity.getSupportActionBar().setHomeButtonEnabled(false);
             mActivity.getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
             getActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
                 @Override
                 public void handleOnBackPressed() {
+                    getActivity().setTitle(R.string.photo_submission);
                     ((ProctorExamSessionActivity) getActivity()).showAuthPhotos();
                 }
             });

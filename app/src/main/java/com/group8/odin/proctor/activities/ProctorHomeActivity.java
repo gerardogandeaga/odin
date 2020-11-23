@@ -15,6 +15,8 @@ import com.group8.odin.proctor.fragments.ProctorExamCreationFragment;
  * Created by: Gerardo Gandeaga
  * Created on: 2020-11-01
  * Description: Activity to show the proctor's dashboard
+ * Updated on: Shreya Jain
+ * Updated by: 2020-11-21
  */
 public class ProctorHomeActivity extends AppCompatActivity {
     private FragmentManager mFragmentManager;
@@ -24,7 +26,7 @@ public class ProctorHomeActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_container_view);
-        setTitle("Proctor Dashboard");
+        setTitle(R.string.dashboard);
 
         mFragmentManager = getSupportFragmentManager();
         showProctorDashboard();
