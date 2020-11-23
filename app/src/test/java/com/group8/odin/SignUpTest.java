@@ -26,8 +26,8 @@ import java.util.Map;
 import static org.junit.Assert.assertEquals;
 
 /*
-* Created By: Shreya Jain
-* Created On: 2020-11-20
+ * Created By: Shreya Jain
+ * Created On: 2020-11-20
  */
 
 public class SignUpTest {

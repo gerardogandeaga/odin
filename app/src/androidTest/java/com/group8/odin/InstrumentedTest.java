@@ -1,0 +1,98 @@
+package com.group8.odin;
+
+import android.content.Context;
+
+import androidx.annotation.NonNull;
+import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import org.junit.Assert;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.junit.Assert.*;
+
+/**
+ * Instrumented test, which will execute on an Android device.
+ *
+ * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
+ */
+@RunWith(AndroidJUnit4.class)
+public class InstrumentedTest {
+    private int result = 0;
+    private FirebaseAuth testAuth;
+    private FirebaseFirestore testStore;
+
+    //Created by: Matthew
+    //Created on: 2020-11-22
+    //Description: Check if the user profile data is being written to firebase correctly
+    @Test
+    public void user_profile_data_correctness() {
+        //expected profile data
+        final String expectedFullName = "Matthew Tong";
+        final String expectedEmailAddress = "testexaminee@sfu.ca";
+        boolean expectedRole = false;
+        //create a hashmap from the expected data
+        final Map<String, Object> expectedData = new HashMap<>();
+        expectedData.put(OdinFirebase.FirestoreUserProfile.NAME, expectedFullName);
+        expectedData.put(OdinFirebase.FirestoreUserProfile.EMAIL, expectedEmailAddress);
+        expectedData.put(OdinFirebase.FirestoreUserProfile.EXAM_IDS, new ArrayList<String>());
+        expectedData.put(OdinFirebase.FirestoreUserProfile.ROLE, false);
+        //firebase variables
+        testStore = FirebaseFirestore.getInstance();
+        testAuth = FirebaseAuth.getInstance();
+        //create a user with the expected profile data
+        testAuth.createUserWithEmailAndPassword(expectedEmailAddress, "Cookie@123")
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        FirebaseUser user = testAuth.getCurrentUser();
+
+                        // Write data to user profile
+                        DocumentReference profileRef = testStore.collection(OdinFirebase.FirestoreCollections.USERS).document(user.getUid());
+                        profileRef.set(expectedData)
+                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                    }
+                                });
+                    }
+                });
+
+        //get the user profile data from firebase and put it into a hashmap
+        DocumentReference profileRef = testStore.collection(OdinFirebase.FirestoreCollections.USERS).document(testAuth.getCurrentUser().getUid());
+        profileRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                DocumentSnapshot profileDoc = task.getResult();
+                Map<String, Object> resultData = profileDoc.getData();
+
+                //check if the user profile data on firebase matches with the expected data
+                assertEquals(expectedData, resultData);
+            }
+        });
+    }
+
+
+    @Test
+    public void exam_information_correctness(){
+
+    }
+}
+
