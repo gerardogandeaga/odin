@@ -78,8 +78,16 @@ public class ProctorLiveMonitoringFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
 
-        // hid fab button
-        mFab.setVisibility(View.GONE);
+        //set up the button
+        mFab.setText(R.string.photo_submission);
+        mFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Load and go to photo submissions fragment
+                getActivity().setTitle(R.string.photo_submission);
+                ((ProctorExamSessionActivity) getActivity()).showAuthPhotos();
+            }
+        });
 
 
         // Setup recycler view with fastadapter
