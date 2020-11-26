@@ -56,12 +56,12 @@ public class HeaderAdapter<Item extends IItem> extends RecyclerView.Adapter impl
             ExamineeItem examineeItem = (ExamineeItem)item;
             // if active
             if (examineeItem.getExaminee().second.getStatus()) {
-                textView.setText("Active");
+                textView.setText(R.string.active);
                 holder.itemView.setBackgroundColor(ContextCompat.getColor(textView.getContext(), R.color.online));
             }
             // if inactive
             else {
-                textView.setText("Inactive");
+                textView.setText(R.string.inactive);
                 holder.itemView.setBackgroundColor(ContextCompat.getColor(textView.getContext(), R.color.offline));
             }
         }

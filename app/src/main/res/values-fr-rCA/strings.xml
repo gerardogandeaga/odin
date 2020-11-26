@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    * Created by: Shreya Jain
+    * Created on: 2020-11-25
+    * Description: Language support for French (Canada)
+    -->
+
+<resources>
+    <string name="app_name">Odin</string>
+    <string name="auth_success">Succès d’authentification. Bienvenue.</string>
+    <string name="auth_fail">Informations d’identification non valides. S’il vous plaît essayer à nouveau!</string>
+    <string name="auth_profile_fail">Profil fetch échoué …</string>
+    <string name="first_name_error">Le prénom ne peut pas être vide. Veuillez entrer votre prénom.</string>
+    <string name="last_name_error">Le nom de famille ne peut pas être vide. Veuillez entrer votre nom de famille.</string>
+    <string name="email_error">L’adresse e-mail ne peut pas être vide. Veuillez entrer votre adresse e-mail.</string>
+    <string name="email_error_valid">Veuillez entrer une adresse e-mail valide.</string>
+    <string name="password_error">Le mot de passe ne peut pas être vide. Veuillez saisir votre mot de passe.</string>
+    <string name="password_error_valid">Mot de passe invalide. S’ll vous plaît, réessaiez.</string>
+    <string name="confirm_pass_error">Veuillez confirmer votre mot de passe.</string>
+    <string name="confirm_pass_error_valid">Les mots de passe ne correspondent pas. S’ll vous plaît, réessaiez.</string>
+    <string name="password_length_error">Le mot de passe doit être d’au moins 6 caractères.</string>
+    <string name="create_success">Profil de l’utilisateur créé!</string>
+    <string name="create_fail">Ne pouvait pas créer un profil d’utilisateur</string>
+    <string name="acc_create_fail">Création de compte a échoué. S’ll vous plaît, réessayez.</string>
+    <string name="doc_fetch_error">Je n’ai pas pu obtenir tous les documents pour la session d’examen -></string>
+    <string name="listening_error">Il y a eu une erreur. Voir journal d’exécuter…</string>
+    <string name="doc_remove_error">"Le document a été retiré de façon inattendue. id -> "</string>
+    <string name="copy_message">ID d’examen copié sur presse-papiers</string>
+    <string name="exam_create_error">La création de l’examen a échoué! S’ll vous plaît, réessaiez.</string>
+    <string name="exam_title_error">Le titre de l’examen ne peut pas être vide. S’ll vous plaît, réessaiez.</string>
+    <string name="exam_date_error">Date d’examen non fixée!</string>
+    <string name="exam_time_error">L’heure de l’examen n’est pas réglée!</string>
+    <string name="auth_time_error">Temps d’authentification non défini!</string>
+    <string name="time_error">Période de temps invalide! Veuillez vérifier que l’heure de fin est après l’heure de début.</string>
+    <string name="time_logic_error">Temps d’examen et d’authentification invalides! Le temps d’authentification ne peut pas être en dehors de la session d’examen</string>
+    <string name="general_error">Quelque chose s’est mal passé… S’ll vous plaît, rafraîchissez-vous.</string>
+    <string name="permissions_success">Autorisations accordées!</string>
+    <string name="permissions_denied">Permission refusée. S’il vous plaît accorder des autorisations et essayer à nouveau!</string>
+    <string name="upload_success">Photo téléchargée! Entrée à la session d’examen…</string>
+    <string name="camera_error">Caméra ne pouvait pas démarrer …</string>
+    <string name="register_exam">Enregistrer l’examen</string>
+    <string name="create_exam">Créer l’examen</string>
+    <string name="live_proctor">Proctoring en direct</string>
+    <string name="fab_action">Effectuer l’action</string>
+    <string name="submission_timestamp">Soumis à: horodatage</string>
+    <string name="activity_log">Journal d’activité</string>
+    <string name="examinee_activity">(hh:mm:ss) Examiner connecté (hh:mm:ss) Examiner l’application envoyée en arrière-plan</string>
+    <string name="email_sample">Email: sampleexaminee@gmail.com</string>
+    <string name="id_sample">ID: 1234XCvbn4567B</string>
+    <string name="inactive">Inactif</string>
+    <string name="active">Actif</string>
+    <string name="examinee_name">Examiner le nom</string>
+    <string name="auth_time">Temps d’authentification</string>
+    <string name="exam_date">Date de l’examen</string>
+    <string name="login">Connectez-vous</string>
+    <string name="signup">S\'enregistrer</string>
+    <string name="dashboard">Bord</string>
+    <string name="exam_creation">Création de session d’examen</string>
+    <string name="photo_submission">Soumissions de photos d’auth</string>
+    <string name="live_monitor">Surveillance en direct</string>
+    <string name="auth_photo_submission">Soumission de photos d’authentification</string>
+    <string name="exam_register">Inscription à l’examen</string>
+    <string name="exam_progress">Examen en cours</string>
+    <string name="email_hint">Tapez votre e-mail</string>
+    <string name="password_hint">Tapez votre mot de passe</string>
+    <string name="first_name_hint">Tapez votre prénom</string>
+    <string name="last_name_hint">Tapez votre nom de famille</string>
+    <string name="welcome_login">Bienvenue à Odin</string>
+    <string name="title_activity_welcome_screen">Écran de bienvenue</string>
+    <string name="title_activity_account_confirmation">Confirmation de compte</string>
+    <string name="title_activity_sign_up">Inscription</string>
+    <string name="resume">L’activité a repris</string>
+    <string name="pause">L’activité s’est interrompue</string>
+    <string name="get_exam_error">Ne pouvait pas obtenir la session d’examen</string>
+    <string name="register_success">Inscrit à l’examen!</string>
+    <string name="exam_not_found">Session d’examen ina pas trouvé. S’il vous plaît réessayer.</string>
+    <string name="confirm_pass_hint">Confirmez votre mot de passe</string>
+    <string name="exam_time_hint">Temps d’examen (De - à)</string>
+    <string name="auth_time_hint">Auth Time (De - À)</string>
+    <string name="email">Email</string>
+    <string name="password">Mot de passe</string>
+    <string name="signup_mess">ou Inscrivez-vous ici</string>
+    <string name="first_name">Prénom</string>
+    <string name="last_name">Nom de famille</string>
+    <string name="create">Créer</string>
+    <string name="create_acc">Créez votre compte</string>
+    <string name="role_ques">Êtes-vous un proctor?</string>
+    <string name="register">Registre</string>
+    <string name="camera">Caméra</string>
+    <string name="submit">Envoyer</string>
+    <string name="exam_details">Entrez les détails de l’examen</string>
+    <string name="exam_info">Informations sur l’examen</string>
+    <string name="confirm_pass">Confirmer le mot de passe</string>
+    <string name="password_detail">Mot de passe (au moins 6 caractères)</string>
+    <string name="header_title">Titre de l’en-tête</string>
+    <string name="info">Informations</string>
+    <string name="id">ID d’examen</string>
+    <string name="exam_title">Titre de l’examen</string>
+    <string name="exam_time">Heure de l’examen</string>
+    <string name="exam_auth_time">Heure d’authentification de l’examen</string>
+</resources>
