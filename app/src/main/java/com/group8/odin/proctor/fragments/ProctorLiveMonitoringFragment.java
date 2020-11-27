@@ -1,6 +1,5 @@
 package com.group8.odin.proctor.fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Pair;
 import android.view.LayoutInflater;
@@ -17,14 +16,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.group8.odin.GlideApp;
 import com.group8.odin.R;
 import com.group8.odin.common.models.ActivityLog;
 import com.group8.odin.common.models.UserProfile;
-import com.group8.odin.examinee.activities.ExamineeExamSessionActivity;
-import com.group8.odin.examinee.list_items.RegisteredExamItem;
 import com.group8.odin.proctor.activities.ProctorExamSessionActivity;
-import com.group8.odin.proctor.activities.ProctorHomeActivity;
 import com.group8.odin.proctor.list_items.ExamineeItem;
 import com.group8.odin.proctor.list_items.HeaderAdapter;
 import com.mikepenz.fastadapter.FastAdapter;
@@ -38,7 +33,6 @@ import java.util.Arrays;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.grpc.okhttp.internal.framed.Header;
 
 /*
  * Created by: Shreya Jain

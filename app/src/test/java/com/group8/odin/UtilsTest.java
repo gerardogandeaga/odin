@@ -2,7 +2,10 @@ package com.group8.odin;
 
 import android.content.Context;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.Timestamp;
+import com.google.firebase.functions.FirebaseFunctions;
+import com.google.firebase.functions.HttpsCallableResult;
 import com.group8.odin.proctor.activities.ProctorExamSessionActivity;
 import com.group8.odin.proctor.activities.ProctorHomeActivity;
 
@@ -19,7 +22,7 @@ import static org.junit.Assert.*;
 public class UtilsTest {
 
     @Test
-    public void getDate() {
+    public void getDateTest() {
         //expected Date
         Date expectedDate= new Date();
         Timestamp timestamp = new Timestamp(expectedDate);
@@ -32,7 +35,7 @@ public class UtilsTest {
     }
 
     @Test
-    public void getTimeStringFromDate() {
+    public void getTimeStringFromDateTest() {
         //expected date = Wed Dec 31 16:00:00 PST 1969
         Date expectedDate = new Date(0);
         String expectedTimeString = "16:00:00";
@@ -42,7 +45,7 @@ public class UtilsTest {
     }
 
     @Test
-    public void getDateTimeStringFromDate() {
+    public void getDateTimeStringFromDateTest() {
         //expected date = Wed Dec 31 16:00:00 PST 1969
         Date expectedDate = new Date(0);
         String expectedTimeString = "31 Dec 1969 16:00:00";

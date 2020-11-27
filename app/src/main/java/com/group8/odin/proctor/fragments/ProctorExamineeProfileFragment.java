@@ -1,13 +1,8 @@
 package com.group8.odin.proctor.fragments;
 
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
+
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.text.format.DateUtils;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,11 +15,8 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -32,7 +24,6 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.group8.odin.GlideApp;
-import com.group8.odin.MyAppGlideModule;
 import com.group8.odin.OdinFirebase;
 import com.group8.odin.R;
 import com.group8.odin.Utils;
@@ -40,8 +31,6 @@ import com.group8.odin.common.models.ActivityLog;
 import com.group8.odin.common.models.UserProfile;
 import com.group8.odin.proctor.activities.ProctorExamSessionActivity;
 
-import java.text.MessageFormat;
-import java.util.ArrayList;
 import java.util.Date;
 
 import butterknife.BindView;

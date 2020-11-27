@@ -25,7 +25,6 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.group8.odin.OdinFirebase;
 import com.group8.odin.R;
 import com.group8.odin.common.models.ActivityLog;
-import com.group8.odin.common.models.ExamSession;
 import com.group8.odin.common.models.UserProfile;
 import com.group8.odin.proctor.fragments.ProctorAuthPhotosFragment;
 import com.group8.odin.proctor.fragments.ProctorExamineeProfileFragment;

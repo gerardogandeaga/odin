@@ -24,19 +24,18 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.group8.odin.OdinFirebase;
 import com.group8.odin.R;
 import com.group8.odin.R2;
+import com.group8.odin.Utils;
 import com.group8.odin.common.activities.LoginActivity;
 import com.group8.odin.examinee.activities.ExamineeExamSessionActivity;
 import com.group8.odin.examinee.list_items.RegisteredExamItem;
 import com.group8.odin.examinee.activities.ExamineeHomeActivity;
 import com.group8.odin.common.models.ExamSession;
-import com.group8.odin.common.models.UserProfile;
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IAdapter;
 import com.mikepenz.fastadapter.adapters.ItemAdapter;
 import com.mikepenz.fastadapter.listeners.OnClickListener;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -46,6 +45,9 @@ import butterknife.ButterKnife;
  * Created on: 2020-11-01
  * Updated by: Shreya Jain
  * Description: Examinee dashboard fragment. Fragment will display the exams that the examinee is registered to.
+ * Updated by: Shreya Jain
+ * Updated on: 2020-11-26
+ * Description: Added time checks
  */
 public class ExamineeDashboardFragment extends Fragment {
     private FirebaseFirestore mFirestore;
@@ -80,10 +82,48 @@ public class ExamineeDashboardFragment extends Fragment {
             public boolean onClick(View v, IAdapter<RegisteredExamItem> adapter, RegisteredExamItem item, int position) {
                 // set exam context
                 OdinFirebase.ExamSessionContext = item.getExamSession();
-                // go to exam session activity
-                Intent examSession = new Intent(getActivity(), ExamineeExamSessionActivity.class);
-                startActivity(examSession);
-                return true;
+
+                Date examStart = OdinFirebase.ExamSessionContext.getExamStartTime();
+                Date examEnd = OdinFirebase.ExamSessionContext.getExamEndTime();
+                Date authStart = OdinFirebase.ExamSessionContext.getAuthStartTime();
+                Date authEnd = OdinFirebase.ExamSessionContext.getAuthEndTime();
+
+                //check time with current time
+                //checks if current time is after or on exam start time
+                if(Utils.isCurrentTimeAfterTime(examStart) || Utils.isCurrentTimeEqualToTime(examStart)){
+                    if(Utils.isCurrentTimeBeforeTime(examEnd) || Utils.isCurrentTimeEqualToTime(examEnd)) {
+                        //check auth time
+                        if(Utils.isCurrentTimeAfterTime(authStart) || Utils.isCurrentTimeEqualToTime(authStart)) {
+                            if(Utils.isCurrentTimeBeforeTime(authEnd) || Utils.isCurrentTimeEqualToTime(authEnd)){
+                                // go to exam session activity
+                                Intent examSession = new Intent(getActivity(), ExamineeExamSessionActivity.class);
+                                startActivity(examSession);
+                                return true;
+                            } else {
+                                //Auth time has ended.
+                                //TODO: Find why there is error and fix it.
+                                Toast.makeText(getContext(), R.string.auth_finished, Toast.LENGTH_SHORT).show();
+                                ((ExamineeExamSessionActivity)getActivity()).showExamSessionHome();
+                                return true;
+                            }
+                        } else {
+                            //Auth time has not started but exam has
+                            //Ideally should not be the case
+                            //TODO: Gives error. Fix it.
+                            Toast.makeText(getContext(), R.string.auth_not_started, Toast.LENGTH_SHORT).show();
+                            ((ExamineeExamSessionActivity)getActivity()).showExamSessionHome();
+                            return true;
+                        }
+                    } else {
+                        //Exam has already ended
+                        Toast.makeText(getContext(), R.string.exam_finished_error, Toast.LENGTH_SHORT).show();
+                        return true;
+                    }
+                } else {
+                    //Exam has not yet started
+                    Toast.makeText(getContext(), R.string.exam_not_started, Toast.LENGTH_SHORT).show();
+                    return true;
+                }
             }
         });
 

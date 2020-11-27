@@ -1,6 +1,5 @@
 package com.group8.odin;
 
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.group8.odin.common.models.ExamSession;
 import com.group8.odin.common.models.UserProfile;
 

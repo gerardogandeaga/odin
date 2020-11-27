@@ -48,6 +48,12 @@
 
     <string name="register_success">Registered for exam!</string>
     <string name="get_exam_error">Could not get exam session</string>
+    <string name="exam_not_started">Exam has not yet started. Please try later.</string>
+    <string name="exam_finished_error">Exam has finished. Please contact proctor for further details.</string>
+    <string name="auth_not_started">Authentication time period has not yet started. Please try later.</string>
+    <string name="auth_finished">Authentication time has passed. Please contact proctor for next steps.</string>
+    <string name="exam_finished">Thank you! The exam has ended and you may now exit.</string>
+    <string name="auth_time_error_for_submission">Authentication period is currently inactive.</string>
 
     <string name="exam_not_found">Exam Session Not Found. Please Retry.</string>
 
@@ -112,6 +118,7 @@
     <string name="exam_auth_time">Exam Authentication Time</string>
     <string name="exam_date">Exam Date</string>
     <string name="auth_time">Auth Time</string>
+    <string name="time_left">Time Left: </string>
 
 
     <!--Examinee Item-->

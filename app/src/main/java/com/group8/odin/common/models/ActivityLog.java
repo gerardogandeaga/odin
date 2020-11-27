@@ -6,7 +6,6 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.group8.odin.OdinFirebase;
 import com.group8.odin.Utils;
-import com.group8.odin.proctor.fragments.ProctorLiveMonitoringFragment;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;

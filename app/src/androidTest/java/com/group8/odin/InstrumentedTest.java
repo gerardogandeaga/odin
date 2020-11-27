@@ -143,4 +143,42 @@ public class InstrumentedTest {
         int actualResult = Utils.getExamineeStatusColour(appContext, status);
         assertEquals(expectedResult, actualResult);
     }
+
+    //Written by Shreya Jain
+    @Test
+    public void getCurrentTimeTest(){
+        int status = 0;
+        Date date = Utils.getCurrentTime();
+        String dateString = date.toString();
+        if(dateString.isEmpty()){
+            status = 0;
+        } else {
+            status = 1;
+        }
+        assertEquals(1, status);
+    }
+
+    //Written by Shreya Jain
+    @Test
+    public void compareDateCheckBefore() {
+        Date sample = Utils.getDate(1606459600); //November 26, 2020 10:46:40 PM
+        boolean result = Utils.isCurrentTimeBeforeTime(sample);
+        assertFalse(result);
+    }
+
+    //Written by Shreya Jain
+    @Test
+    public void compareDateCheckEquals() {
+        Date sample = Utils.getDate(1606459600); //November 26, 2020 10:46:40 PM
+        boolean result = Utils.isCurrentTimeEqualToTime(sample);
+        assertFalse(result);
+    }
+
+    //Written by Shreya Jain
+    @Test
+    public void compareDateCheckAfter() {
+        Date sample = Utils.getDate(1606459600); //November 26, 2020 10:46:40 PM
+        boolean result = Utils.isCurrentTimeAfterTime(sample);
+        assertTrue(result);
+    }
 }

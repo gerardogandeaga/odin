@@ -9,7 +9,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
-import com.group8.odin.OdinFirebase;
 import com.group8.odin.R;
 import com.group8.odin.Utils;
 import com.group8.odin.common.models.ActivityLog;
@@ -18,7 +17,6 @@ import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.items.AbstractItem;
 
 import java.util.List;
-import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

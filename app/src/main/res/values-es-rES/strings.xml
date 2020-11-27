@@ -99,4 +99,11 @@
     <string name="live_proctor">Supervisión en vivo</string>
     <string name="create_exam">Crear examen</string>
     <string name="register_exam">Registro de examen</string>
+    <string name="exam_finished_error">El examen ha terminado. Comuníquese con el supervisor para obtener más detalles.</string>
+    <string name="exam_not_started">El examen aún no ha comenzado. Por favor intente mas tarde.</string>
+    <string name="auth_not_started">El período de tiempo de autenticación aún no ha comenzado. Por favor intente mas tarde.</string>
+    <string name="auth_finished">Ha pasado el tiempo de autenticación. Comuníquese con el supervisor para conocer los próximos pasos.</string>
+    <string name="exam_finished">¡Gracias! El examen ha finalizado y ahora puede salir.</string>
+    <string name="auth_time_error_for_submission">El período de autenticación está actualmente inactivo.</string>
+    <string name="time_left">Tiempo restante:</string>
 </resources>

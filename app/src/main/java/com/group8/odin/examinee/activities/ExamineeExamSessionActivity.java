@@ -1,21 +1,13 @@
 package com.group8.odin.examinee.activities;
 
-import android.app.Activity;
-import android.app.Application;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.Lifecycle;
-import androidx.lifecycle.OnLifecycleEvent;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -30,8 +22,6 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.group8.odin.OdinFirebase;
 import com.group8.odin.R;
-import com.group8.odin.common.models.ExamSession;
-import com.group8.odin.common.models.UserProfile;
 import com.group8.odin.examinee.fragments.ExamineeAuthPhotoSubmissionFragment;
 import com.group8.odin.examinee.fragments.ExamineeExamSessionHomeFragment;
 

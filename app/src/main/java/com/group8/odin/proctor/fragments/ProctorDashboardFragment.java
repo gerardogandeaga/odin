@@ -26,6 +26,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.group8.odin.OdinFirebase;
 import com.group8.odin.R;
 import com.group8.odin.R2;
+import com.group8.odin.Utils;
 import com.group8.odin.common.activities.LoginActivity;
 import com.group8.odin.common.models.ExamSession;
 import com.group8.odin.examinee.list_items.RegisteredExamItem;
@@ -36,6 +37,8 @@ import com.mikepenz.fastadapter.IAdapter;
 import com.mikepenz.fastadapter.adapters.ItemAdapter;
 import com.mikepenz.fastadapter.listeners.OnClickListener;
 import com.mikepenz.fastadapter.listeners.OnLongClickListener;
+
+import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -89,9 +92,28 @@ public class ProctorDashboardFragment extends Fragment {
             @Override
             public boolean onClick(View v, IAdapter<RegisteredExamItem> adapter, RegisteredExamItem item, int position) {
                 OdinFirebase.ExamSessionContext = item.getExamSession();
-                Intent examSessionIntent = new Intent(getActivity(), ProctorExamSessionActivity.class);
-                startActivity(examSessionIntent);
-                return true;
+
+                Date examStart = OdinFirebase.ExamSessionContext.getExamStartTime();
+                Date examEnd = OdinFirebase.ExamSessionContext.getExamEndTime();
+
+                if(Utils.isCurrentTimeAfterTime(examStart) || Utils.isCurrentTimeEqualToTime(examStart)) {
+                    if(Utils.isCurrentTimeBeforeTime(examEnd) || Utils.isCurrentTimeEqualToTime(examEnd)) {
+                        Intent examSessionIntent = new Intent(getActivity(), ProctorExamSessionActivity.class);
+                        startActivity(examSessionIntent);
+                        return true;
+                    } else {
+                        //Exam has ended
+                        //TODO: Add path to post exam report for this exam. For now, dummy path to auth photos
+                        Intent examSessionIntent = new Intent(getActivity(), ProctorExamSessionActivity.class);
+                        startActivity(examSessionIntent);
+                        return true;
+                    }
+                } else {
+                    //Exam has not yet started.
+                    //TODO: Updating existing exam. Hence, change to showProctorExamUpdate() once made the necessary function for the same.
+                    ((ProctorHomeActivity)getActivity()).showProctorExamCreation();
+                    return true;
+                }
             }
         });
         // Copy id into clipboard so user can share it
