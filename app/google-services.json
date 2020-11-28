@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "159771803040",
+    "firebase_url": "https://odin-e89e4.firebaseio.com",
+    "project_id": "odin-e89e4",
+    "storage_bucket": "odin-e89e4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:159771803040:android:87660b5f870c9a842938c5",
+        "android_client_info": {
+          "package_name": "com.group8.odin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "159771803040-0ph9is19uogq33pfh9o57r4658soff6i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBu6fjfJGrn0DahYKQtxUbrtyx7rKTEEXE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "159771803040-0ph9is19uogq33pfh9o57r4658soff6i.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
