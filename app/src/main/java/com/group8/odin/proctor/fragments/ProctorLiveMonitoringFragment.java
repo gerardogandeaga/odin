@@ -20,6 +20,7 @@ import com.group8.odin.R;
 import com.group8.odin.common.models.ActivityLog;
 import com.group8.odin.common.models.UserProfile;
 import com.group8.odin.proctor.activities.ProctorExamSessionActivity;
+import com.group8.odin.proctor.activities.ProctorHomeActivity;
 import com.group8.odin.proctor.list_items.ExamineeItem;
 import com.group8.odin.proctor.list_items.HeaderAdapter;
 import com.mikepenz.fastadapter.FastAdapter;
@@ -40,7 +41,7 @@ import butterknife.ButterKnife;
  * Created on: 17/11/20
  * Description: Displays a list of examinees
  * Updated by: Shreya Jain
- * Updated on: 2020-11-22
+ * Updated on: 2020-11-22 and 2020-11-28
  */
 public class ProctorLiveMonitoringFragment extends Fragment {
     @BindView(R.id.fabAction) ExtendedFloatingActionButton mFab;
@@ -159,8 +160,8 @@ public class ProctorLiveMonitoringFragment extends Fragment {
             getActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
                 @Override
                 public void handleOnBackPressed() {
-                    getActivity().setTitle(R.string.photo_submission);
-                    ((ProctorExamSessionActivity) getActivity()).showAuthPhotos();
+                    getActivity().setTitle(R.string.dashboard);
+                    ((ProctorHomeActivity) getActivity()).showProctorDashboard();
                 }
             });
         }

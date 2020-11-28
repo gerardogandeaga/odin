@@ -274,4 +274,6 @@ public class ExamineeAuthPhotoSubmissionFragment extends Fragment {
         mAuthPhotoUri = image.getAbsolutePath();
         return image;
     }
+
+    //TODO: On back press, go to exam session instead of examinee dashboard
 }

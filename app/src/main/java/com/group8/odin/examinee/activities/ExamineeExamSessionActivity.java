@@ -2,6 +2,7 @@ package com.group8.odin.examinee.activities;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -41,9 +42,9 @@ import java.util.Map;
  */
 public class ExamineeExamSessionActivity extends AppCompatActivity {
     private FirebaseFirestore mFirestore;
-    private FragmentManager mFragmentManager;
-    private FragmentTransaction mFragmentTransaction;
-    public boolean InExam;
+    private static FragmentManager mFragmentManager;
+    private static FragmentTransaction mFragmentTransaction;
+    public static boolean InExam;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -53,32 +54,18 @@ public class ExamineeExamSessionActivity extends AppCompatActivity {
         // Setup fragment manager
         mFragmentManager = getSupportFragmentManager();
 
-        // check if photo has already been submitted for the exam session
-        FirebaseStorage storage = FirebaseStorage.getInstance();
-        StorageReference reference = storage.getReference();
-        reference.child(OdinFirebase.ExamSessionContext.getExamId()).child(OdinFirebase.UserProfileContext.getUserId() + ".jpg")
-                .getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                    @Override
-                    public void onSuccess(Uri uri) {
-                        // auth photo exists in storage
-                        showExamSessionHome();
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        // auth photo does not exist in storage so we can take an auth photo
-                        showAuthPhotoSubmission();
-                    }
-                });
+        //go to exam session home
+        showExamSessionHome();
     }
 
-    private void showAuthPhotoSubmission() {
+    public static void showAuthPhotoSubmission() {
         InExam = false;
         mFragmentTransaction = mFragmentManager.beginTransaction();
         ExamineeAuthPhotoSubmissionFragment fragment = new ExamineeAuthPhotoSubmissionFragment();
         mFragmentTransaction.replace(R.id.container, fragment);
         mFragmentTransaction.commit();
     }
+
 
     public void showExamSessionHome() {
         InExam = true;

@@ -106,4 +106,5 @@
     <string name="exam_finished_error">L\'examen est terminé. Veuillez contacter le surveillant pour plus de détails.</string>
     <string name="auth_time_error_for_submission">La période d\'authentification est actuellement inactive.</string>
     <string name="time_left">Temps restant:</string>
+    <string name="submitAuthPhoto">Soumettre une photo d\'authentification</string>
 </resources>

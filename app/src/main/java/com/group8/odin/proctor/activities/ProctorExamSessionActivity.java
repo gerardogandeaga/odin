@@ -39,6 +39,7 @@ import java.util.HashMap;
  * Description: Activity that would display authentication photos to the proctor
  * Updated by: Shreya Jain
  * Updated on: 2020-11-22
+ * Update: 2020-11-28 by Shreya - changed app flow for proctor. They now first enter live monitoring screen.
  */
 public class ProctorExamSessionActivity extends AppCompatActivity {
     private FirebaseFirestore mFirestore;
@@ -81,7 +82,7 @@ public class ProctorExamSessionActivity extends AppCompatActivity {
         mFragmentTransaction.commit();
 
         startListeningToActivityLogsCollection();
-        showAuthPhotos();
+        showLiveMonitoring();
     }
 
     // load activity logs

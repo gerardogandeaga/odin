@@ -105,6 +105,8 @@
 
     <string name="exam_details">Enter Exam Details</string>
 
+    <string name="submitAuthPhoto">Submit Auth Photo</string>
+
 
     <!--Misc strings-->
     <string name="exam_info">Exam Information</string>

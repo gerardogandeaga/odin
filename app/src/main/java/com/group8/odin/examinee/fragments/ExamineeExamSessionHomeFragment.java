@@ -1,21 +1,28 @@
 package com.group8.odin.examinee.fragments;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.group8.odin.OdinFirebase;
 import com.group8.odin.R;
 import com.group8.odin.Utils;
+import com.group8.odin.examinee.activities.ExamineeExamSessionActivity;
 
 import java.util.Date;
 
@@ -43,8 +50,24 @@ public class ExamineeExamSessionHomeFragment extends Fragment {
     @BindView(R.id.message_layout)
     LinearLayout mMessage_layout;
     @BindView(R.id.exam_finished) TextView mTvExam_finished;
+    @BindView(R.id.btnSubmitAuthPhoto)
+    Button mBtnSubmitAuthPhoto;
 
     private FirebaseFirestore mFirestore;
+
+    private Date authStart = OdinFirebase.ExamSessionContext.getAuthStartTime();
+    private Date authEnd = OdinFirebase.ExamSessionContext.getAuthEndTime();
+    private Date examEnd = OdinFirebase.ExamSessionContext.getExamEndTime();
+
+    private Runnable runnable;
+    private Runnable authTime;
+    private static int secondsInDay = 24*60*60*1000; //milliseconds in a day
+    private static int secondsInHour = 60*60*1000; //milliseconds in an hour
+    private static int secondsInMinute = 60 * 1000; //milliseconds in a minute
+    private static int secondsInSecond = 1000; //milliseconds in a second
+
+    private FragmentManager mFragmentManager;
+    private FragmentTransaction mFragmentTransaction;
 
     @Nullable
     @Override
@@ -58,14 +81,23 @@ public class ExamineeExamSessionHomeFragment extends Fragment {
         ButterKnife.bind(this, view);
         getActivity().setTitle(R.string.exam_progress);
         mMessage_layout.setVisibility(View.GONE);
+        mBtnSubmitAuthPhoto.setVisibility(View.GONE);
         mTvExamName.setText(OdinFirebase.ExamSessionContext.getTitle());
         mTvExamID.setText(OdinFirebase.ExamSessionContext.getExamId());
         mTvExamStartTime.setText("Start Time: " + Utils.getDateTimeStringFromDate(OdinFirebase.ExamSessionContext.getExamStartTime()));
         mTvExamEndTime.setText("End Time: " + Utils.getDateTimeStringFromDate(OdinFirebase.ExamSessionContext.getExamEndTime()));
         countDownTimer();
+        checkForAuthTime();
+
+        mBtnSubmitAuthPhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //go to submitting auth photos
+                ExamineeExamSessionActivity.showAuthPhotoSubmission();
+            }
+        });
     }
 
-    private Runnable runnable;
     public void countDownTimer() {
         final Handler handler = new Handler();
         runnable = new Runnable() {
@@ -73,22 +105,21 @@ public class ExamineeExamSessionHomeFragment extends Fragment {
             public void run() {
                 handler.postDelayed(this, 1000);
                 try {
-                    Date examEnd = OdinFirebase.ExamSessionContext.getExamEndTime();
-                    Date currentDate = new Date();
-                    if(!currentDate.after(examEnd)){
+                    Date currentDate = Utils.getCurrentTime();
+                    if(!Utils.isCurrentTimeAfterTime(examEnd)){
                         long diff = examEnd.getTime() - currentDate.getTime();
-                        long days = diff /(24*60*60*1000);
-                        diff-= days * (24 * 60 * 60 * 1000);
-                        long hours = diff /(60*60*1000);
-                        diff -= hours * (60*60*1000);
-                        long minutes = diff / (60 * 1000);
-                        diff -= minutes * (60 * 1000);
-                        long seconds = diff /1000;
+                        long days = diff /secondsInDay;
+                        diff-= days * secondsInDay;
+                        long hours = diff /secondsInHour;
+                        diff -= hours * secondsInHour;
+                        long minutes = diff / secondsInMinute;
+                        diff -= minutes * secondsInMinute;
+                        long seconds = diff /secondsInSecond;
                         mTvHours.setText(String.format("%02d", hours) + ":");
                         mTvMinutes.setText(String.format("%02d", minutes) + ":");
                         mTvSeconds.setText(String.format("%02d", seconds));
                     } else {
-                        //TODO: Invesitgate why message is not shown yet timer is gone.
+                        //TODO: Go to new screen showing exam is done (Gerardo)
                         mMessage_layout.setVisibility(View.VISIBLE);
                         mTvExam_finished.setVisibility(View.VISIBLE);
                         timerViewGone();
@@ -102,6 +133,43 @@ public class ExamineeExamSessionHomeFragment extends Fragment {
     }
 
     public void timerViewGone() {
-        mTimer_layout.setVisibility(View.GONE);
+       mTvHours.setVisibility(View.GONE);
+       mTvMinutes.setVisibility(View.GONE);
+       mTvSeconds.setVisibility(View.GONE);
+    }
+
+    public void checkForAuthTime() {
+        final Handler handler = new Handler();
+        authTime = new Runnable() {
+            @Override
+            public void run() {
+                handler.postDelayed(this, 1000);
+                try {
+                    Date currentDate = Utils.getCurrentTime();
+                    if(!Utils.isCurrentTimeAfterTime(authEnd)){
+                        //check auth time
+                        if(Utils.isCurrentTimeAfterTime(authStart) || Utils.isCurrentTimeEqualToTime(authStart)) {
+                            // Auth time is going on
+                            //TODO: Message that authentication has started. Toast message wont work as it keeps popping every second when the condition is true
+                            mBtnSubmitAuthPhoto.setVisibility(View.VISIBLE);
+                        } else {
+                            //Auth time has not started but exam has
+                            //TODO: Put up a message that auth time ended. Toast message wont work as it keeps popping every second when the condition is true
+                            //Toast.makeText(getContext(), R.string.auth_not_started, Toast.LENGTH_SHORT).show();
+                            mBtnSubmitAuthPhoto.setVisibility(View.GONE);
+                        }
+                    } else {
+                        //Auth time has ended.
+                        //TODO: Put up a message that auth time ended. Find a way to kill this runnable
+                        //Toast.makeText(getContext(), R.string.auth_finished, Toast.LENGTH_SHORT).show();
+                        mBtnSubmitAuthPhoto.setVisibility(View.GONE);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        handler.postDelayed(authTime, 1 * secondsInSecond);
     }
 }

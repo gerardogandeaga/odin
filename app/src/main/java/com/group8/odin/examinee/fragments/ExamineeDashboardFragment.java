@@ -92,28 +92,10 @@ public class ExamineeDashboardFragment extends Fragment {
                 //checks if current time is after or on exam start time
                 if(Utils.isCurrentTimeAfterTime(examStart) || Utils.isCurrentTimeEqualToTime(examStart)){
                     if(Utils.isCurrentTimeBeforeTime(examEnd) || Utils.isCurrentTimeEqualToTime(examEnd)) {
-                        //check auth time
-                        if(Utils.isCurrentTimeAfterTime(authStart) || Utils.isCurrentTimeEqualToTime(authStart)) {
-                            if(Utils.isCurrentTimeBeforeTime(authEnd) || Utils.isCurrentTimeEqualToTime(authEnd)){
-                                // go to exam session activity
-                                Intent examSession = new Intent(getActivity(), ExamineeExamSessionActivity.class);
-                                startActivity(examSession);
-                                return true;
-                            } else {
-                                //Auth time has ended.
-                                //TODO: Find why there is error and fix it.
-                                Toast.makeText(getContext(), R.string.auth_finished, Toast.LENGTH_SHORT).show();
-                                ((ExamineeExamSessionActivity)getActivity()).showExamSessionHome();
-                                return true;
-                            }
-                        } else {
-                            //Auth time has not started but exam has
-                            //Ideally should not be the case
-                            //TODO: Gives error. Fix it.
-                            Toast.makeText(getContext(), R.string.auth_not_started, Toast.LENGTH_SHORT).show();
-                            ((ExamineeExamSessionActivity)getActivity()).showExamSessionHome();
-                            return true;
-                        }
+                        //start exam session
+                        Intent examSession = new Intent(getActivity(), ExamineeExamSessionActivity.class);
+                        startActivity(examSession);
+                        return true;
                     } else {
                         //Exam has already ended
                         Toast.makeText(getContext(), R.string.exam_finished_error, Toast.LENGTH_SHORT).show();

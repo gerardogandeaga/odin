@@ -104,7 +104,8 @@ public class ProctorAuthPhotosFragment extends Fragment {
         if (!hidden) getActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                getActivity().startActivity(new Intent(getActivity(), ProctorHomeActivity.class));
+                getActivity().setTitle(R.string.live_monitor);
+                ((ProctorExamSessionActivity)getActivity()).showLiveMonitoring();
             }
         });
         super.onHiddenChanged(hidden);
