@@ -4,6 +4,7 @@ package com.group8.odin.common.models;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.group8.odin.OdinFirebase;
+import com.group8.odin.R2;
 
 import java.util.ArrayList;
 
@@ -11,12 +12,16 @@ import java.util.ArrayList;
  * Created by: Gerardo Gandeaga
  * Created on: 2020-10-31
  * Description: Object representation of user profile
+ * Updated by Raj Patel
+ * Updated on: 2020-11-28
+ * Description: Added Education ID
  */
 public class UserProfile {
     public enum Role { PROCTOR, EXAMINEE }
     private String userId;
     private String name;
     private String email;
+    private String educationID;
     private Role role;
     // list of associated exam sessions
     private ArrayList<ExamSession> examSessions;
@@ -33,6 +38,7 @@ public class UserProfile {
         userId = userProfileDocument.getId();
         name = userProfileDocument.get(OdinFirebase.FirestoreUserProfile.NAME).toString();
         email  = userProfileDocument.get(OdinFirebase.FirestoreUserProfile.EMAIL).toString();
+        educationID = userProfileDocument.get(OdinFirebase.FirestoreUserProfile.EDUCATION_ID).toString();
         role = (boolean)userProfileDocument.get(OdinFirebase.FirestoreUserProfile.ROLE) ? Role.PROCTOR : Role.EXAMINEE;
         examSessionIds = (ArrayList<String>)userProfileDocument.get(OdinFirebase.FirestoreUserProfile.EXAM_IDS);
         examSessions = new ArrayList<>();
@@ -50,6 +56,10 @@ public class UserProfile {
     }
     public UserProfile setEmail(String email) {
         this.email = email;
+        return this;
+    }
+    public UserProfile setEducationID(String educationID) {
+        this.educationID = educationID;
         return this;
     }
     public UserProfile setRole(Role role) {
@@ -72,6 +82,7 @@ public class UserProfile {
     public String getEmail() {
         return email;
     }
+    public String getEducationID() { return educationID;}
     public Role getRole() {
         return role;
     }

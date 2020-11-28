@@ -11,6 +11,9 @@ import static org.junit.Assert.*;
 /*
 Created by: Matthew Tong
 Created On: 2020-11-22
+Updated by Raj Patel
+Updated on: 2020-11-28
+Description: Added Education ID tests
  */
 
 public class UserProfileTest {
@@ -18,6 +21,7 @@ public class UserProfileTest {
     private static final String expectedUserId = "expected user id";
     private static final String expectedName = "expected name";
     private static final String expectedEmail = "expected email";
+    private static final String expectedEducID = "expected education id";
     private static final UserProfile.Role expectedRole1 = UserProfile.Role.PROCTOR;
     private static final UserProfile.Role expectedRole2 = UserProfile.Role.EXAMINEE;
     // list of associated exam sessions
@@ -50,6 +54,14 @@ public class UserProfileTest {
         myUserProfile.setEmail(expectedEmail);
         String result = myUserProfile.getEmail();
         assertEquals(expectedEmail, result);
+    }
+
+    @Test
+    public void setEducationID() {
+        UserProfile myUserProfile = new UserProfile();
+        myUserProfile.setEducationID(expectedEducID);
+        String result = myUserProfile.getEducationID();
+        assertEquals(expectedEducID, result);
     }
 
     @Test

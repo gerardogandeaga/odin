@@ -44,6 +44,9 @@ import java.util.regex.Pattern;
     Description: Added Validation Code, Design Modifications and back button
     Updated by: Shreya Jain
     Updated on: 2020-11-20 and 2020-11-21
+    Updated by Raj Patel
+    Updated on: 2020-11-28
+    Description: Added Education ID
 */
 
 public class SignUpActivity extends AppCompatActivity {
@@ -52,6 +55,7 @@ public class SignUpActivity extends AppCompatActivity {
     @BindView(R.id.editTextEmail)       EditText mEtEmail;
     @BindView(R.id.editPassword)        EditText mEtPassword;
     @BindView(R.id.editConfirmPassword) EditText mEtConfirmPassword;
+    @BindView(R.id.editEducationID) EditText mEtEducationID;
     //Declaring a regular expression for email as per RFC standards
     private static final String EMAIL_REGEX = "(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])";
     @BindView(R.id.cbProctor)                CheckBox mCbRole;
@@ -85,7 +89,7 @@ public class SignUpActivity extends AppCompatActivity {
         mBtnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String first, last, email, pass1, pass2;
+                String first, last, email, pass1, pass2, educID;
 
                 //Checks for valid data
                 first = mEtFirstName.getText().toString().trim();
@@ -103,6 +107,12 @@ public class SignUpActivity extends AppCompatActivity {
                 email = mEtEmail.getText().toString().trim();
                 if(email.isEmpty()){
                     Toast.makeText(SignUpActivity.this, R.string.email_error, Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                educID = mEtEducationID.getText().toString().trim();
+                if(educID.isEmpty()){
+                    Toast.makeText(SignUpActivity.this, R.string.email_error_valid, Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -157,6 +167,7 @@ public class SignUpActivity extends AppCompatActivity {
                                         data.put(OdinFirebase.FirestoreUserProfile.NAME, mEtFirstName.getText().toString().trim() + " " + mEtLastName.getText().toString().trim());
                                         data.put(OdinFirebase.FirestoreUserProfile.EMAIL, mEtEmail.getText().toString().trim());
                                         data.put(OdinFirebase.FirestoreUserProfile.EXAM_IDS, new ArrayList<String>());
+                                        data.put(OdinFirebase.FirestoreUserProfile.EDUCATION_ID, mEtEducationID.getText().toString().trim());
                                         data.put(OdinFirebase.FirestoreUserProfile.ROLE, mCbRole.isChecked());
                                         DocumentReference profileRef = mFirestore.collection(OdinFirebase.FirestoreCollections.USERS).document(user.getUid());
                                         profileRef.set(data)

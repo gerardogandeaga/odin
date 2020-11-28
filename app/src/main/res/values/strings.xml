@@ -5,6 +5,9 @@
     values-round/strings.xml for round devices.
     Updated by: Shreya Jain
     Updated on: 2020-11-21
+    Updated by Raj Patel
+    Updated on: 2020-11-28
+    Description: Added Education ID related strings
     -->
 
     <!--Toast Messages and Errors-->
@@ -15,6 +18,7 @@
     <string name="first_name_error">First name cannot be empty. Please enter your first name.</string>
     <string name="last_name_error">Last name cannot be empty. Please enter your last name.</string>
     <string name="email_error">Email address cannot be empty. Please enter your email address.</string>
+    <string name= "education_ID_error">Education ID cannot be empty. Please enter your Education ID.</string>
     <string name="email_error_valid">Please enter a valid email address.</string>
     <string name="password_error">Password cannot be empty. Please enter your Password.</string>
     <string name="password_error_valid">Invalid Password. Please try again.</string>
@@ -76,6 +80,7 @@
     <string name="first_name_hint">Type your first name</string>
     <string name="last_name_hint">Type your last name</string>
     <string name="confirm_pass_hint">Confirm your password</string>
+    <string name="education_ID_hint">Enter your Education/Student/Professor ID</string>
     <string name="exam_time_hint">Exam Time (From - To)</string>
     <string name="auth_time_hint">Auth Time (From - To)</string>
 
@@ -88,6 +93,7 @@
     <string name="last_name">Last Name</string>
     <string name="password_detail">Password (at least 6 characters)</string>
     <string name="confirm_pass">Confirm Password</string>
+    <string name="education_ID">Education ID</string>
     <string name="create">Create</string>
     <string name="create_acc">Create Your Account</string>
     <string name="role_ques">Are you a proctor?</string>

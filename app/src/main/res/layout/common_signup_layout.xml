@@ -9,6 +9,9 @@
     Description: Added Back Button
     Updated by: Shreya Jain
     Updated on: 2020-11-22
+    Updated by Raj Patel
+    Updated on: 2020-11-28
+    Description: Added Education ID button and field
     -->
 
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -136,6 +139,27 @@
             android:textSize="6pt"
             android:textStyle="italic" />
 
+        <TextView
+            android:id="@+id/textTitleEducationID"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:text="@string/education_ID"
+            android:textColor="@android:color/black"
+            android:textSize="6pt" />
+
+        <EditText
+            android:id="@+id/editEducationID"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/education_ID_hint"
+            android:inputType="textVisiblePassword"
+            android:textColor="@color/colorTextField"
+            android:textSize="6pt"
+            android:textStyle="italic" />
+
     </LinearLayout>
 
     <Button
@@ -178,6 +202,6 @@
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="0.705" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

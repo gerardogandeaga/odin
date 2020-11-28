@@ -8,6 +8,9 @@ import com.group8.odin.common.models.UserProfile;
  * Created by: Gerardo Gandeaga
  * Created on: 2020-10-31
  * Description: Driver class for Firebase connections
+ * Updated by Raj Patel
+ * Updated on: 2020-11-28
+ * Description: Added Education ID
  */
 public class OdinFirebase {
     // Consistent references throughout the application
@@ -27,6 +30,7 @@ public class OdinFirebase {
         public static final String EMAIL = "email";
         public static final String ROLE = "role";
         public static final String EXAM_IDS = "exam_ids";
+        public static final String EDUCATION_ID = "education_ID";
     }
 
     public static class FirestoreExamSession {
