@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <!--
+    Created by: Matthew Tong
+    Created on: 2020-11-04
+    Description: Layout for Welcome Screen
+    Updated by: Shreya Jain
+    Updated on: 2020-11-07
+    -->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:orientation="vertical">
+
+
+        <TextView
+            android:id="@+id/text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="100dp"
+            android:gravity="center"
+            android:text="Welcome to Odin"
+            android:textColor="@android:color/black"
+            android:textSize="12pt"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textTitleEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="72dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:text="E-mail"
+            android:textSize="6pt"
+            android:textColor="@android:color/black" />
+
+
+        <EditText
+            android:id="@+id/editTextEmailAddress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/text"
+            android:inputType="textEmailAddress"
+            android:hint="Type your E-mail"
+            android:textColor="@color/colorTextField"
+            android:textSize="6pt"
+            android:textStyle="italic" />
+
+        <TextView
+            android:id="@+id/textTitlePassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="36dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:text="Password"
+            android:textSize="6pt"
+            android:textColor="@android:color/black"  />
+
+        <EditText
+            android:id="@+id/editTextPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textVisiblePassword"
+            android:hint="Type your password"
+            android:textColor="@color/colorTextField"
+            android:textSize="6pt"
+            android:textStyle="italic"/>
+        <Button
+            android:id="@+id/btnLogin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="Login"
+            android:backgroundTint="@color/colorPrimary"/>
+
+        <Button
+            android:id="@+id/btnSignUp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="or Sign up here"
+            android:textAllCaps="false"
+            android:textColor="@color/colorTextField"
+            android:textStyle="italic"
+            android:background="@android:color/transparent"/>
+
+    </LinearLayout>
+
+</LinearLayout>
+    <!--
+    TODO: WelcomeScreen
+    create fragment for login
+    create fragment for forgot password*/
+    -->
