@@ -23,13 +23,10 @@ import com.google.firebase.storage.ListResult;
 import com.google.firebase.storage.StorageReference;
 import com.group8.odin.OdinFirebase;
 import com.group8.odin.R;
-import com.group8.odin.common.models.UserProfile;
 import com.group8.odin.examinee.activities.ExamineeHomeActivity;
 import com.group8.odin.examinee.list_items.AuthPhotoItem;
 import com.group8.odin.examinee.list_items.RegisteredExamItem;
-import com.group8.odin.proctor.activities.ProctorExamSessionActivity;
 import com.group8.odin.proctor.activities.ProctorHomeActivity;
-import com.group8.odin.proctor.list_items.ExamineeItem;
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.adapters.ItemAdapter;
 
@@ -81,41 +78,49 @@ public class ProctorAuthPhotosFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
 
-        getActivity().setTitle(R.string.photo_submission);
+        getActivity().setTitle("Auth Photo Submissions");
 
         // Hide action button
-        mFabAction.setText(R.string.live_proctor);
-        mFabAction.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ((ProctorExamSessionActivity) getActivity()).showLiveMonitoring();
-            }
-        });
+        mFabAction.setVisibility(View.GONE);
 
 
         // Setup recycler view with fastadapter
         mItemAdapter = new ItemAdapter();
         FastAdapter<RegisteredExamItem> fastAdapter = FastAdapter.with(mItemAdapter);
+
         GridLayoutManager gridLayout = new GridLayoutManager(getActivity(), 2);
+
         mRvAuthPhotos.setLayoutManager(gridLayout);
         mRvAuthPhotos.setAdapter(fastAdapter); // bind adapter
 
-//        loadPhotosFromStorage();
+        loadPhotosFromStorage();
     }
 
-    public void addPhoto(UserProfile examinee) {
-        System.out.println(mReference.child(examinee.getUserId()).toString());
-        mItemAdapter.add(new AuthPhotoItem().setPhotoReference(mReference.child(examinee.getUserId() + ".jpg")).setName(examinee.getName()));
+    // Retrieves and displays photos from the storage bucket in firebase storage
+    private void loadPhotosFromStorage() {
+        mReference.listAll()
+                .addOnSuccessListener(new OnSuccessListener<ListResult>() {
+                    @Override
+                    public void onSuccess(ListResult listResult) {
+                        loadAllInRecycler(listResult);
+                        Toast.makeText(getActivity(), "Listed photos", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(getActivity(), "Could not load photos...", Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
-    @Override
-    public void onHiddenChanged(boolean hidden) {
-        if (!hidden) getActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
-            @Override
-            public void handleOnBackPressed() {
-                getActivity().startActivity(new Intent(getActivity(), ProctorHomeActivity.class));
-            }
-        });
-        super.onHiddenChanged(hidden);
+    private void loadAllInRecycler(ListResult listResult) {
+        // Recycler list items
+        ArrayList<AuthPhotoItem> items = new ArrayList<>();
+        for (StorageReference ref : listResult.getItems()) {
+            items.add(new AuthPhotoItem().setPhotoReference(ref));
+        }
+
+        mItemAdapter.add(items);
     }
 }

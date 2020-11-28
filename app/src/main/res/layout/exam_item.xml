@@ -6,9 +6,7 @@
     app:cardCornerRadius="3dp"
     app:cardElevation="5dp"
     android:layout_margin="8dp">
-    <!-- Created by: Gerardo Gandeaga
-        Updated by: Shreya Jain
-    -->
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -19,7 +17,7 @@
             android:id="@+id/tvExamTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/exam_title"
+            android:text="Exam Title"
             android:textStyle="bold"
             android:textSize="16sp"/>
 
@@ -27,7 +25,7 @@
             android:id="@+id/tvExamId"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/id"
+            android:text="Id"
             android:textStyle="normal"
             android:textSize="13sp"/>
 
@@ -35,7 +33,7 @@
             android:id="@+id/tvExamTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/exam_time"
+            android:text="Exam Time"
             android:textStyle="normal"
             android:textSize="13sp"/>
 
@@ -43,7 +41,7 @@
             android:id="@+id/tvAuthTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/exam_auth_time"
+            android:text="Exam Authentication Time"
             android:textStyle="normal"
             android:textSize="13sp"/>
 

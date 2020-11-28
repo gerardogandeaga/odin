@@ -5,23 +5,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical">
 
-    <!-- Created by: Gerardo Gandeaga
-        Updated by: Shreya Jain
-    -->
     <ImageView
         android:id="@+id/imgAuthPhoto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:srcCompat="@tools:sample/avatars" />
-
-    <TextView
-        android:id="@+id/tvName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:textStyle="bold"
-        android:textColor="@color/black"
-        android:padding="4dp"
-        android:text="@string/examinee_name"/>
 
 </LinearLayout>

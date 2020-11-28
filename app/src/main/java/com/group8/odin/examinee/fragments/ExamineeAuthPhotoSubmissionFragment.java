@@ -3,11 +3,13 @@ package com.group8.odin.examinee.fragments;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,9 +35,12 @@ import com.google.firebase.storage.UploadTask;
 import com.group8.odin.OdinFirebase;
 import com.group8.odin.R;
 import com.group8.odin.R2;
-import com.group8.odin.examinee.activities.ExamineeExamSessionActivity;
+import com.group8.odin.common.activities.LoginActivity;
+import com.group8.odin.examinee.activities.ExamineeHomeActivity;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -50,7 +55,6 @@ import butterknife.ButterKnife;
  * Updated by: Shreya Jain
  * Updated on: 2020-11-08
  * Description: Added permissions check
- * Updated by: Shreya Jain
  */
 public class ExamineeAuthPhotoSubmissionFragment extends Fragment {
     @BindView(R2.id.imgResultPhoto) ImageView mImgAuthPhotoResult;
@@ -123,7 +127,8 @@ public class ExamineeAuthPhotoSubmissionFragment extends Fragment {
 
     // Function to initiate after permissions are given by user
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode,
+                                           String[] permissions, int[] grantResults) {
 
         switch (requestCode) {
             case PERMISSIONS_REQUEST_CODE:
@@ -133,7 +138,7 @@ public class ExamineeAuthPhotoSubmissionFragment extends Fragment {
                     boolean readExternalFile = grantResults[2] == PackageManager.PERMISSION_GRANTED;
                     if(cameraPermission && writeExternalFile && readExternalFile)
                     {
-                        Toast.makeText(getActivity(), R.string.permissions_success, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "Permission Granted!", Toast.LENGTH_SHORT).show();
                         permissionsStatus = 1;
                     }
                     else
@@ -155,7 +160,7 @@ public class ExamineeAuthPhotoSubmissionFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.examinee_auth_photo_submission_layout, container, false);
+        return inflater.inflate(R.layout.examinee_auth_photo_submission, container, false);
     }
 
     @Override
@@ -163,7 +168,7 @@ public class ExamineeAuthPhotoSubmissionFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
 
-        getActivity().setTitle(R.string.auth_photo_submission);
+        getActivity().setTitle("Authentication Photo Submission");
 
         // Camera activity
         mBtnCamera.setOnClickListener(new View.OnClickListener() {
@@ -172,7 +177,7 @@ public class ExamineeAuthPhotoSubmissionFragment extends Fragment {
                 if (permissionsStatus == 1) {
                     invokeCameraActivity();
                 } else {
-                    Toast.makeText(getActivity(), R.string.permissions_denied, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Permission Denied. Please grant permissions and try again!", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -185,13 +190,12 @@ public class ExamineeAuthPhotoSubmissionFragment extends Fragment {
                 Uri uri = Uri.fromFile(new File(mAuthPhotoUri));
 
                 // store photo in exam session folder
-                mReference.child(OdinFirebase.ExamSessionContext.getExamId() + "/" + OdinFirebase.UserProfileContext.getUserId() + ".jpg").putFile(uri)// todo : when uploading files rename file to userid_time.jpg
+                mReference.child(OdinFirebase.ExamSessionContext.getExamId() + "/" + uri.getLastPathSegment()).putFile(uri)// todo : when uploading files rename file to userid_time.jpg
                         .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                             @Override
                             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                Toast.makeText(getActivity(), R.string.upload_success, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getActivity(), "Photo Uploaded!", Toast.LENGTH_SHORT).show();
                                 mPbProgress.setVisibility(View.VISIBLE);
-                                ((ExamineeExamSessionActivity) getActivity()).showExamSessionHome();
                             }
                         })
                         .addOnFailureListener(new OnFailureListener() {
@@ -226,7 +230,7 @@ public class ExamineeAuthPhotoSubmissionFragment extends Fragment {
         }
         catch (IOException e) {
             e.printStackTrace();
-            Toast.makeText(getActivity(), R.string.camera_error, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Camera could not start...", Toast.LENGTH_SHORT).show();
         }
 
         if (tmpPhotoFile != null) {
@@ -252,8 +256,8 @@ public class ExamineeAuthPhotoSubmissionFragment extends Fragment {
     // This function is needed to get full resolution image
     private File createImageFile() throws IOException {
         // Create an image file name
-        String imageFileName = OdinFirebase.UserProfileContext.getUserId(); // the file name will be the examinee id
-        System.out.println("This is the prefix: " + imageFileName);
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
         File storageDir = getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File image =  File.createTempFile(
                 imageFileName,   /* prefix */

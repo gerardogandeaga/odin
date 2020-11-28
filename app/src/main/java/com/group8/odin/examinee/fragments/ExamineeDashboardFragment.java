@@ -44,7 +44,6 @@ import butterknife.ButterKnife;
 /*
  * Created by: Gerardo Gandeaga
  * Created on: 2020-11-01
- * Updated by: Shreya Jain
  * Description: Examinee dashboard fragment. Fragment will display the exams that the examinee is registered to.
  */
 public class ExamineeDashboardFragment extends Fragment {
@@ -69,7 +68,7 @@ public class ExamineeDashboardFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
 
-        getActivity().setTitle(R.string.dashboard);
+        getActivity().setTitle("Examinee Dashboard");
 
         // Setup recycler view with fastadapter
         mItemAdapter = new ItemAdapter();
@@ -98,7 +97,7 @@ public class ExamineeDashboardFragment extends Fragment {
         mFirestore = FirebaseFirestore.getInstance();
 
         // Setup floating action button
-        mFabRegister.setText(R.string.register_exam);
+        mFabRegister.setText("Register an Exam");
         mFabRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -1,6 +1,11 @@
 package com.group8.odin.common.activities;
 
+import android.Manifest;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -10,6 +15,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -26,6 +33,11 @@ import com.group8.odin.R;
 import com.group8.odin.common.models.UserProfile;
 import com.group8.odin.examinee.activities.ExamineeHomeActivity;
 import com.group8.odin.proctor.activities.ProctorHomeActivity;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -55,10 +67,10 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
-            setContentView(R.layout.common_login_layout);
+            setContentView(R.layout.activity_log_in);
             ButterKnife.bind(this);
 
-            setTitle(R.string.login);
+            setTitle("Login");
 
             // Initialize Firebase Auth
             mAuth = FirebaseAuth.getInstance();
@@ -69,16 +81,6 @@ public class LoginActivity extends AppCompatActivity {
                 public void onClick(View v) {
                     String myLogInEmail = etMyLogInEmail.getText().toString();
                     String myLogInPassword = etMyLogInPassword.getText().toString();
-
-                    if(myLogInEmail.isEmpty()){
-                        Toast.makeText(LoginActivity.this, R.string.email_error, Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-
-                    if(myLogInPassword.isEmpty()){
-                        Toast.makeText(LoginActivity.this, R.string.password_error, Toast.LENGTH_SHORT).show();
-                        return;
-                    }
 
                     //Begin firebase authentication (log in)
                     mAuth.signInWithEmailAndPassword(myLogInEmail, myLogInPassword)
@@ -91,8 +93,8 @@ public class LoginActivity extends AppCompatActivity {
                                         // Sign in success, update UI with the signed-in user's information
                                         Log.d(TAG, "signInWithEmail:success");
                                         FirebaseUser user = mAuth.getCurrentUser();
-                                        Toast.makeText(LoginActivity.this, R.string.auth_success,
-                                                Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(LoginActivity.this, "Authentication Success. Welcome.",
+                                                Toast.LENGTH_SHORT).show(); //TODO: improve this toast message
 
                                         // get user profile
                                         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -115,13 +117,13 @@ public class LoginActivity extends AppCompatActivity {
                                         }).addOnFailureListener(new OnFailureListener() {
                                             @Override
                                             public void onFailure(@NonNull Exception e) {
-                                                Toast.makeText(LoginActivity.this, R.string.auth_profile_fail, Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(LoginActivity.this, "Profile fetch failed...", Toast.LENGTH_SHORT).show();
                                             }
                                         });
                                     } else {
                                         // If sign in fails, display a message to the user.
                                         Log.w(TAG, "signInWithEmail:failure", task.getException());
-                                        Toast.makeText(LoginActivity.this, R.string.auth_fail,
+                                        Toast.makeText(LoginActivity.this, "Invalid credentials. Please try again!",
                                                 Toast.LENGTH_SHORT).show();
                                     }
                                 }
@@ -152,5 +154,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 }
 
-/*TODO:  create fragment for forgot password
+/*TODO: LoginScreen
+ *       create fragment for login
+ *       create fragment for forgot password
  */

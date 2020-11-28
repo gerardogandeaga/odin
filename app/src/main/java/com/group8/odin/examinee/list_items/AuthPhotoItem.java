@@ -31,22 +31,14 @@ import butterknife.ButterKnife;
 public class AuthPhotoItem extends AbstractItem<AuthPhotoItem, AuthPhotoItem.ViewHolder> {
     // Data view item will actually hold
     private StorageReference mReference;
-    private String mName;
 
     public AuthPhotoItem setPhotoReference(StorageReference ref) {
         mReference = ref;
         return this;
     }
-    public AuthPhotoItem setName(String name) {
-        mName = name;
-        return this;
-    }
 
     public StorageReference getPhotoReference() {
         return mReference;
-    }
-    public String getName() {
-        return mName;
     }
 
     @NonNull
@@ -69,7 +61,6 @@ public class AuthPhotoItem extends AbstractItem<AuthPhotoItem, AuthPhotoItem.Vie
     protected static class ViewHolder extends FastAdapter.ViewHolder<AuthPhotoItem> {
         Context context;
         @BindView(R.id.imgAuthPhoto) ImageView authPhoto;
-        @BindView(R.id.tvName) TextView name;
 
         public ViewHolder(View view) {
             super(view);
@@ -84,14 +75,12 @@ public class AuthPhotoItem extends AbstractItem<AuthPhotoItem, AuthPhotoItem.Vie
             GlideApp.with(context)
                     .load(item.getPhotoReference())
                     .into(authPhoto);
-            name.setText(item.mName);
+
         }
 
         @Override
         public void unbindView(AuthPhotoItem item) {
             // remove content from the item view
-            authPhoto.setImageDrawable(null);
-            name.setText(null);
         }
     }
 }

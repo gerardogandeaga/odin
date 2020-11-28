@@ -22,7 +22,6 @@ YOU MAY CHANGE THIS FOR TESTING BUT AKE SURE TO REVERT!!!!!!!!!!!!!
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-<!--        <activity android:name=".common.activities.LoginActivity">-->
         <activity android:name=".common.activities.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

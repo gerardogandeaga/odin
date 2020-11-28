@@ -20,7 +20,6 @@ import androidx.fragment.app.Fragment;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.Timestamp;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
@@ -47,8 +46,6 @@ import butterknife.ButterKnife;
  * Updated on: 2020-11-07
  * Description: error handling, real time syncing of user profile and its associated exam sessions
  * Bug: The date set is one month behind. Eg: November 30, 2020 would be equivalent to 2020-10-30. -> Fixed On: 2020-11-07 by Shreya Jain
- * Updated by: Shreya Jain
- * Updated on: 2020-11-22
  */
 public class ProctorExamCreationFragment extends Fragment {
     // Bind views
@@ -87,7 +84,7 @@ public class ProctorExamCreationFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.proctor_exam_creation_layout, container, false);
+        return inflater.inflate(R.layout.proctor_exam_creation, container, false);
     }
 
     @Override
@@ -95,7 +92,7 @@ public class ProctorExamCreationFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
 
-        getActivity().setTitle(R.string.exam_creation);
+        getActivity().setTitle("Exam Session Creation");
 
         // Handle on back button pressed in the fragment
         getActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
@@ -214,8 +211,8 @@ public class ProctorExamCreationFragment extends Fragment {
                     Date examStart, examEnd, authStart, authEnd;
                     examStart = new Date(mYear - 1900, mMonth, mDay, mStartExamHour, mStartExamMinute);
                     examEnd = new Date(mYear - 1900, mMonth, mDay, mEndExamHour, mEndExamMinute);
-                    authStart = new Date(mYear - 1900, mMonth, mDay, mStartAuthHour, mStartAuthMinute);
-                    authEnd = new Date(mYear - 1900, mMonth, mDay, mEndAuthHour, mEndAuthMinute);
+                    authStart = new Date(mYear -1900, mMonth, mDay, mStartAuthHour, mStartAuthMinute);
+                    authEnd = new Date(mYear -1900, mMonth, mDay, mEndAuthHour, mEndAuthMinute);
 
                     // Add a new document with a generated id.
                     Map<String, Object> data = new HashMap<>();
@@ -225,22 +222,18 @@ public class ProctorExamCreationFragment extends Fragment {
                     data.put(OdinFirebase.FirestoreExamSession.AUTH_START_TIME, new Timestamp(authStart));
                     data.put(OdinFirebase.FirestoreExamSession.AUTH_END_TIME, new Timestamp(authEnd));
 
-                    final Map<String, Object> ghostData = new HashMap<>();
-
-                    // add exam session
                     mFirestore.collection(OdinFirebase.FirestoreCollections.EXAM_SESSIONS)
                             .add(data)
                             .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                                 @Override
                                 public void onSuccess(DocumentReference documentReference) {
                                     linkExamToProctorProfile(documentReference);
-                                    documentReference.collection(OdinFirebase.FirestoreCollections.ACTIVITY_LOGS).add(ghostData);
                                 }
                             })
                             .addOnFailureListener(new OnFailureListener() {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
-                                    Toast.makeText(getActivity(), R.string.exam_create_error, Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getActivity(), "Exam creation failed! Please try again.", Toast.LENGTH_SHORT).show();
                                 }
                             });
 
@@ -264,33 +257,33 @@ public class ProctorExamCreationFragment extends Fragment {
     // Checks if the exam creation fields are valid
     private boolean checkFieldsAreValid() {
         if (mEtExamTitle.getText().toString().trim().isEmpty()) {
-            Toast.makeText(getActivity(), R.string.exam_title_error, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Need an Exam Title!", Toast.LENGTH_SHORT).show();
             return false;
         }
 
         if (!mExamDateSet) {
-            Toast.makeText(getActivity(), R.string.exam_date_error, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Exam date not set!", Toast.LENGTH_SHORT).show();
             return false;
         }
         if (!mExamTimeSet) {
-            Toast.makeText(getActivity(), R.string.exam_time_error, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Exam time not set!", Toast.LENGTH_SHORT).show();
             return false;
         }
         if (!mAuthTimeSet) {
-            Toast.makeText(getActivity(), R.string.auth_time_error, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Auth time not set!", Toast.LENGTH_SHORT).show();
             return false;
         }
 
         if (!validStartEndTimes(mStartExamHour, mStartExamMinute, mEndExamHour, mEndExamMinute)) {
-            Toast.makeText(getActivity(), R.string.time_error, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Invalid exam times!", Toast.LENGTH_SHORT).show();
             return false;
         }
         if (!validStartEndTimes(mStartAuthHour, mStartAuthMinute, mEndAuthHour, mEndAuthMinute)) {
-            Toast.makeText(getActivity(), R.string.time_error, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Invalid auth times!", Toast.LENGTH_SHORT).show();
             return false;
         }
         if (!validExamAndAuthTimes()) {
-            Toast.makeText(getActivity(), R.string.time_logic_error, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Invalid exam and auth times!", Toast.LENGTH_SHORT).show();
             return false;
         }
 
@@ -321,7 +314,7 @@ public class ProctorExamCreationFragment extends Fragment {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(getActivity(), R.string.general_error, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "Something went wrong...Please refresh.", Toast.LENGTH_SHORT).show();
                     }
                 });
     }

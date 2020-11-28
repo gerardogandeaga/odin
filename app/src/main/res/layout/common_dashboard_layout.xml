@@ -8,10 +8,6 @@
     android:backgroundTint="#FFFFFF"
     android:orientation="vertical">
 
-    <!--Created by: Gerardo Gandeaga
-        Updated by: Shreya Jain
-    -->
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
@@ -24,7 +20,7 @@
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
         android:gravity="bottom|right"
-        android:text="@string/fab_action"
+        android:text="Perform Action"
         app:layout_constraintBottom_toBottomOf="@+id/recycler_view"
         app:layout_constraintEnd_toEndOf="parent" />
 
