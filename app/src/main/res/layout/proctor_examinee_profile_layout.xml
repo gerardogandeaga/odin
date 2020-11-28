@@ -6,7 +6,7 @@ Updated by: Shreya Jain
 Updated on: 2020-11-21
 Updated by Raj Patel
 Updated on: 2020-11-28
-Description: Added Education ID display
+Description: Added Education ID display instead of exam ID
 -->
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"

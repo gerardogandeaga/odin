@@ -63,7 +63,7 @@ public class ProctorExamineeProfileFragment extends Fragment {
     @BindView(R.id.imgAuthPhoto)    ImageView mImgAuthPhoto;
     @BindView(R.id.tvAuthTimeStamp) TextView mTvAuthPhotoTimestamp;
     @BindView(R.id.tvEmail)         TextView mTvEmail;
-    @BindView(R.id.tvEducationID)            TextView mTvEducId;
+    @BindView(R.id.tvEducationID)            TextView mTvEducationId;
     @BindView(R.id.tvActivityLog)   TextView mTvActivityLog;
 
     private ProctorExamSessionActivity mActivity;
@@ -97,7 +97,7 @@ public class ProctorExamineeProfileFragment extends Fragment {
     private void displayProfileAndActivityData() {
         // set fields
         mTvEmail.setText("Email: " + mExaminee.getEmail());
-        mTvEducId.setText("Student ID: " + mExaminee.getEducationID());
+        mTvEducationId.setText("Student ID: " + mExaminee.getEducationID());
 
         // get the auth photo
         StorageReference authPhoto = mStorage.getReference().child(OdinFirebase.ExamSessionContext.getExamId() + "/" + mExaminee.getUserId() + ".jpg");
