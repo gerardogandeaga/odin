@@ -17,7 +17,7 @@
     <string name="email_error">Email address cannot be empty. Please enter your email address.</string>
     <string name="email_error_valid">Please enter a valid email address.</string>
     <string name="password_error">Password cannot be empty. Please enter your Password.</string>
-    <string name="password_error_valid">Invalid Password. Please try again.</string>
+    <!-- <string name="password_error_valid">Invalid Password. Please try again.</string> -->
     <string name="confirm_pass_error">Please confirm your password.</string>
     <string name="confirm_pass_error_valid">Passwords do not match. Please try again.</string>
     <string name="password_length_error">Password must be at least 6 characters.</string>
