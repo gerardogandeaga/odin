@@ -124,7 +124,7 @@
     <string name="examinee_name">Examinee Name</string>
     <string name="active">Active</string>
     <string name="inactive">Inactive</string>
-    <string name="id_sample">ID: 1234XCvbn4567B</string>
+    <string name="educ_id_sample">Student ID: ABCD1234</string>
     <string name="email_sample">Email: sampleexaminee@gmail.com</string>
 
     <!--Activity Log Item-->

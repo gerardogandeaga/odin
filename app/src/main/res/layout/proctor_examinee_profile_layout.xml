@@ -4,6 +4,9 @@ Created By: Shreya Jain
 Created On: November 13, 2020
 Updated by: Shreya Jain
 Updated on: 2020-11-21
+Updated by Raj Patel
+Updated on: 2020-11-28
+Description: Added Education ID display
 -->
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -67,10 +70,10 @@ Updated on: 2020-11-21
                     android:textColor="@color/black" />
 
                 <TextView
-                    android:id="@+id/tvId"
+                    android:id="@+id/tvEducationID"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/id_sample"
+                    android:text="@string/educ_id_sample"
                     android:textColor="@color/black" />
 
             </LinearLayout>

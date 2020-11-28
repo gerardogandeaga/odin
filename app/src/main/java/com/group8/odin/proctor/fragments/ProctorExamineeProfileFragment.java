@@ -54,13 +54,16 @@ import butterknife.ButterKnife;
 * Description: Examinee summary view for proctor
 * Updated by: Shreya Jain
 * Updated on: 2020-11-22
+* Updated by Raj Patel
+* Updated on: 2020-11-28
+* Description: Added Education ID
  */
 
 public class ProctorExamineeProfileFragment extends Fragment {
     @BindView(R.id.imgAuthPhoto)    ImageView mImgAuthPhoto;
     @BindView(R.id.tvAuthTimeStamp) TextView mTvAuthPhotoTimestamp;
     @BindView(R.id.tvEmail)         TextView mTvEmail;
-    @BindView(R.id.tvId)            TextView mTvId;
+    @BindView(R.id.tvEducationID)            TextView mTvEducId;
     @BindView(R.id.tvActivityLog)   TextView mTvActivityLog;
 
     private ProctorExamSessionActivity mActivity;
@@ -94,7 +97,7 @@ public class ProctorExamineeProfileFragment extends Fragment {
     private void displayProfileAndActivityData() {
         // set fields
         mTvEmail.setText("Email: " + mExaminee.getEmail());
-        mTvId.setText("ID: " + mExaminee.getUserId());
+        mTvEducId.setText("Student ID: " + mExaminee.getEducationID());
 
         // get the auth photo
         StorageReference authPhoto = mStorage.getReference().child(OdinFirebase.ExamSessionContext.getExamId() + "/" + mExaminee.getUserId() + ".jpg");
