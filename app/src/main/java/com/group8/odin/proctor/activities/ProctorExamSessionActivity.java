@@ -82,7 +82,7 @@ public class ProctorExamSessionActivity extends AppCompatActivity {
         mFragmentTransaction.commit();
 
         startListeningToActivityLogsCollection();
-        showLiveMonitoring();
+        showAuthPhotos();
     }
 
     // load activity logs

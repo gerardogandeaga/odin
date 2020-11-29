@@ -160,8 +160,8 @@ public class ProctorLiveMonitoringFragment extends Fragment {
             getActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
                 @Override
                 public void handleOnBackPressed() {
-                    getActivity().setTitle(R.string.dashboard);
-                    ((ProctorHomeActivity) getActivity()).showProctorDashboard();
+                    getActivity().setTitle(R.string.photo_submission);
+                    ((ProctorExamSessionActivity) getActivity()).showAuthPhotos();
                 }
             });
         }

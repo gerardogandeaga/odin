@@ -23,6 +23,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.group8.odin.OdinFirebase;
 import com.group8.odin.R;
+import com.group8.odin.Utils;
 import com.group8.odin.examinee.fragments.ExamineeAuthPhotoSubmissionFragment;
 import com.group8.odin.examinee.fragments.ExamineeExamSessionHomeFragment;
 
@@ -45,6 +46,7 @@ public class ExamineeExamSessionActivity extends AppCompatActivity {
     private static FragmentManager mFragmentManager;
     private static FragmentTransaction mFragmentTransaction;
     public static boolean InExam;
+    private Date authEnd = OdinFirebase.ExamSessionContext.getAuthEndTime();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -54,8 +56,33 @@ public class ExamineeExamSessionActivity extends AppCompatActivity {
         // Setup fragment manager
         mFragmentManager = getSupportFragmentManager();
 
-        //go to exam session home
-        showExamSessionHome();
+        //check if auth time has ended
+        if(!Utils.isCurrentTimeAfterTime(authEnd)) {
+            //auth time not yet ended
+            // check if photo has already been submitted for the exam session
+            FirebaseStorage storage = FirebaseStorage.getInstance();
+            StorageReference reference = storage.getReference();
+            reference.child(OdinFirebase.ExamSessionContext.getExamId()).child(OdinFirebase.UserProfileContext.getUserId() + ".jpg")
+                    .getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                @Override
+                public void onSuccess(Uri uri) {
+                    // auth photo exists in storage
+                    showExamSessionHome();
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    // auth photo does not exist in storage so we can take an auth photo
+                    showAuthPhotoSubmission();
+                }
+            });
+
+        } else {
+            //auth time has ended
+            Toast.makeText(this, R.string.auth_finished, Toast.LENGTH_SHORT).show();
+            //go to exam session home
+            showExamSessionHome();
+        }
     }
 
     public static void showAuthPhotoSubmission() {
