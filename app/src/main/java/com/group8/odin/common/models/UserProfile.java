@@ -15,6 +15,7 @@ import java.util.ArrayList;
 public class UserProfile {
     public enum Role { PROCTOR, EXAMINEE }
     private String userId;
+    private String eduId;
     private String name;
     private String email;
     private Role role;
