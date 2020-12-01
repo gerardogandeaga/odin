@@ -12,6 +12,7 @@ import com.group8.odin.common.models.UserProfile;
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.items.AbstractItem;
 
+import java.util.Comparator;
 import java.util.List;
 
 import butterknife.BindView;
@@ -21,6 +22,9 @@ import butterknife.ButterKnife;
  * Created by: Gerardo Gandeaga
  * Created on: 2020-10-31
  * Description: Definition for view handling for examinee registered exams
+ * Updated by: Raj Patel
+ * Updated on: 2020-12-01
+ * Description Added sorting of registered exams to loadExamSessions function
  */
 public class RegisteredExamItem extends AbstractItem<RegisteredExamItem, RegisteredExamItem.ViewHolder> {
     // Data view item will actually hold
@@ -84,6 +88,23 @@ public class RegisteredExamItem extends AbstractItem<RegisteredExamItem, Registe
             examTitle.setText(null);
             examTime.setText(null);
             authTime.setText(null);
+        }
+    }
+
+    // custom Registered Exam comparator
+    public static class Comparison implements Comparator<RegisteredExamItem> {
+
+        @Override
+        public int compare(RegisteredExamItem a, RegisteredExamItem b) {
+            int comp = a.getExamSession().getExamStartTime().compareTo(b.getExamSession().getExamStartTime());
+            // if they have the same status value then compare by title
+            if (comp == 0) {
+                return a.getExamSession().getTitle().compareTo(b.getExamSession().getTitle());
+            }
+            // if they are different status values then compare by status
+            else {
+                return -(comp);
+            }
         }
     }
 }

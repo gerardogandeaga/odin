@@ -35,6 +35,8 @@ import com.mikepenz.fastadapter.IAdapter;
 import com.mikepenz.fastadapter.adapters.ItemAdapter;
 import com.mikepenz.fastadapter.listeners.OnClickListener;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -46,6 +48,9 @@ import butterknife.ButterKnife;
  * Created on: 2020-11-01
  * Updated by: Shreya Jain
  * Description: Examinee dashboard fragment. Fragment will display the exams that the examinee is registered to.
+ * Updated by: Raj Patel
+ * Updated on: 2020-12-01
+ * Description Added sorting of registered exams to loadExamSessions function
  */
 public class ExamineeDashboardFragment extends Fragment {
     private FirebaseFirestore mFirestore;
@@ -118,9 +123,11 @@ public class ExamineeDashboardFragment extends Fragment {
     }
 
     // Load user exam sessions
-    public boolean loadExamSessions() {
-        for (String id : OdinFirebase.UserProfileContext.getExamSessionIds()) {
-            DocumentReference exam = mFirestore.collection(OdinFirebase.FirestoreCollections.EXAM_SESSIONS).document(id);
+    public boolean loadExamSessions()
+    {
+        for (String id : OdinFirebase.UserProfileContext.getExamSessionIds())
+        {
+            final DocumentReference exam = mFirestore.collection(OdinFirebase.FirestoreCollections.EXAM_SESSIONS).document(id);
             exam.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -130,11 +137,20 @@ public class ExamineeDashboardFragment extends Fragment {
                         OdinFirebase.UserProfileContext.getExamSessions().add(session);
 
                         // Display exam sessions in recycler view
-                        mItemAdapter.add(new RegisteredExamItem().setExamSession(session));
-                    }
-                    else {
+
+                        if (OdinFirebase.UserProfileContext.getExamSessions().size() == OdinFirebase.UserProfileContext.getExamSessionIds().size()) {
+                            ArrayList<RegisteredExamItem> adapterItems = new ArrayList<>(); // list item (gui)
+
+                            // creates registered exam sessions and puts them in list
+                            for (ExamSession examSession: OdinFirebase.UserProfileContext.getExamSessions()) adapterItems.add(new RegisteredExamItem().setExamSession(examSession));
+
+                            // sort
+                            adapterItems.sort(new RegisteredExamItem.Comparison());
+                            // add to adapter
+                            mItemAdapter.add(adapterItems);
+                        }
+                    } else
                         Log.e("UserProfile -> LoadExamSessions: ", "Error loading exam sessions");
-                    }
                 }
             });
         }

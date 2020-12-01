@@ -37,6 +37,8 @@ import com.mikepenz.fastadapter.adapters.ItemAdapter;
 import com.mikepenz.fastadapter.listeners.OnClickListener;
 import com.mikepenz.fastadapter.listeners.OnLongClickListener;
 
+import java.util.ArrayList;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -46,6 +48,9 @@ import butterknife.ButterKnife;
  * Description: Fragment to handle the proctor's dashboard that displays all the exams created by them
  * Updated by: Shreya Jain
  * Updated on: 2020-11-22
+ * Updated by: Raj Patel
+ * Updated on: 2020-12-01
+ * Description Added sorting of registered exams to loadExamSessions function
  */
 public class ProctorDashboardFragment extends Fragment {
     @BindView(R2.id.recycler_view)
@@ -137,7 +142,18 @@ public class ProctorDashboardFragment extends Fragment {
                         OdinFirebase.UserProfileContext.getExamSessions().add(session);
 
                         // Display exam sessions in recycler view
-                        mItemAdapter.add(new RegisteredExamItem().setExamSession(session));
+
+                        if (OdinFirebase.UserProfileContext.getExamSessions().size() == OdinFirebase.UserProfileContext.getExamSessionIds().size()) {
+                            ArrayList<RegisteredExamItem> adapterItems = new ArrayList<>(); // list item (gui)
+
+                            // creates registered exam sessions and puts them in list
+                            for (ExamSession examSession: OdinFirebase.UserProfileContext.getExamSessions()) adapterItems.add(new RegisteredExamItem().setExamSession(examSession));
+
+                            // sort
+                            adapterItems.sort(new RegisteredExamItem.Comparison());
+                            // add to adapter
+                            mItemAdapter.add(adapterItems);
+                        }
                     }
                     else {
                         Log.e("UserProfile -> LoadExamSessions: ", "Error loading exam sessions");
