@@ -30,6 +30,9 @@ import com.group8.odin.R2;
 import com.group8.odin.common.models.UserProfile;
 import com.group8.odin.proctor.activities.ProctorHomeActivity;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -48,6 +51,9 @@ import butterknife.ButterKnife;
  * Bug: The date set is one month behind. Eg: November 30, 2020 would be equivalent to 2020-10-30. -> Fixed On: 2020-11-07 by Shreya Jain
  * Updated by: Shreya Jain
  * Updated on: 2020-11-22
+ * Updated by: Matthew Tong
+ * Updated on 2020-12-01
+ * Description: fixed time format display and changed icons appearances
  */
 public class ProctorExamCreationFragment extends Fragment {
     // Bind views
@@ -126,8 +132,17 @@ public class ProctorExamCreationFragment extends Fragment {
                         mYear = year;
                         mDay = day;
                         mMonth = month;
-                        mEtExamDate.setText(day + "-" + (month+1) + "-" + year); //Since date picker has months [0..11] ~ [Jan .. Dec]
-                        mExamDateSet = true;
+                        try {
+                            String newStr = day + "-" + (month+1) + "-" + year;
+                            DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+                            Date newDate = formatter.parse(newStr);
+                            formatter = new SimpleDateFormat("dd MMM yyyy");
+                            newStr = formatter.format(newDate);
+                            mEtExamDate.setText(newStr);
+                            mExamDateSet = true;
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }, mYear, mMonth, mDay);
 
@@ -155,9 +170,20 @@ public class ProctorExamCreationFragment extends Fragment {
                             public void onTimeSet(TimePicker timePicker, int hour, int minute) {
                                 mEndExamHour = hour;
                                 mEndExamMinute = minute;
-                                // Finally display result in field
-                                mEtExamTime.setText("From " + mStartExamHour + ":" + mStartExamMinute + " to " + mEndExamHour + ":" + mEndExamMinute);
-                                mExamTimeSet = true;
+                                try {
+                                    String myStartTime = mStartExamHour + ":" + mStartExamMinute;
+                                    String myEndTime = mEndExamHour + ":" + mEndExamMinute;
+                                    DateFormat formatter = new SimpleDateFormat("HH:mm");
+                                    Date myStartTimeDate = (Date)formatter.parse(myStartTime);
+                                    Date myEndTimeDate = (Date)formatter.parse(myEndTime);
+                                    myStartTime = formatter.format(myStartTimeDate);
+                                    myEndTime = formatter.format(myEndTimeDate);
+                                    // Finally display result in field
+                                    mEtExamTime.setText("From " + myStartTime + " to " + myEndTime);
+                                    mExamTimeSet = true;
+                                } catch (ParseException e) {
+                                    e.printStackTrace();
+                                }
                             }
                         }, mEndExamHour, mEndExamMinute, true);
                         endTime.show();
@@ -188,9 +214,20 @@ public class ProctorExamCreationFragment extends Fragment {
                             public void onTimeSet(TimePicker timePicker, int hour, int minute) {
                                 mEndAuthHour = hour;
                                 mEndAuthMinute = minute;
-                                // Finally display result in field
-                                mEtAuthTime.setText("From " + mStartAuthHour + ":" + mStartAuthMinute + " to " + mEndAuthHour + ":" + mEndAuthMinute);
-                                mAuthTimeSet = true;
+                                try {
+                                    String myStartTime = mStartAuthHour + ":" + mStartAuthMinute;
+                                    String myEndTime = mEndAuthHour + ":" + mEndAuthMinute;
+                                    DateFormat formatter = new SimpleDateFormat("HH:mm");
+                                    Date myStartTimeDate = (Date)formatter.parse(myStartTime);
+                                    Date myEndTimeDate = (Date)formatter.parse(myEndTime);
+                                    myStartTime = formatter.format(myStartTimeDate);
+                                    myEndTime = formatter.format(myEndTimeDate);
+                                    // Finally display result in field
+                                    mEtAuthTime.setText("From " + myStartTime + " to " + myEndTime);
+                                    mAuthTimeSet = true;
+                                } catch (ParseException e) {
+                                    e.printStackTrace();
+                                }
                             }
                         }, mEndAuthHour, mEndAuthMinute, true);
                         endTime.show();
@@ -220,9 +257,9 @@ public class ProctorExamCreationFragment extends Fragment {
                     Map<String, Object> data = new HashMap<>();
                     data.put(OdinFirebase.FirestoreExamSession.TITLE, mEtExamTitle.getText().toString().trim());
                     data.put(OdinFirebase.FirestoreExamSession.EXAM_START_TIME, new Timestamp(examStart));
-                    data.put(OdinFirebase.FirestoreExamSession.EXAM_END_TIME, new Timestamp(examEnd));
+                    //data.put(OdinFirebase.FirestoreExamSession.EXAM_END_TIME, new Timestamp(examEnd));
                     data.put(OdinFirebase.FirestoreExamSession.AUTH_START_TIME, new Timestamp(authStart));
-                    data.put(OdinFirebase.FirestoreExamSession.AUTH_END_TIME, new Timestamp(authEnd));
+                    //data.put(OdinFirebase.FirestoreExamSession.AUTH_END_TIME, new Timestamp(authEnd));
 
                     final Map<String, Object> ghostData = new HashMap<>();
 

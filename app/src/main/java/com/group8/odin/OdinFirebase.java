@@ -7,6 +7,10 @@ import com.group8.odin.common.models.UserProfile;
  * Created by: Gerardo Gandeaga
  * Created on: 2020-10-31
  * Description: Driver class for Firebase connections
+ * Updated by: Matthew Tong
+ * Updated on 2020-12-01
+ * Description: removed exam_end_time and auth_end_time
+ * added exam duration and auth duration
  */
 public class OdinFirebase {
     // Consistent references throughout the application
@@ -31,9 +35,11 @@ public class OdinFirebase {
     public static class FirestoreExamSession {
         public static final String TITLE = "title";
         public static final String EXAM_START_TIME = "exam_start_time";
-        public static final String EXAM_END_TIME = "exam_end_time";
+        //public static final String EXAM_END_TIME = "exam_end_time";
+        public static final String EXAM_DURATION = "exam_duration";
         public static final String AUTH_START_TIME = "auth_start_time";
-        public static final String AUTH_END_TIME = "auth_end_time";
+        //public static final String AUTH_END_TIME = "auth_end_time";
+        public static final String AUTH_DURATION = "auth_duration";
     }
 
     public static class FirestoreActivityLog {
