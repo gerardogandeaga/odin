@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Created by: Matthew Tong
+    Created on: 2020-11-30
+    Description: Layout for Exam Edit Screen
+    -->
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="72dp"
+        android:text="Edit Exam"
+        android:textColor="#000000"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/etExamTitle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.29" />
+
+    <EditText
+        android:id="@+id/etEditExamTitle"
+        android:layout_width="match_parent"
+        android:layout_height="39dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:ems="10"
+        android:text="@string/exam_title"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvExamTitle" />
+
+    <EditText
+        android:id="@+id/etEditExamDate"
+        android:layout_width="0dp"
+        android:layout_height="39dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="38dp"
+        android:ems="10"
+        android:text="@string/exam_date"
+        android:textColor="@color/black"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toStartOf="@+id/btnEditExamDate"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@id/tvDateTitle"
+        app:layout_constraintTop_toBottomOf="@+id/etEditExamTitle" />
+
+    <Button
+        android:id="@+id/btnEditExamDate"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/ic_calendar"
+        app:layout_constraintBottom_toBottomOf="@+id/etEditExamDate"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/etEditExamDate"
+        app:layout_constraintVertical_bias="0.619" />
+
+    <EditText
+        android:id="@+id/etEditExamTime"
+        android:layout_width="206dp"
+        android:layout_height="39dp"
+        android:layout_marginStart="16dp"
+        android:ems="10"
+        android:text="@string/exam_time_hint"
+        android:textColor="@color/black"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toStartOf="@+id/btnEditExamTime"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvExamTimeTitle" />
+
+    <Button
+        android:id="@+id/btnEditExamTime"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginEnd="16dp"
+        android:text="@string/exam_time"
+        android:background="@drawable/ic_edit"
+        app:layout_constraintBottom_toBottomOf="@+id/etEditExamTime"
+        app:layout_constraintStart_toEndOf="@id/etEditExamTime"
+        app:layout_constraintTop_toTopOf="@+id/etEditExamTime" />
+
+    <EditText
+        android:id="@+id/etEditAuthTime"
+        android:layout_width="206dp"
+        android:layout_height="39dp"
+        android:layout_marginStart="16dp"
+        android:ems="10"
+        android:text="@string/auth_time_hint"
+        android:textColor="@color/black"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toStartOf="@+id/btnAuthTime"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvAuthTimeTitle" />
+
+    <Button
+        android:id="@+id/btnEditAuthTime"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:background="@drawable/ic_edit"
+        app:layout_constraintBottom_toBottomOf="@+id/etEditAuthTime"
+        app:layout_constraintStart_toEndOf="@id/etEditAuthTime"
+        app:layout_constraintTop_toTopOf="@+id/etEditAuthTime" />
+
+    <EditText
+        android:id="@+id/etAuthDuration"
+        android:layout_width="0dp"
+        android:layout_height="39dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="@string/auth_duration_hint"
+        android:textColor="@color/black"
+        app:layout_constraintBottom_toBottomOf="@+id/etEditAuthTime"
+        app:layout_constraintEnd_toStartOf="@id/btnEditAuthDuration"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/btnEditAuthTime"
+        app:layout_constraintTop_toTopOf="@+id/etEditAuthTime" />
+
+    <Button
+        android:id="@+id/btnEditAuthDuration"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/ic_edit"
+        app:layout_constraintBottom_toBottomOf="@+id/etEditAuthTime"
+        app:layout_constraintTop_toTopOf="@+id/etEditAuthTime"
+        app:layout_constraintStart_toEndOf="@id/etAuthDuration"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintVertical_bias="0.523" />
+
+    <Button
+        android:id="@+id/btnSubmitExamEdit"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="57dp"
+        android:layout_marginEnd="16dp"
+        android:text="Submit"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/etEditAuthTime" />
+
+    <TextView
+        android:id="@+id/tvExamTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="200dp"
+        android:text="Title: "
+        app:layout_constraintBottom_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvTitle" />
+
+    <TextView
+        android:id="@+id/tvDateTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="8dp"
+        android:text="Date: "
+        app:layout_constraintBottom_toBottomOf="@+id/etEditExamDate"
+        app:layout_constraintEnd_toStartOf="@+id/etEditExamDate"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/etEditExamDate" />
+
+    <TextView
+        android:id="@+id/tvExamTimeTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="38dp"
+        android:layout_marginStart="16dp"
+        android:text="Exam Starts: "
+        app:layout_constraintBottom_toTopOf="@+id/etExamTime"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvDateTitle" />
+
+    <EditText
+        android:id="@+id/etExamDuration"
+        android:layout_width="0dp"
+        android:layout_height="39dp"
+        android:text="@string/exam_duration_hint"
+        android:textColor="@color/black"
+        android:inputType="textPersonName"
+        app:layout_constraintBottom_toBottomOf="@+id/etEditExamTime"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/btnEditExamTime"
+        app:layout_constraintEnd_toStartOf="@id/btnEditExamDuration"
+        app:layout_constraintTop_toTopOf="@+id/etEditExamTime" />
+
+    <Button
+        android:id="@+id/btnEditExamDuration"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/ic_edit"
+        app:layout_constraintBottom_toBottomOf="@+id/etEditExamTime"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/etExamDuration"
+        app:layout_constraintTop_toTopOf="@+id/etEditExamTime" />
+
+    <TextView
+        android:id="@+id/tvAuthTimeTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="38dp"
+        android:layout_marginStart="16dp"
+        android:text="Authentication Starts: "
+        app:layout_constraintBottom_toTopOf="@+id/etAuthTime"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/etEditExamTime" />
+
+    <TextView
+        android:id="@+id/tvExamDuration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Duration:"
+        app:layout_constraintBottom_toTopOf="@+id/etExamDuration"
+        app:layout_constraintStart_toEndOf="@+id/btnEditExamTime" />
+
+    <TextView
+        android:id="@+id/tvAuthDaration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Duration:"
+        app:layout_constraintBottom_toTopOf="@+id/etAuthDuration"
+        app:layout_constraintStart_toEndOf="@+id/btnEditAuthTime" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

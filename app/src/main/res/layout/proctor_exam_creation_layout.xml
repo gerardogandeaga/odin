@@ -9,6 +9,9 @@
     Description: Fixed design bugs
     Updated by: Shreya Jain
     Updated on: 2020-11-21
+    Updated by: Matthew Tong
+    Updated on: 2020-11-30
+    Description: changed icons appearances
     -->
 
 <androidx.constraintlayout.widget.ConstraintLayout
@@ -64,10 +67,11 @@
 
     <Button
         android:id="@+id/btnExamDate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginEnd="28dp"
         android:text="@string/exam_date"
+        android:background="@drawable/ic_calendar"
         app:layout_constraintBottom_toBottomOf="@+id/etExamDate"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/etExamDate" />
@@ -89,9 +93,10 @@
 
     <Button
         android:id="@+id/btnExamTime"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginEnd="28dp"
+        android:background="@drawable/ic_edit"
         android:text="@string/exam_time"
         app:layout_constraintBottom_toBottomOf="@+id/etExamTime"
         app:layout_constraintEnd_toEndOf="parent"
@@ -114,14 +119,15 @@
 
     <Button
         android:id="@+id/btnAuthTime"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginEnd="28dp"
+        android:background="@drawable/ic_edit"
         android:text="@string/auth_time"
         app:layout_constraintBottom_toBottomOf="@+id/etAuthTime"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/etAuthTime"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="0.476" />
 
     <Button
         android:id="@+id/btnCreateExam"

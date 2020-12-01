@@ -3,8 +3,8 @@
     <!--
     This string is used for square devices and overridden by hello_world in
     values-round/strings.xml for round devices.
-    Updated by: Shreya Jain
-    Updated on: 2020-11-21
+    Updated by: Matthew Tong
+    Updated on: 2020-12-01
     -->
 
     <!--Toast Messages and Errors-->
@@ -32,6 +32,8 @@
 
     <string name="copy_message">Exam ID Copied to Clipboard</string>
 
+    <string name="exam_edit_success">Exam info updated!.</string>
+    <string name="exam_edit_error">Failed to edit Exam! Please try again.</string>
     <string name="exam_create_error">Exam creation failed! Please try again.</string>
     <string name="exam_title_error">Exam Title cannot be empty. Please try again.</string>
     <string name="exam_date_error">Exam date not set!</string>
@@ -39,6 +41,8 @@
     <string name="auth_time_error">Auth time not set!</string>
     <string name="time_error">Invalid time period! Please verify that the end time is after start time.</string>
     <string name="time_logic_error">Invalid exam and auth times! Auth time cannot be outside exam session</string>
+    <string name="auth_start_after_exam_ends_error">"Authentication needs to start before the exam ends"</string>
+    <string name="auth_longer_than_exam">"Authentication needs to end before the exam ends"</string>
     <string name="general_error">Something went wrong…Please refresh.</string>
 
     <string name="permissions_success">Permissions Granted!</string>
@@ -64,6 +68,7 @@
     <string name="signup">Sign Up</string>
     <string name="dashboard">Dashboard</string>
     <string name="exam_creation">Exam Session Creation</string>
+    <string name= "exam_edit">Edit Exam Session</string>>
     <string name="photo_submission">Auth Photo Submissions</string>
     <string name="live_monitor">Live Monitoring</string>
     <string name="auth_photo_submission">Authentication Photo Submission</string>
@@ -77,7 +82,9 @@
     <string name="last_name_hint">Type your last name</string>
     <string name="confirm_pass_hint">Confirm your password</string>
     <string name="exam_time_hint">Exam Time (From - To)</string>
+    <string name="exam_duration_hint">Exam Duration</string>
     <string name="auth_time_hint">Auth Time (From - To)</string>
+    <string name="auth_duration_hint">Auth Duration</string>
 
     <!--Form Elements-->
     <string name="email">Email</string>
@@ -131,4 +138,6 @@
     <string name="live_proctor">Live Proctoring</string>
     <string name="create_exam">Create Exam</string>
     <string name="register_exam">Register Exam</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

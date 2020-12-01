@@ -28,10 +28,13 @@ import com.group8.odin.common.models.ActivityLog;
 import com.group8.odin.common.models.ExamSession;
 import com.group8.odin.common.models.UserProfile;
 import com.group8.odin.proctor.fragments.ProctorAuthPhotosFragment;
+import com.group8.odin.proctor.fragments.ProctorEditExamSessionFragment;
 import com.group8.odin.proctor.fragments.ProctorExamineeProfileFragment;
 import com.group8.odin.proctor.fragments.ProctorLiveMonitoringFragment;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 
 /*
@@ -40,12 +43,16 @@ import java.util.HashMap;
  * Description: Activity that would display authentication photos to the proctor
  * Updated by: Shreya Jain
  * Updated on: 2020-11-22
+ * Updated by: Matthew Tong
+ * Updated on: 2020-12-01
+ * Description: added a new frament for editing exam session (ProctorEditExamSessionFragment)
  */
 public class ProctorExamSessionActivity extends AppCompatActivity {
     private FirebaseFirestore mFirestore;
     private FragmentManager mFragmentManager;
 
     // fragments
+    private ProctorEditExamSessionFragment mProctorEditExamSessionFragment;
     private ProctorExamineeProfileFragment mProctorExamineeProfileFragment;
     private ProctorLiveMonitoringFragment mProctorMonitoringFragment;
     private ProctorAuthPhotosFragment mProctorAuthPhotoFragment;
@@ -67,22 +74,32 @@ public class ProctorExamSessionActivity extends AppCompatActivity {
         mFirestore = FirebaseFirestore.getInstance();
 
         mFragmentManager = getSupportFragmentManager();
+        mProctorEditExamSessionFragment = new ProctorEditExamSessionFragment();
         mProctorExamineeProfileFragment = new ProctorExamineeProfileFragment();
         mProctorMonitoringFragment = new ProctorLiveMonitoringFragment();
         mProctorAuthPhotoFragment = new ProctorAuthPhotosFragment();
 
         // add fragments to memory
         mFragmentTransaction = mFragmentManager.beginTransaction();
+        mFragmentTransaction.add(R.id.container, mProctorEditExamSessionFragment);
         mFragmentTransaction.add(R.id.container, mProctorExamineeProfileFragment);
         mFragmentTransaction.add(R.id.container, mProctorMonitoringFragment);
         mFragmentTransaction.add(R.id.container, mProctorAuthPhotoFragment);
+        mFragmentTransaction.hide(mProctorEditExamSessionFragment);
         mFragmentTransaction.hide(mProctorExamineeProfileFragment);
         mFragmentTransaction.hide(mProctorMonitoringFragment);
         mFragmentTransaction.hide(mProctorAuthPhotoFragment);
         mFragmentTransaction.commit();
 
         startListeningToActivityLogsCollection();
-        showAuthPhotos();
+        Date currentTime = Calendar.getInstance().getTime();
+        Date AuthStartTime = OdinFirebase.ExamSessionContext.getAuthStartTime();
+        if(currentTime.before(AuthStartTime)){
+            showEditExamSession();
+        }else {
+            //showEditExamSession();
+            showAuthPhotos();
+        }
     }
 
     // load activity logs
@@ -222,6 +239,16 @@ public class ProctorExamSessionActivity extends AppCompatActivity {
         mExamineeProfileContext = null;
         mFragmentTransaction = mFragmentManager.beginTransaction();
         mFragmentTransaction.show(mProctorMonitoringFragment);
+        mFragmentTransaction.hide(mProctorAuthPhotoFragment);
+        mFragmentTransaction.hide(mProctorExamineeProfileFragment);
+        mFragmentTransaction.commit();
+    }
+
+    // display the edit exam page
+    public void showEditExamSession(){
+        mFragmentTransaction = mFragmentManager.beginTransaction();
+        mFragmentTransaction.hide(mProctorMonitoringFragment);
+        mFragmentTransaction.show(mProctorEditExamSessionFragment);
         mFragmentTransaction.hide(mProctorAuthPhotoFragment);
         mFragmentTransaction.hide(mProctorExamineeProfileFragment);
         mFragmentTransaction.commit();

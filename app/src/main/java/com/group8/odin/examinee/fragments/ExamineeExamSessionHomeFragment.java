@@ -45,6 +45,9 @@ import butterknife.ButterKnife;
  * Created on: 2020-11-01
  * Description: Examinee dashboard fragment. Fragment will display the exams that the examinee is registered to.
  * Updated by: Shreya Jain
+ * Updated on 2020-12-01
+ * Updated by: Matthew Tong
+ * Description: removed the displaying of exam end time (mTvExamEndTime)
  */
 public class ExamineeExamSessionHomeFragment extends Fragment {
     @BindView(R.id.tvExamInfo) TextView mTvExamInfo;
@@ -69,6 +72,6 @@ public class ExamineeExamSessionHomeFragment extends Fragment {
         mTvExamName.setText(OdinFirebase.ExamSessionContext.getTitle());
         mTvExamID.setText(OdinFirebase.ExamSessionContext.getExamId());
         mTvExamStartTime.setText("Start Time: " + Utils.getDateTimeStringFromDate(OdinFirebase.ExamSessionContext.getExamStartTime()));
-        mTvExamEndTime.setText("End Time: " + Utils.getDateTimeStringFromDate(OdinFirebase.ExamSessionContext.getExamEndTime()));
+        //mTvExamEndTime.setText("End Time: " + Utils.getDateTimeStringFromDate(OdinFirebase.ExamSessionContext.getExamEndTime()));
     }
 }
