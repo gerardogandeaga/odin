@@ -5,13 +5,16 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
+import com.bumptech.glide.util.Util;
 import com.group8.odin.OdinFirebase;
 import com.group8.odin.R;
+import com.group8.odin.Utils;
 import com.group8.odin.common.models.ExamSession;
 import com.group8.odin.common.models.UserProfile;
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.items.AbstractItem;
 
+import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
@@ -53,10 +56,11 @@ public class RegisteredExamItem extends AbstractItem<RegisteredExamItem, Registe
 
     // List item view
     protected static class ViewHolder extends FastAdapter.ViewHolder<RegisteredExamItem> {
-        @BindView(R.id.tvExamTitle) TextView examTitle;
-        @BindView(R.id.tvExamId)    TextView examId;
-        @BindView(R.id.tvExamTime)  TextView examTime;
-        @BindView(R.id.tvAuthTime)  TextView authTime;
+        @BindView(R.id.tvExamTitle)     TextView examTitle;
+        @BindView(R.id.tvExamId)        TextView examId;
+        @BindView(R.id.tvExamStartTime) TextView examStartTime;
+        @BindView(R.id.tvExamEndTime)   TextView examEndTime;
+        @BindView(R.id.tvAuthTime)      TextView authTime;
 
         public ViewHolder(View view) {
             super(view);
@@ -72,17 +76,20 @@ public class RegisteredExamItem extends AbstractItem<RegisteredExamItem, Registe
                 examId.setVisibility(View.GONE);
             }
             else {
-                examId.setText("Exam ID: " + item.examSession.getExamId());
+                examId.setText("ID: " + item.examSession.getExamId());
             }
-            examTime.setText("Exam Begins on " + item.examSession.getExamStartTime().toString());
-            authTime.setText("ID check at " + item.examSession.getAuthStartTime().toString());
+
+            examStartTime.setText("Starts: " + item.examSession.getExamStartTime().toString());
+            examEndTime.setText("Ends: " + item.examSession.getExamEndTime().toString());
+            authTime.setText("ID check ends at " + Utils.getTimeStringFromDate(item.examSession.getAuthEndTime()));
         }
 
         @Override
         public void unbindView(RegisteredExamItem item) {
             // remove content from the item view
             examTitle.setText(null);
-            examTime.setText(null);
+            examStartTime.setText(null);
+            examEndTime.setText(null);
             authTime.setText(null);
         }
     }

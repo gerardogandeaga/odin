@@ -21,6 +21,11 @@ import java.util.List;
  * Description:
  */
 public class HeaderAdapter<Item extends IItem> extends RecyclerView.Adapter implements StickyRecyclerHeadersAdapter {
+    boolean live;
+
+    public HeaderAdapter(boolean live) {
+        this.live = live;
+    }
 
     @Override
     public long getHeaderId(int position) {
@@ -52,15 +57,29 @@ public class HeaderAdapter<Item extends IItem> extends RecyclerView.Adapter impl
         IItem item = getItem(position);
         if (item instanceof ExamineeItem && ((ExamineeItem) item).getExaminee() != null) {
             ExamineeItem examineeItem = (ExamineeItem)item;
-            // if active
-            if (examineeItem.getExaminee().second.getStatus()) {
-                textView.setText(R.string.active);
-                holder.itemView.setBackgroundColor(ContextCompat.getColor(textView.getContext(), R.color.online));
+            if (live) {
+                // if active
+                if (examineeItem.getExaminee().second.getStatus()) {
+                    textView.setText(R.string.active);
+                    holder.itemView.setBackgroundColor(ContextCompat.getColor(textView.getContext(), R.color.online));
+                }
+                // if inactive
+                else {
+                    textView.setText(R.string.inactive);
+                    holder.itemView.setBackgroundColor(ContextCompat.getColor(textView.getContext(), R.color.offline));
+                }
             }
-            // if inactive
             else {
-                textView.setText(R.string.inactive);
-                holder.itemView.setBackgroundColor(ContextCompat.getColor(textView.getContext(), R.color.offline));
+                // if active
+                if (examineeItem.getExaminee().second.getOverallStatus()) {
+                    textView.setText("No Activity"); // todo shreya: add string
+                    holder.itemView.setBackgroundColor(ContextCompat.getColor(textView.getContext(), R.color.online));
+                }
+                // if inactive
+                else {
+                    textView.setText("Reported Activity"); // todo shreya: add string
+                    holder.itemView.setBackgroundColor(ContextCompat.getColor(textView.getContext(), R.color.offline));
+                }
             }
         }
     }

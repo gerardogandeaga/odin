@@ -20,9 +20,9 @@ public class Utils {
     public static Date getDate(long time) {
         return new Date(time*1000L);
     }
-
     public static String getTimeStringFromDate(Date date) { return new SimpleDateFormat("HH:mm:ss").format(date); }
     public static String getDateTimeStringFromDate(Date date) { return new SimpleDateFormat("dd MMM yyyy HH:mm:ss").format(date); }
+    public static String getDateStringFromDate(Date date) { return new SimpleDateFormat("dd MMM yyyy").format(date); }
 
     public static int getExamineeStatusColour(Context context, boolean online) {
         // set icon colour tints
@@ -53,5 +53,9 @@ public class Utils {
     public static boolean isCurrentTimeAfterTime(Date time){
 
         return getCurrentTime().after(time);
+    }
+
+    public static boolean isCurrentTimeBetweenTimes(Date time1, Date time2) {
+        return getCurrentTime().after(time1) && getCurrentTime().before(time2);
     }
 }

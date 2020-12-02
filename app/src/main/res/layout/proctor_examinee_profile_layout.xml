@@ -21,8 +21,10 @@ Updated on: 2020-11-21
             android:id="@+id/imgAuthPhoto"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:maxHeight="100dp"
-            tools:srcCompat="@tools:sample/avatars" />
+            android:maxHeight="400dp"
+            android:minHeight="150dp"
+            android:src="@drawable/ic_profile"
+            android:tint="@color/black" />
 
         <TextView
             android:id="@+id/tvAuthTimeStamp"

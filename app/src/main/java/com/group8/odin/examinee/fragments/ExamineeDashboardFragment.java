@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.util.Util;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
@@ -81,31 +82,20 @@ public class ExamineeDashboardFragment extends Fragment {
             @Override
             public boolean onClick(View v, IAdapter<RegisteredExamItem> adapter, RegisteredExamItem item, int position) {
                 // set exam context
-                OdinFirebase.ExamSessionContext = item.getExamSession();
-
-                Date examStart = OdinFirebase.ExamSessionContext.getExamStartTime();
-                Date examEnd = OdinFirebase.ExamSessionContext.getExamEndTime();
-                Date authStart = OdinFirebase.ExamSessionContext.getAuthStartTime();
-                Date authEnd = OdinFirebase.ExamSessionContext.getAuthEndTime();
-
-                //check time with current time
-                //checks if current time is after or on exam start time
-                if(Utils.isCurrentTimeAfterTime(examStart) || Utils.isCurrentTimeEqualToTime(examStart)){
-                    if(Utils.isCurrentTimeBeforeTime(examEnd) || Utils.isCurrentTimeEqualToTime(examEnd)) {
-                        //start exam session
-                        Intent examSession = new Intent(getActivity(), ExamineeExamSessionActivity.class);
-                        startActivity(examSession);
-                        return true;
-                    } else {
-                        //Exam has already ended
-                        Toast.makeText(getContext(), R.string.exam_finished_error, Toast.LENGTH_SHORT).show();
-                        return true;
-                    }
-                } else {
-                    //Exam has not yet started
-                    Toast.makeText(getContext(), R.string.exam_not_started, Toast.LENGTH_SHORT).show();
-                    return true;
+                if (Utils.isCurrentTimeBeforeTime(item.getExamSession().getExamStartTime())) {
+                    Toast.makeText(getActivity(), "Exam session has not started", Toast.LENGTH_SHORT).show();
                 }
+                else
+                if (Utils.isCurrentTimeBetweenTimes(item.getExamSession().getExamStartTime(), item.getExamSession().getExamEndTime())) {
+                    startActivity(new Intent(getActivity(), ExamineeExamSessionActivity.class));
+                    OdinFirebase.ExamSessionContext = item.getExamSession();
+                }
+                else
+                if (Utils.isCurrentTimeAfterTime(item.getExamSession().getExamEndTime())) {
+                    Toast.makeText(getActivity(), "Exam is over", Toast.LENGTH_SHORT).show();
+                }
+
+                return true;
             }
         });
 

@@ -19,8 +19,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
+        android:padding="32dp"
         android:orientation="vertical">
 
 
@@ -35,58 +34,38 @@
             android:textSize="12pt"
             android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/textTitleEmail"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="72dp"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
-            android:text="@string/email"
-            android:textSize="6pt"
-            android:textColor="@android:color/black" />
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:hint="@string/email_hint"
+            android:layout_marginTop="80dp">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/editTextEmailAddress"
+                android:id="@+id/etEmail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/text"
-                android:hint="@string/email_hint"
                 android:inputType="textEmailAddress"
-                android:textColor="@color/colorTextField"
-                android:textSize="6pt"
-                android:textStyle="italic" />
+                android:textSize="16sp"
+                android:background="@android:color/transparent"/>
 
         </com.google.android.material.textfield.TextInputLayout>
 
-        <TextView
-            android:id="@+id/textTitlePassword"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="36dp"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
-            android:text="@string/password"
-            android:textSize="6pt"
-            android:textColor="@android:color/black"  />
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:hint="@string/password_hint"
+            android:layout_marginTop="32dp">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/editTextPassword"
+                android:id="@+id/etPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/password_hint"
                 android:inputType="textVisiblePassword"
-                android:textColor="@color/colorTextField"
-                android:textSize="6pt"
-                android:textStyle="italic" />
+                android:textSize="16sp"
+                android:background="@android:color/transparent" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -94,13 +73,14 @@
             android:id="@+id/btnLogin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="16dp"
             android:text="@string/login" />
 
         <Button
             android:id="@+id/btnSignUp"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
             android:text="@string/signup_mess"
             android:textAllCaps="false"
             android:textColor="@color/colorTextField"

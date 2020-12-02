@@ -38,6 +38,10 @@ public class ActivityLog {
 
     public boolean getStatus() { return status; }
 
+    // if there is only one entry in the activity that means the examinee how only logged in
+    // therefore their overall activity will be true, meaning they have been active the whole time
+    public boolean getOverallStatus() { return activity.size() == 1; }
+
     @Override
     public String toString() {
         // set timestamps

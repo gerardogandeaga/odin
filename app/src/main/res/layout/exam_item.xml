@@ -32,7 +32,15 @@
             android:textSize="13sp"/>
 
         <TextView
-            android:id="@+id/tvExamTime"
+            android:id="@+id/tvExamStartTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/exam_time"
+            android:textStyle="normal"
+            android:textSize="13sp"/>
+
+        <TextView
+            android:id="@+id/tvExamEndTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/exam_time"
@@ -46,8 +54,6 @@
             android:text="@string/exam_auth_time"
             android:textStyle="normal"
             android:textSize="13sp"/>
-
-
 
     </LinearLayout>
 

@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.bumptech.glide.util.Util;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
@@ -24,17 +25,16 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.group8.odin.OdinFirebase;
 import com.group8.odin.R;
+import com.group8.odin.Utils;
 import com.group8.odin.common.models.ActivityLog;
 import com.group8.odin.common.models.ExamSession;
 import com.group8.odin.common.models.UserProfile;
 import com.group8.odin.proctor.fragments.ProctorAuthPhotosFragment;
-import com.group8.odin.proctor.fragments.ProctorEditExamSessionFragment;
 import com.group8.odin.proctor.fragments.ProctorExamineeProfileFragment;
 import com.group8.odin.proctor.fragments.ProctorLiveMonitoringFragment;
+import com.group8.odin.proctor.fragments.ProctorPostExamReportFragment;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 
 /*
@@ -48,14 +48,16 @@ import java.util.HashMap;
  * Description: added a new frament for editing exam session (ProctorEditExamSessionFragment)
  */
 public class ProctorExamSessionActivity extends AppCompatActivity {
+    private static final String TAG = "ProctorExamSessionActiv";
     private FirebaseFirestore mFirestore;
     private FragmentManager mFragmentManager;
 
     // fragments
-    private ProctorEditExamSessionFragment mProctorEditExamSessionFragment;
+//    private ProctorEditExamSessionFragment mProctorEditExamSessionFragment;
     private ProctorExamineeProfileFragment mProctorExamineeProfileFragment;
     private ProctorLiveMonitoringFragment mProctorMonitoringFragment;
     private ProctorAuthPhotosFragment mProctorAuthPhotoFragment;
+    private ProctorPostExamReportFragment mProctorPostExamReportFragment;
     private FragmentTransaction mFragmentTransaction;
 
     // reference to all examinees in the exam session
@@ -74,57 +76,41 @@ public class ProctorExamSessionActivity extends AppCompatActivity {
         mFirestore = FirebaseFirestore.getInstance();
 
         mFragmentManager = getSupportFragmentManager();
-        mProctorEditExamSessionFragment = new ProctorEditExamSessionFragment();
+//        mProctorEditExamSessionFragment = new ProctorEditExamSessionFragment();
         mProctorExamineeProfileFragment = new ProctorExamineeProfileFragment();
         mProctorMonitoringFragment = new ProctorLiveMonitoringFragment();
         mProctorAuthPhotoFragment = new ProctorAuthPhotosFragment();
+        mProctorPostExamReportFragment = new ProctorPostExamReportFragment();
 
         // add fragments to memory
         mFragmentTransaction = mFragmentManager.beginTransaction();
-        mFragmentTransaction.add(R.id.container, mProctorEditExamSessionFragment);
+        // add all fragments
         mFragmentTransaction.add(R.id.container, mProctorExamineeProfileFragment);
         mFragmentTransaction.add(R.id.container, mProctorMonitoringFragment);
         mFragmentTransaction.add(R.id.container, mProctorAuthPhotoFragment);
-        mFragmentTransaction.hide(mProctorEditExamSessionFragment);
+        mFragmentTransaction.add(R.id.container, mProctorPostExamReportFragment);
+        // hid them
         mFragmentTransaction.hide(mProctorExamineeProfileFragment);
         mFragmentTransaction.hide(mProctorMonitoringFragment);
         mFragmentTransaction.hide(mProctorAuthPhotoFragment);
+        mFragmentTransaction.hide(mProctorPostExamReportFragment);
         mFragmentTransaction.commit();
 
-        startListeningToActivityLogsCollection();
-        Date currentTime = Calendar.getInstance().getTime();
-        Date AuthStartTime = OdinFirebase.ExamSessionContext.getAuthStartTime();
-        if(currentTime.before(AuthStartTime)){
-            showEditExamSession();
-        }else {
-            //showEditExamSession();
-            showAuthPhotos();
+        // if exam time is over show the post exam report
+        if (Utils.isCurrentTimeAfterTime(OdinFirebase.ExamSessionContext.getExamEndTime()) ||
+                Utils.isCurrentTimeEqualToTime(OdinFirebase.ExamSessionContext.getExamEndTime())) {
+            showPostExamReport();
+            generateReport();
+        }
+        else {
+            // if the exam is underway then go into live proctoring
+            startListeningToActivityLogsCollection();
+            showLiveMonitoring();
         }
     }
 
-    // load activity logs
-    // todo: remove unused function
-    private void loadAllActivityLogs() {
-        CollectionReference activityLogs = mFirestore.collection(OdinFirebase.FirestoreCollections.EXAM_SESSIONS).document(OdinFirebase.ExamSessionContext.getExamId()).collection(OdinFirebase.FirestoreCollections.ACTIVITY_LOGS);
-        activityLogs.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-            @Override
-            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                // create activity log and user profile references
-                for (DocumentSnapshot snapshot : queryDocumentSnapshots.getDocuments()) {
-                    // create activity log and load user profile
-                    loadUserProfile(snapshot.getId(), new ActivityLog(snapshot));
-                }
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(getApplicationContext(), R.string.doc_fetch_error + OdinFirebase.ExamSessionContext.getExamId(), Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
     // load a user profile, this will implicitly be an examinee profile
-    private void loadUserProfile(String id, final ActivityLog activityLog) {
+    private void loadUserProfileToLive(String id, final ActivityLog activityLog) {
         DocumentReference userProfiles = mFirestore.collection(OdinFirebase.FirestoreCollections.USERS).document(id);
         userProfiles.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
@@ -135,6 +121,24 @@ public class ProctorExamSessionActivity extends AppCompatActivity {
 
                 // show auth photo in auth photo list
                 mProctorAuthPhotoFragment.addPhoto(examinee);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(getApplicationContext(), R.string.auth_profile_fail, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    // load a user profile, this will implicitly be an examinee profile
+    private void loadUserProfileToReport(String id, final ActivityLog activityLog) {
+        DocumentReference userProfiles = mFirestore.collection(OdinFirebase.FirestoreCollections.USERS).document(id);
+        userProfiles.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot snapshot) {
+                UserProfile examinee = new UserProfile(snapshot);
+                mExaminees.put(snapshot.getId(), Pair.create(examinee, activityLog));
+                mProctorPostExamReportFragment.updateRecyclerView();
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -163,7 +167,7 @@ public class ProctorExamSessionActivity extends AppCompatActivity {
                             ActivityLog log = new ActivityLog(dc.getDocument());
                             if (log.isValid()) {
                                 // examinee has logged in
-                                loadUserProfile(documentId, log);
+                                loadUserProfileToLive(documentId, log);
                             }
                             break;
 
@@ -186,6 +190,31 @@ public class ProctorExamSessionActivity extends AppCompatActivity {
                             }
                     }
                 }
+            }
+        });
+    }
+
+    private void generateReport() {
+        OdinFirebase.ExamSessionContext.getReference().collection(OdinFirebase.FirestoreCollections.ACTIVITY_LOGS).addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot snapshots, @Nullable FirebaseFirestoreException error) {
+                if (error != null) {
+                    Toast.makeText(getApplicationContext(), "could not get activity logs", Toast.LENGTH_SHORT).show();
+                    Log.e(TAG, error.toString());
+                    return;
+                }
+
+                // get activity logs
+                for (DocumentSnapshot snapshot : snapshots.getDocuments()) {
+                    ActivityLog log = new ActivityLog(snapshot);
+                    if (log.isValid()) {
+                        // examinee has logged in
+                        loadUserProfileToReport(snapshot.getId(), log);
+                    }
+                }
+
+                // update the post exam report fragment
+                mProctorPostExamReportFragment.updateRecyclerView();
             }
         });
     }
@@ -213,6 +242,7 @@ public class ProctorExamSessionActivity extends AppCompatActivity {
         mFragmentTransaction.hide(mProctorMonitoringFragment);
         mFragmentTransaction.show(mProctorAuthPhotoFragment);
         mFragmentTransaction.hide(mProctorExamineeProfileFragment);
+        mFragmentTransaction.hide(mProctorPostExamReportFragment);
         mFragmentTransaction.commit();
     }
 
@@ -224,6 +254,7 @@ public class ProctorExamSessionActivity extends AppCompatActivity {
         mFragmentTransaction.hide(mProctorMonitoringFragment);
         mFragmentTransaction.hide(mProctorAuthPhotoFragment);
         mFragmentTransaction.show(mProctorExamineeProfileFragment);
+        mFragmentTransaction.hide(mProctorPostExamReportFragment);
         mFragmentTransaction.commit();
 
         getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
@@ -241,16 +272,17 @@ public class ProctorExamSessionActivity extends AppCompatActivity {
         mFragmentTransaction.show(mProctorMonitoringFragment);
         mFragmentTransaction.hide(mProctorAuthPhotoFragment);
         mFragmentTransaction.hide(mProctorExamineeProfileFragment);
+        mFragmentTransaction.hide(mProctorPostExamReportFragment);
         mFragmentTransaction.commit();
     }
 
-    // display the edit exam page
-    public void showEditExamSession(){
+    public void showPostExamReport() {
+        mExamineeProfileContext = null;
         mFragmentTransaction = mFragmentManager.beginTransaction();
         mFragmentTransaction.hide(mProctorMonitoringFragment);
-        mFragmentTransaction.show(mProctorEditExamSessionFragment);
         mFragmentTransaction.hide(mProctorAuthPhotoFragment);
         mFragmentTransaction.hide(mProctorExamineeProfileFragment);
+        mFragmentTransaction.show(mProctorPostExamReportFragment);
         mFragmentTransaction.commit();
     }
 }

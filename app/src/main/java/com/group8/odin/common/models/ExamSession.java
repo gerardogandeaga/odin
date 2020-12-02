@@ -1,6 +1,7 @@
 package com.group8.odin.common.models;
 
 import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.group8.odin.OdinFirebase;
 import com.group8.odin.Utils;
@@ -19,10 +20,10 @@ import java.util.Date;
 public class ExamSession {
     private String examId; // Exam id in
     private String title;
-    private String examDuration;
-    private String authDuration;
-    private Date examStartTime; //examEndTime;
-    private Date authStartTime; //authEndTime;
+    private Date examStartTime;
+    private Date examEndTime;
+    private long authDuration; // time in seconds
+    private DocumentReference mReference;
 
     public ExamSession() {}
 
@@ -31,14 +32,13 @@ public class ExamSession {
         title = examSessionDocument.get(OdinFirebase.FirestoreExamSession.TITLE).toString();
         examId = examSessionDocument.getId();
         examStartTime = Utils.getDate(((Timestamp)examSessionDocument.get(OdinFirebase.FirestoreExamSession.EXAM_START_TIME)).getSeconds());
-        //examEndTime = Utils.getDate(((Timestamp)examSessionDocument.get(OdinFirebase.FirestoreExamSession.EXAM_END_TIME)).getSeconds());
-        examDuration = examSessionDocument.get(OdinFirebase.FirestoreExamSession.EXAM_DURATION).toString();
-        authStartTime = Utils.getDate(((Timestamp)examSessionDocument.get(OdinFirebase.FirestoreExamSession.AUTH_START_TIME)).getSeconds());
-        //authEndTime = Utils.getDate(((Timestamp)examSessionDocument.get(OdinFirebase.FirestoreExamSession.AUTH_END_TIME)).getSeconds());
-        authDuration = examSessionDocument.get(OdinFirebase.FirestoreExamSession.AUTH_DURATION).toString();
+        examEndTime = Utils.getDate(((Timestamp)examSessionDocument.get(OdinFirebase.FirestoreExamSession.EXAM_END_TIME)).getSeconds());
+        authDuration = (long)examSessionDocument.get(OdinFirebase.FirestoreExamSession.AUTH_DURATION);
+        mReference = examSessionDocument.getReference();
     }
 
-    //Setters and getters
+    // setters
+
     public ExamSession setExamId(String examId) {
         this.examId = examId;
         return this;
@@ -51,23 +51,16 @@ public class ExamSession {
         this.examStartTime = examStartTime;
         return this;
     }
-    public ExamSession setExamDuration(String examDuration){
-        this.examDuration = examDuration;
+    public ExamSession setExamEndTime(Date examStartTime) {
+        this.examStartTime = examStartTime;
         return this;
     }
-    public ExamSession setAuthStartTime(Date authStartTime){
-        this.authStartTime = authStartTime;
-        return this;
-    }
-    public ExamSession setAuthDuration(String authDuration){
+    public ExamSession setAuthDuration(long authDuration) {
         this.authDuration = authDuration;
         return this;
     }
 
-    /*public ExamSession setExamEndTime(Date examEndTime) {
-        this.examEndTime = examEndTime;
-        return this;
-    }*/
+    // getters
 
     public String getExamId() {
         return examId;
@@ -78,22 +71,20 @@ public class ExamSession {
     public Date getExamStartTime() {
         return examStartTime;
     }
-
-    /*public Date getExamEndTime() {
+    public Date getExamEndTime() {
         return examEndTime;
     }
-
-    public Date getAuthEndTime() {
-        return authEndTime;
-    }*/
-
-    public String getExamDuration(){
-        return examDuration;
-    }
-    public Date getAuthStartTime() {
-        return authStartTime;
-    }
-    public String getAuthDuration(){
+    public long getAuthDuration(){
         return authDuration;
+    }
+    public Date getAuthEndTime() {
+        Date duration = new Date(authDuration);
+        Date endDate = new Date(examStartTime.getTime());
+        endDate.setHours(endDate.getHours() + duration.getHours());
+        endDate.setMinutes(endDate.getMinutes() + duration.getMinutes());
+        return endDate;
+    }
+    public DocumentReference getReference() {
+        return mReference;
     }
 }

@@ -181,10 +181,6 @@ public class ExamineeAuthPhotoSubmissionFragment extends Fragment {
         mBtnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Date authStart = OdinFirebase.ExamSessionContext.getAuthStartTime();
-                Date authEnd = OdinFirebase.ExamSessionContext.getAuthEndTime();
-                if ((Utils.isCurrentTimeAfterTime(authStart) || Utils.isCurrentTimeEqualToTime(authStart)) && (Utils.isCurrentTimeBeforeTime(authEnd) || Utils.isCurrentTimeEqualToTime(authEnd))) {
-
                     Uri uri = Uri.fromFile(new File(mAuthPhotoUri));
 
                     // store photo in exam session folder
@@ -211,13 +207,7 @@ public class ExamineeAuthPhotoSubmissionFragment extends Fragment {
                                     mPbProgress.setProgress(progress);
                                 }
                             });
-                } else {
-                    //disable submit button
-                    mBtnSubmit.setEnabled(false);
-                    Toast.makeText(getContext(), R.string.auth_time_error_for_submission, Toast.LENGTH_SHORT).show();
-                    ((ExamineeExamSessionActivity)getActivity()).showExamSessionHome();
                 }
-            }
         });
 
         // Hide progress bar

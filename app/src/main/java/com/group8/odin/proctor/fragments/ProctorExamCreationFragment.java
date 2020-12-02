@@ -3,12 +3,15 @@ package com.group8.odin.proctor.fragments;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -27,6 +30,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.group8.odin.OdinFirebase;
 import com.group8.odin.R;
 import com.group8.odin.R2;
+import com.group8.odin.Utils;
+import com.group8.odin.common.models.ExamSession;
 import com.group8.odin.common.models.UserProfile;
 import com.group8.odin.proctor.activities.ProctorHomeActivity;
 
@@ -58,27 +63,29 @@ import butterknife.ButterKnife;
 public class ProctorExamCreationFragment extends Fragment {
     // Bind views
     // Edit Text
-    @BindView(R2.id.etExamTitle) EditText mEtExamTitle;
-    @BindView(R2.id.etExamDate)  EditText mEtExamDate;
-    @BindView(R2.id.etExamTime)  EditText mEtExamTime;
-    @BindView(R2.id.etAuthTime)  EditText mEtAuthTime;
+    @BindView(R.id.etExamTitle) EditText mEtExamTitle;
+    @BindView(R.id.etEST_H) EditText mEtEST_H;
+    @BindView(R.id.etEST_M) EditText mEtEST_M;
+    @BindView(R.id.etEET_H) EditText mEtEET_H;
+    @BindView(R.id.etEET_M) EditText mEtEET_M;
+    @BindView(R.id.etAD_H) EditText mEtAD_H;
+    @BindView(R.id.etAD_M) EditText mEtAD_M;
+    @BindView(R.id.tvExamDate) TextView mTvExamDate;
     // Buttons
-    @BindView(R2.id.btnExamDate)   Button mBtnExamDate;
-    @BindView(R2.id.btnExamTime)   Button mBtnExamTime;
-    @BindView(R2.id.btnAuthTime)   Button mBtnAuthTime;
-    @BindView(R2.id.btnCreateExam) Button mBtnCreateExam;
+    @BindView(R.id.imgCalendar) ImageView mImgCalendar;
+    @BindView(R.id.btnCreateExam) Button mBtnCreateExam;
+
+    private boolean mIsNew = true;
+    private ExamSession mExamSessionEdit;
 
     // Exam date
     int mYear, mMonth, mDay;
     boolean mExamDateSet;
 
     // Exam time
-    int mStartExamHour, mStartExamMinute, mEndExamHour, mEndExamMinute;
-    boolean mExamTimeSet;
-
-    // Exam auth time
-    int mStartAuthHour, mStartAuthMinute, mEndAuthHour, mEndAuthMinute;
-    boolean mAuthTimeSet;
+    private int mStartExamHour, mStartExamMinute, mEndExamHour, mEndExamMinute;
+    // Auth duration
+    private int mAuthDuration;
 
     // Firebase
     private FirebaseFirestore mFirestore;
@@ -100,24 +107,36 @@ public class ProctorExamCreationFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
 
-        getActivity().setTitle(R.string.exam_creation);
+        if (mIsNew) {
+            getActivity().setTitle(R.string.exam_creation);
+            mBtnCreateExam.setText("Create Exam");
+        }
+        else {
+            getActivity().setTitle("Exam Session Details");
+            mEtEST_H.setText(Integer.toString(mExamSessionEdit.getExamStartTime().getHours()));
+            mEtEST_M.setText(Integer.toString(mExamSessionEdit.getExamStartTime().getMinutes()));
+            mEtEET_H.setText(Integer.toString(mExamSessionEdit.getExamEndTime().getHours()));
+            mEtEET_M.setText(Integer.toString(mExamSessionEdit.getExamEndTime().getMinutes()));
+            mEtAD_H.setText(Integer.toString(new Date(mExamSessionEdit.getAuthDuration()).getHours()));
+            mEtAD_M.setText(Integer.toString(new Date(mExamSessionEdit.getAuthDuration()).getMinutes()));
+            mTvExamDate.setText(Utils.getDateStringFromDate(mExamSessionEdit.getExamStartTime()));
+            mEtExamTitle.setText(mExamSessionEdit.getTitle());
+            mBtnCreateExam.setText("Update Exam");
+        }
 
         // Handle on back button pressed in the fragment
         getActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                // return to the exminee dashboard
+                // return to the examinee dashboard
                 ((ProctorHomeActivity)getActivity()).showProctorDashboard();
             }
         });
 
         // Lock date and time fields
-        mEtExamDate.setEnabled(false);
-        mEtExamTime.setEnabled(false);
-        mEtAuthTime.setEnabled(false);
 
         // Initialize date picker
-        mBtnExamDate.setOnClickListener(new View.OnClickListener() {
+        mImgCalendar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 final Calendar c = Calendar.getInstance();
@@ -132,17 +151,8 @@ public class ProctorExamCreationFragment extends Fragment {
                         mYear = year;
                         mDay = day;
                         mMonth = month;
-                        try {
-                            String newStr = day + "-" + (month+1) + "-" + year;
-                            DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
-                            Date newDate = formatter.parse(newStr);
-                            formatter = new SimpleDateFormat("dd MMM yyyy");
-                            newStr = formatter.format(newDate);
-                            mEtExamDate.setText(newStr);
-                            mExamDateSet = true;
-                        } catch (ParseException e) {
-                            e.printStackTrace();
-                        }
+                        mTvExamDate.setText(Utils.getDateStringFromDate(new Date(mYear - 1900, mMonth, mDay)));
+                        mExamDateSet = true;
                     }
                 }, mYear, mMonth, mDay);
 
@@ -151,138 +161,144 @@ public class ProctorExamCreationFragment extends Fragment {
             }
         });
 
-        // Set exam time
-        mBtnExamTime.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                // Start Time dialog
-                TimePickerDialog startTime = new TimePickerDialog(getActivity(), new TimePickerDialog.OnTimeSetListener() {
-
-                    @Override
-                    public void onTimeSet(TimePicker timePicker, int hour, int minute) {
-                        mStartExamHour = hour;
-                        mStartExamMinute = minute;
-
-                        // End time dialog
-                        TimePickerDialog endTime = new TimePickerDialog(getActivity(), new TimePickerDialog.OnTimeSetListener() {
-                            @Override
-                            public void onTimeSet(TimePicker timePicker, int hour, int minute) {
-                                mEndExamHour = hour;
-                                mEndExamMinute = minute;
-                                try {
-                                    String myStartTime = mStartExamHour + ":" + mStartExamMinute;
-                                    String myEndTime = mEndExamHour + ":" + mEndExamMinute;
-                                    DateFormat formatter = new SimpleDateFormat("HH:mm");
-                                    Date myStartTimeDate = (Date)formatter.parse(myStartTime);
-                                    Date myEndTimeDate = (Date)formatter.parse(myEndTime);
-                                    myStartTime = formatter.format(myStartTimeDate);
-                                    myEndTime = formatter.format(myEndTimeDate);
-                                    // Finally display result in field
-                                    mEtExamTime.setText("From " + myStartTime + " to " + myEndTime);
-                                    mExamTimeSet = true;
-                                } catch (ParseException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        }, mEndExamHour, mEndExamMinute, true);
-                        endTime.show();
-
-                    }
-
-                }, mStartExamHour, mStartExamMinute, true);
-                // Show start time
-                startTime.show();
-            }
-        });
-
-        // Set auth time
-        mBtnAuthTime.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Start Time dialog
-                TimePickerDialog startTime = new TimePickerDialog(getActivity(), new TimePickerDialog.OnTimeSetListener() {
-
-                    @Override
-                    public void onTimeSet(TimePicker timePicker, int hour, int minute) {
-                        mStartAuthHour = hour;
-                        mStartAuthMinute = minute;
-
-                        // End time dialog
-                        TimePickerDialog endTime = new TimePickerDialog(getActivity(), new TimePickerDialog.OnTimeSetListener() {
-                            @Override
-                            public void onTimeSet(TimePicker timePicker, int hour, int minute) {
-                                mEndAuthHour = hour;
-                                mEndAuthMinute = minute;
-                                try {
-                                    String myStartTime = mStartAuthHour + ":" + mStartAuthMinute;
-                                    String myEndTime = mEndAuthHour + ":" + mEndAuthMinute;
-                                    DateFormat formatter = new SimpleDateFormat("HH:mm");
-                                    Date myStartTimeDate = (Date)formatter.parse(myStartTime);
-                                    Date myEndTimeDate = (Date)formatter.parse(myEndTime);
-                                    myStartTime = formatter.format(myStartTimeDate);
-                                    myEndTime = formatter.format(myEndTimeDate);
-                                    // Finally display result in field
-                                    mEtAuthTime.setText("From " + myStartTime + " to " + myEndTime);
-                                    mAuthTimeSet = true;
-                                } catch (ParseException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        }, mEndAuthHour, mEndAuthMinute, true);
-                        endTime.show();
-                    }
-
-                }, mStartExamHour, mStartExamMinute, true);
-                // Show start time
-                startTime.show();
-            }
-        });
-
-
         // Adds an exam to firestore
         mBtnCreateExam.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (!validInput()) return;
+
+                mStartExamHour = Integer.parseInt(mEtEST_H.getText().toString().trim());
+                mStartExamMinute = Integer.parseInt(mEtEST_M.getText().toString().trim());
+                mEndExamHour = Integer.parseInt(mEtEET_H.getText().toString().trim());
+                mEndExamMinute = Integer.parseInt(mEtEET_M.getText().toString().trim());
+
                 if (checkFieldsAreValid()) {
+
                     // Convert times to dates
                     //The year is taken as (Year+1900) by the date picker.
-                    Date examStart, examEnd, authStart, authEnd;
+                    Date examStart, examEnd;
                     examStart = new Date(mYear - 1900, mMonth, mDay, mStartExamHour, mStartExamMinute);
                     examEnd = new Date(mYear - 1900, mMonth, mDay, mEndExamHour, mEndExamMinute);
-                    authStart = new Date(mYear - 1900, mMonth, mDay, mStartAuthHour, mStartAuthMinute);
-                    authEnd = new Date(mYear - 1900, mMonth, mDay, mEndAuthHour, mEndAuthMinute);
+                    long authDuration = new Date(mYear - 1900, mMonth, mDay, Integer.parseInt(mEtAD_H.getText().toString().trim()), Integer.parseInt(mEtAD_M.getText().toString().trim()), 0).getTime();
 
                     // Add a new document with a generated id.
                     Map<String, Object> data = new HashMap<>();
                     data.put(OdinFirebase.FirestoreExamSession.TITLE, mEtExamTitle.getText().toString().trim());
                     data.put(OdinFirebase.FirestoreExamSession.EXAM_START_TIME, new Timestamp(examStart));
-                    //data.put(OdinFirebase.FirestoreExamSession.EXAM_END_TIME, new Timestamp(examEnd));
-                    data.put(OdinFirebase.FirestoreExamSession.AUTH_START_TIME, new Timestamp(authStart));
-                    //data.put(OdinFirebase.FirestoreExamSession.AUTH_END_TIME, new Timestamp(authEnd));
+                    data.put(OdinFirebase.FirestoreExamSession.EXAM_END_TIME, new Timestamp(examEnd));
+                    data.put(OdinFirebase.FirestoreExamSession.AUTH_DURATION, authDuration);
 
-                    final Map<String, Object> ghostData = new HashMap<>();
-
-                    // add exam session
-                    mFirestore.collection(OdinFirebase.FirestoreCollections.EXAM_SESSIONS)
-                            .add(data)
-                            .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                                @Override
-                                public void onSuccess(DocumentReference documentReference) {
-                                    linkExamToProctorProfile(documentReference);
-                                    documentReference.collection(OdinFirebase.FirestoreCollections.ACTIVITY_LOGS).add(ghostData);
-                                }
-                            })
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Toast.makeText(getActivity(), R.string.exam_create_error, Toast.LENGTH_SHORT).show();
-                                }
-                            });
-
+                    // create a new exam session
+                    if (mIsNew) {
+                        final Map<String, Object> ghostData = new HashMap<>();
+                        // add exam session
+                        mFirestore.collection(OdinFirebase.FirestoreCollections.EXAM_SESSIONS)
+                                .add(data)
+                                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                    @Override
+                                    public void onSuccess(DocumentReference documentReference) {
+                                        linkExamToProctorProfile(documentReference);
+                                        documentReference.collection(OdinFirebase.FirestoreCollections.ACTIVITY_LOGS).add(ghostData);
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Toast.makeText(getActivity(), R.string.exam_create_error, Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                    }
+                    // update the exam session details
+                    else {
+                        mExamSessionEdit.getReference().update(data)
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        Toast.makeText(getActivity(), "Exam details updated!", Toast.LENGTH_SHORT).show();
+                                        ((ProctorHomeActivity)getActivity()).showProctorDashboard();
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Toast.makeText(getActivity(), "Could not update exam details.", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                    }
                 }
             }
         });
+    }
+
+    public void editExamSession(ExamSession examSession) {
+        mIsNew = false;
+        mExamSessionEdit = examSession;
+    }
+
+    private boolean validInput() {
+        boolean pass = true;
+        String est_h = mEtEST_H.getText().toString().trim();
+        String est_m = mEtEST_M.getText().toString().trim();
+        String eet_h = mEtEET_H.getText().toString().trim();
+        String eet_m = mEtEET_M.getText().toString().trim();
+        String ad_h = mEtAD_H.getText().toString().trim();
+        String ad_m = mEtAD_M.getText().toString().trim();
+
+        if (est_h.isEmpty() | est_m.isEmpty()) {
+            Toast.makeText(getActivity(), "Exam start fields cannot be empty", Toast.LENGTH_SHORT).show();
+            pass = false;
+        }
+
+        if (eet_h.isEmpty() | eet_m.isEmpty()) {
+            Toast.makeText(getActivity(), "Exam end fields cannot be empty", Toast.LENGTH_SHORT).show();
+            pass = false;
+        }
+
+
+        if (ad_h.isEmpty() | ad_m.isEmpty()) {
+            Toast.makeText(getActivity(), "Authentication duration fields cannot be empty", Toast.LENGTH_SHORT).show();
+            pass = false;
+        }
+
+        // check the values
+        if (pass) {
+            // value
+            int est_h_val = Integer.parseInt(est_h);
+            int est_m_val = Integer.parseInt(est_m);
+            int eet_h_val = Integer.parseInt(eet_h);
+            int eet_m_val = Integer.parseInt(eet_m);
+            int ad_h_val = Integer.parseInt(ad_h);
+            int ad_m_val = Integer.parseInt(ad_m);
+
+            if (!validTime(est_h_val, est_m_val)) {
+                Toast.makeText(getActivity(), "Invalid time start time", Toast.LENGTH_SHORT).show();
+                pass = false;
+            }
+
+            if (!validTime(eet_h_val, eet_m_val)) {
+                Toast.makeText(getActivity(), "Invalid time end time", Toast.LENGTH_SHORT).show();
+                pass = false;
+            }
+
+            if (!validTime(ad_h_val, ad_m_val)) {
+                Toast.makeText(getActivity(), "Invalid authentication duration", Toast.LENGTH_SHORT).show();
+                pass = false;
+            }
+        }
+
+        return pass;
+    }
+
+    private boolean validTime(int hour, int minute) {
+        return validHour(hour) && validMinute(minute);
+    }
+
+    private boolean validHour(int hour) {
+        return hour >= 0 && hour <= 24;
+    }
+
+    private boolean validMinute(int minute) {
+        return minute >= 0 && minute <= 60;
     }
 
     // Function will check if we have a valid start and end time respective to each other
@@ -293,9 +309,9 @@ public class ProctorExamCreationFragment extends Fragment {
     }
 
     // Check if auth and exam times are valid with respect to each other
-    private boolean validExamAndAuthTimes() {
-        return (validStartEndTimes(mStartExamHour, mStartExamMinute, mStartAuthHour, mStartAuthMinute) && validStartEndTimes(mEndAuthHour, mEndAuthMinute, mEndExamHour, mEndExamMinute));
-    }
+//    private boolean validExamAndAuthTimes() {
+//        return (validStartEndTimes(mStartExamHour, mStartExamMinute, mStartAuthHour, mStartAuthMinute) && validStartEndTimes(mEndAuthHour, mEndAuthMinute, mEndExamHour, mEndExamMinute));
+//    }
 
     // Checks if the exam creation fields are valid
     private boolean checkFieldsAreValid() {
@@ -308,27 +324,19 @@ public class ProctorExamCreationFragment extends Fragment {
             Toast.makeText(getActivity(), R.string.exam_date_error, Toast.LENGTH_SHORT).show();
             return false;
         }
-        if (!mExamTimeSet) {
-            Toast.makeText(getActivity(), R.string.exam_time_error, Toast.LENGTH_SHORT).show();
-            return false;
-        }
-        if (!mAuthTimeSet) {
-            Toast.makeText(getActivity(), R.string.auth_time_error, Toast.LENGTH_SHORT).show();
-            return false;
-        }
 
         if (!validStartEndTimes(mStartExamHour, mStartExamMinute, mEndExamHour, mEndExamMinute)) {
             Toast.makeText(getActivity(), R.string.time_error, Toast.LENGTH_SHORT).show();
             return false;
         }
-        if (!validStartEndTimes(mStartAuthHour, mStartAuthMinute, mEndAuthHour, mEndAuthMinute)) {
-            Toast.makeText(getActivity(), R.string.time_error, Toast.LENGTH_SHORT).show();
-            return false;
-        }
-        if (!validExamAndAuthTimes()) {
-            Toast.makeText(getActivity(), R.string.time_logic_error, Toast.LENGTH_SHORT).show();
-            return false;
-        }
+//        if (!validStartEndTimes(mStartAuthHour, mStartAuthMinute, mEndAuthHour, mEndAuthMinute)) {
+//            Toast.makeText(getActivity(), R.string.time_error, Toast.LENGTH_SHORT).show();
+//            return false;
+//        }
+//        if (!validExamAndAuthTimes()) {
+//            Toast.makeText(getActivity(), R.string.time_logic_error, Toast.LENGTH_SHORT).show();
+//            return false;
+//        }
 
         return true;
     }

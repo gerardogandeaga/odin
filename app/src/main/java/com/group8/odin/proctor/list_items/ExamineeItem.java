@@ -30,10 +30,16 @@ public class ExamineeItem extends AbstractItem<ExamineeItem, ExamineeItem.ViewHo
     // Data view item will actually hold
     private Pair<UserProfile, ActivityLog> examinee;
     private String header;
+    private boolean live;
 
-    public ExamineeItem setExaminee(Pair<UserProfile, ActivityLog> examinee) {
+    public ExamineeItem setExaminee(Pair<UserProfile, ActivityLog> examinee, boolean live) {
         this.examinee = examinee;
-        this.header = examinee.second.getStatus() ? "Active" : "Inactive";
+        this.live = live;
+        if (this.live) {
+            this.header = examinee.second.getStatus() ? "Active" : "Inactive";
+        } else {
+            this.header = examinee.second.getStatus() ? "No Activity" : "Reported Activity";
+        }
         return this;
     }
 
@@ -87,7 +93,7 @@ public class ExamineeItem extends AbstractItem<ExamineeItem, ExamineeItem.ViewHo
             // populate the item with content
             name.setText(item.examinee.first.getName());
             // set colour filter
-            status.setColorFilter(Utils.getExamineeStatusColour(context, item.examinee.second.getStatus()));
+            status.setColorFilter(Utils.getExamineeStatusColour(context, item.live ? item.examinee.second.getStatus() : item.examinee.second.getOverallStatus()));
         }
 
         @Override

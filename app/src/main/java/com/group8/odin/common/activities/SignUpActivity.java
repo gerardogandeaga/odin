@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -44,11 +45,16 @@ import java.util.regex.Pattern;
 */
 
 public class SignUpActivity extends AppCompatActivity {
-    @BindView(R.id.editTextFirstName)   EditText mEtFirstName;
-    @BindView(R.id.editTextLastName)    EditText mEtLastName;
-    @BindView(R.id.editTextEmail)       EditText mEtEmail;
-    @BindView(R.id.editPassword)        EditText mEtPassword;
-    @BindView(R.id.editConfirmPassword) EditText mEtConfirmPassword;
+    @BindView(R.id.etFirstName)        EditText mEtFirstName;
+    @BindView(R.id.etLastName)         EditText mEtLastName;
+    @BindView(R.id.etEmail)            EditText mEtEmail;
+    @BindView(R.id.etPassword)         EditText mEtPassword;
+    @BindView(R.id.etConfirmPassword)  EditText mEtConfirmPassword;
+    @BindView(R.id.tilFirstName)       TextInputLayout mTilFirstName;
+    @BindView(R.id.tilLastName)        TextInputLayout mTilLastName;
+    @BindView(R.id.tilEmail)           TextInputLayout mTilEmail;
+    @BindView(R.id.tilPassword)        TextInputLayout mTilPassword;
+    @BindView(R.id.tilConfirmPassword) TextInputLayout mTilConfirmPassword;
     //Declaring a regular expression for email as per RFC standards
     private static final String EMAIL_REGEX = "(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])";
     @BindView(R.id.cbProctor)                CheckBox mCbRole;
@@ -82,64 +88,10 @@ public class SignUpActivity extends AppCompatActivity {
         mBtnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String first, last, email, pass1, pass2;
-
-                //Checks for valid data
-                first = mEtFirstName.getText().toString().trim();
-                if(first.isEmpty()){
-                    Toast.makeText(SignUpActivity.this, R.string.first_name_error, Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                last = mEtLastName.getText().toString().trim();
-                if(last.isEmpty()){
-                    Toast.makeText(SignUpActivity.this, R.string.last_name_error, Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                email = mEtEmail.getText().toString().trim();
-                if(email.isEmpty()){
-                    Toast.makeText(SignUpActivity.this, R.string.email_error, Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                Matcher matcher = EMAIL_PATTERN.matcher(email);
-                if(!(matcher.matches())){
-                    Toast.makeText(SignUpActivity.this, R.string.email_error_valid, Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                pass1 = mEtPassword.getText().toString().trim();
-                if(pass1.isEmpty()){
-                    Toast.makeText(SignUpActivity.this, R.string.password_error, Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                pass2 = mEtConfirmPassword.getText().toString().trim();
-                if(pass2.isEmpty()){
-                    Toast.makeText(SignUpActivity.this, R.string.confirm_pass_error, Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                if(!(pass2.equals(pass1))){
-                    Toast.makeText(SignUpActivity.this, R.string.confirm_pass_error_valid, Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                if(pass1.length() < 6){
-                    Toast.makeText(SignUpActivity.this, R.string.password_length_error, Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-//                Pattern pattern = Pattern.compile(PASSWORD_REGEX);
-//                Matcher matcher1 = pattern.matcher(pass1);
-//                if(!(matcher1.matches())){
-//                    Toast.makeText(SignUpActivity.this, R.string.password_error_valid, Toast.LENGTH_SHORT).show();
-//                    return;
-//                }
+                if (!validInput()) return;
 
                 // Begin firebase authentication
-                mAuth.createUserWithEmailAndPassword(email, pass1)
+                mAuth.createUserWithEmailAndPassword(mEtEmail.getText().toString().trim(), mEtPassword.getText().toString().trim())
                         .addOnCompleteListener(SignUpActivity.this, new OnCompleteListener<AuthResult>() {
 
                                 @Override
@@ -152,6 +104,7 @@ public class SignUpActivity extends AppCompatActivity {
                                         // Write data to user profile
                                         Map<String, Object> data = new HashMap<>();
                                         data.put(OdinFirebase.FirestoreUserProfile.NAME, mEtFirstName.getText().toString().trim() + " " + mEtLastName.getText().toString().trim());
+                                        data.put(OdinFirebase.FirestoreUserProfile.EMAIL, mEtEmail.getText().toString().trim());
                                         data.put(OdinFirebase.FirestoreUserProfile.EMAIL, mEtEmail.getText().toString().trim());
                                         data.put(OdinFirebase.FirestoreUserProfile.EXAM_IDS, new ArrayList<String>());
                                         data.put(OdinFirebase.FirestoreUserProfile.ROLE, mCbRole.isChecked());
@@ -182,6 +135,62 @@ public class SignUpActivity extends AppCompatActivity {
                     // End of firebase authentication
             }
         });
+    }
+
+    // validate input fields
+    // todo: shreya please valid the education number field and add error like below
+    private boolean validInput() {
+        boolean pass = true;
+        String first, last, email, pass1, pass2;
+
+        //Checks for valid data
+        first = mEtFirstName.getText().toString().trim();
+        if(first.isEmpty()){
+            mTilFirstName.setError(getString(R.string.first_name_error));
+            pass = false;
+        }
+
+        last = mEtLastName.getText().toString().trim();
+        if(last.isEmpty()){
+            mTilLastName.setError(getString(R.string.last_name_error));
+            pass = false;
+        }
+
+        email = mEtEmail.getText().toString().trim();
+        if(email.isEmpty()){
+            mTilEmail.setError(getString(R.string.email_error));
+            pass = false;
+        }
+
+        Matcher matcher = EMAIL_PATTERN.matcher(email);
+        if(!(matcher.matches())){
+            mTilEmail.setError(getString(R.string.email_error_valid));
+            pass = false;
+        }
+
+        pass1 = mEtPassword.getText().toString().trim();
+        if(pass1.isEmpty()){
+            mTilPassword.setError(getString( R.string.password_error));
+            pass = false;
+        }
+
+        pass2 = mEtConfirmPassword.getText().toString().trim();
+        if(pass2.isEmpty()){
+            mTilConfirmPassword.setError(getString(R.string.confirm_pass_error));
+            pass = false;
+        }
+
+        if(!(pass2.equals(pass1))){
+            mTilConfirmPassword.setError(getString(R.string.confirm_pass_error_valid));
+            pass = false;
+        }
+
+        if(pass1.length() < 6){
+            mTilPassword.setError(getString(R.string.password_length_error));
+            pass = false;
+        }
+
+        return pass;
     }
 
 

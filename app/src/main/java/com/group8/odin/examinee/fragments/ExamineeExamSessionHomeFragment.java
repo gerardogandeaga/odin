@@ -2,40 +2,23 @@ package com.group8.odin.examinee.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.group8.odin.OdinFirebase;
 import com.group8.odin.R;
-import com.group8.odin.R2;
 import com.group8.odin.Utils;
-import com.group8.odin.common.activities.LoginActivity;
-import com.group8.odin.common.models.ExamSession;
-import com.group8.odin.examinee.activities.ExamineeExamSessionActivity;
 import com.group8.odin.examinee.activities.ExamineeHomeActivity;
-import com.group8.odin.examinee.list_items.RegisteredExamItem;
-import com.mikepenz.fastadapter.FastAdapter;
-import com.mikepenz.fastadapter.IAdapter;
-import com.mikepenz.fastadapter.adapters.ItemAdapter;
-import com.mikepenz.fastadapter.listeners.OnClickListener;
 
-import org.w3c.dom.Text;
+import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -52,11 +35,20 @@ import butterknife.ButterKnife;
 public class ExamineeExamSessionHomeFragment extends Fragment {
     @BindView(R.id.tvExamInfo) TextView mTvExamInfo;
     @BindView(R.id.tvExamName) TextView mTvExamName;
-    @BindView(R.id.textView3) TextView mTvExamID;
-    @BindView(R.id.textView4) TextView mTvExamStartTime;
-    @BindView(R.id.textView5) TextView mTvExamEndTime;
+    @BindView(R.id.tvExamStartTime) TextView mTvExamStartTime;
+    @BindView(R.id.tvExamEndTime) TextView mTvExamEndTime;
+//    @BindView(R.id.tvTimer) TextView mTvTimer;
+//    @BindView(R.id.timer_layout) LinearLayout mTimer_layout;
+//    @BindView(R.id.tvHours) TextView mTvHours;
+//    @BindView(R.id.tvMinutes) TextView mTvMinutes;
+//    @BindView(R.id.tvSeconds) TextView mTvSeconds;
+//    @BindView(R.id.message_layout) LinearLayout mMessage_layout;
+//    @BindView(R.id.exam_finished) TextView mTvExam_finished;
 
-    private FirebaseFirestore mFirestore;
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
 
     @Nullable
     @Override
@@ -70,8 +62,11 @@ public class ExamineeExamSessionHomeFragment extends Fragment {
         ButterKnife.bind(this, view);
         getActivity().setTitle(R.string.exam_progress);
         mTvExamName.setText(OdinFirebase.ExamSessionContext.getTitle());
-        mTvExamID.setText(OdinFirebase.ExamSessionContext.getExamId());
         mTvExamStartTime.setText("Start Time: " + Utils.getDateTimeStringFromDate(OdinFirebase.ExamSessionContext.getExamStartTime()));
         //mTvExamEndTime.setText("End Time: " + Utils.getDateTimeStringFromDate(OdinFirebase.ExamSessionContext.getExamEndTime()));
+    }
+
+    public void UpdateTime(String time) {
+        // update your text views...
     }
 }

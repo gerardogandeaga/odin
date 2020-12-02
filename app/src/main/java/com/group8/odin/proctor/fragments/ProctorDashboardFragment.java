@@ -38,8 +38,6 @@ import com.mikepenz.fastadapter.adapters.ItemAdapter;
 import com.mikepenz.fastadapter.listeners.OnClickListener;
 import com.mikepenz.fastadapter.listeners.OnLongClickListener;
 
-import java.util.Date;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -52,10 +50,8 @@ import butterknife.ButterKnife;
  * Updated by: Shreya on 2020-11-26: Added time checks
  */
 public class ProctorDashboardFragment extends Fragment {
-    @BindView(R2.id.recycler_view)
-    RecyclerView mRvCreatedExams;
-    @BindView(R2.id.fabAction)
-    ExtendedFloatingActionButton mFabCreateExam;
+    @BindView(R2.id.recycler_view) RecyclerView mRvCreatedExams;
+    @BindView(R2.id.fabAction)     ExtendedFloatingActionButton mFabCreateExam;
 
     private ItemAdapter mItemAdapter;
     private FirebaseFirestore mFirestore;
@@ -94,29 +90,37 @@ public class ProctorDashboardFragment extends Fragment {
             public boolean onClick(View v, IAdapter<RegisteredExamItem> adapter, RegisteredExamItem item, int position) {
                 OdinFirebase.ExamSessionContext = item.getExamSession();
 
-                Date examStart = OdinFirebase.ExamSessionContext.getExamStartTime();
-                Date examEnd = OdinFirebase.ExamSessionContext.getExamEndTime();
-
-                if(Utils.isCurrentTimeAfterTime(examStart) || Utils.isCurrentTimeEqualToTime(examStart)) {
-                    if(Utils.isCurrentTimeBeforeTime(examEnd) || Utils.isCurrentTimeEqualToTime(examEnd)) {
-                        Intent examSessionIntent = new Intent(getActivity(), ProctorExamSessionActivity.class);
-                        startActivity(examSessionIntent);
-                        return true;
-                    } else {
-                        //Exam has ended
-                        //TODO: Add path to post exam report for this exam. For now, dummy path to auth photos
-                        Intent examSessionIntent = new Intent(getActivity(), ProctorExamSessionActivity.class);
-                        startActivity(examSessionIntent);
-                        return true;
-                    }
-                } else {
-                    //Exam has not yet started.
-                    //TODO: Updating existing exam. Hence, change to showProctorExamUpdate() once made the necessary function for the same.
-                    ((ProctorHomeActivity)getActivity()).showProctorExamCreation();
-                    return true;
+                if (Utils.isCurrentTimeBeforeTime(OdinFirebase.ExamSessionContext.getExamStartTime())) {
+                    ((ProctorHomeActivity) getActivity()).showProctorExamCreateOrEdit(item.getExamSession());
                 }
+                // after exam has started
+                else if (Utils.isCurrentTimeAfterTime(OdinFirebase.ExamSessionContext.getExamStartTime())) {
+                    startActivity(new Intent(getActivity(), ProctorExamSessionActivity.class));
+                }
+                return true;
+
+//                if(Utils.isCurrentTimeAfterTime(examStart) || Utils.isCurrentTimeEqualToTime(examStart)) {
+//                    if(Utils.isCurrentTimeBeforeTime(examEnd) || Utils.isCurrentTimeEqualToTime(examEnd)) {
+//                        Intent examSessionIntent = new Intent(getActivity(), ProctorExamSessionActivity.class);
+//                        startActivity(examSessionIntent);
+//                        return true;
+//                    } else {
+//                        //Exam has ended
+//                        //TODO: Add path to post exam report for this exam. For now, dummy path to auth photos
+//                        Intent examSessionIntent = new Intent(getActivity(), ProctorExamSessionActivity.class);
+//                        startActivity(examSessionIntent);
+//                        return true;
+//                    }
+//                }
+//                else {
+//                    //Exam has not yet started.
+//                    //TODO: Updating existing exam. Hence, change to showProctorExamUpdate() once made the necessary function for the same.
+//                    ((ProctorHomeActivity)getActivity()).showProctorExamCreation();
+//                    return true;
+//                }
             }
         });
+
         // Copy id into clipboard so user can share it
         fastAdapter.withOnLongClickListener(new OnLongClickListener<RegisteredExamItem>() {
             @Override
@@ -134,7 +138,7 @@ public class ProctorDashboardFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 // Load and go to examinee registration fragment
-                ((ProctorHomeActivity)getActivity()).showProctorExamCreation();
+                ((ProctorHomeActivity)getActivity()).showProctorExamCreateOrEdit(null);
             }
         });
 
@@ -148,7 +152,7 @@ public class ProctorDashboardFragment extends Fragment {
     }
 
     // Load user exam sessions
-    public boolean loadExamSessions() {
+    public void loadExamSessions() {
         for (String id : OdinFirebase.UserProfileContext.getExamSessionIds()) {
             DocumentReference exam = mFirestore.collection(OdinFirebase.FirestoreCollections.EXAM_SESSIONS).document(id);
             exam.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -168,6 +172,5 @@ public class ProctorDashboardFragment extends Fragment {
                 }
             });
         }
-        return true;
     }
 }

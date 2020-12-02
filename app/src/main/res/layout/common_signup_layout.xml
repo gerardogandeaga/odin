@@ -24,147 +24,107 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="100dp"
         android:orientation="vertical"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
+        android:padding="32dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/textTitleFirstName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
-            android:text="@string/first_name"
-            android:textColor="@android:color/black"
-            android:textSize="6pt" />
-
         <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilFirstName"
             android:layout_width="match_parent"
+            android:hint="@string/first_name_hint"
             android:layout_height="wrap_content">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/editTextFirstName"
+                android:id="@+id/etFirstName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/first_name_hint"
                 android:inputType="textPersonName"
-                android:textColor="@color/colorTextField"
-                android:textSize="6pt"
-                android:textStyle="italic" />
+                style="@style/inputStyle"/>
 
         </com.google.android.material.textfield.TextInputLayout>
 
-        <TextView
-            android:id="@+id/textTitleLastName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
-            android:text="@string/last_name"
-            android:textColor="@android:color/black"
-            android:textSize="6pt" />
-
         <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilLastName"
             android:layout_width="match_parent"
+            android:hint="@string/last_name_hint"
             android:layout_height="wrap_content">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/editTextLastName"
+                android:id="@+id/etLastName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/last_name_hint"
                 android:inputType="textPersonName"
                 android:textColor="@color/colorTextField"
-                android:textSize="6pt"
-                android:textStyle="italic" />
+                style="@style/inputStyle"/>
 
         </com.google.android.material.textfield.TextInputLayout>
 
-        <TextView
-            android:id="@+id/textTitleEmail"
+<!--        todo: shreya add string resource -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilEduId"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
-            android:text="@string/email"
-            android:textColor="@android:color/black"
-            android:textSize="6pt" />
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:hint="Type you education id">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/editTextEmail"
+                android:id="@+id/etEduId"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/email_hint"
                 android:inputType="textPersonName"
                 android:textColor="@color/colorTextField"
-                android:textSize="6pt"
-                android:textStyle="italic" />
+                style="@style/inputStyle" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
-        <TextView
-            android:id="@+id/textTitlePassword"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
-            android:text="@string/password_detail"
-            android:textColor="@android:color/black"
-            android:textSize="6pt" />
+            android:hint="@string/email_hint">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPersonName"
+                android:textColor="@color/colorTextField"
+                style="@style/inputStyle" />
+
+        </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:hint="@string/password_hint"
             app:passwordToggleEnabled="true">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/editPassword"
+                android:id="@+id/etPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/password_hint"
                 android:inputType="textVisiblePassword"
                 android:textColor="@color/colorTextField"
-                android:textSize="6pt"
-                android:textStyle="italic" />
+                style="@style/inputStyle" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
-        <TextView
-            android:id="@+id/textTitleConfirmaPassword"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
-            android:text="@string/confirm_pass"
-            android:textColor="@android:color/black"
-            android:textSize="6pt" />
-
         <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilConfirmPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:hint="@string/confirm_pass_hint"
             app:passwordToggleEnabled="true">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/editConfirmPassword"
+                android:id="@+id/etConfirmPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/confirm_pass_hint"
                 android:inputType="textVisiblePassword"
                 android:textColor="@color/colorTextField"
-                android:textSize="6pt"
-                android:textStyle="italic" />
+                style="@style/inputStyle" />
 
         </com.google.android.material.textfield.TextInputLayout>
 

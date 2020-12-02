@@ -30,15 +30,13 @@ public class OdinFirebase {
         public static final String EMAIL = "email";
         public static final String ROLE = "role";
         public static final String EXAM_IDS = "exam_ids";
+        public static final String EDU_ID = "edu_id";
     }
 
     public static class FirestoreExamSession {
         public static final String TITLE = "title";
         public static final String EXAM_START_TIME = "exam_start_time";
-        //public static final String EXAM_END_TIME = "exam_end_time";
-        public static final String EXAM_DURATION = "exam_duration";
-        public static final String AUTH_START_TIME = "auth_start_time";
-        //public static final String AUTH_END_TIME = "auth_end_time";
+        public static final String EXAM_END_TIME = "exam_end_time";
         public static final String AUTH_DURATION = "auth_duration";
     }
 
