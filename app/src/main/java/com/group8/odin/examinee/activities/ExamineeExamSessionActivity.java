@@ -28,6 +28,7 @@ import com.group8.odin.OdinFirebase;
 import com.group8.odin.R;
 import com.group8.odin.Utils;
 import com.group8.odin.examinee.fragments.ExamineeAuthPhotoSubmissionFragment;
+import com.group8.odin.examinee.fragments.ExamineeExamEndFragment;
 import com.group8.odin.examinee.fragments.ExamineeExamSessionHomeFragment;
 
 import java.util.Arrays;
@@ -91,6 +92,7 @@ public class ExamineeExamSessionActivity extends AppCompatActivity {
 
     private ExamineeAuthPhotoSubmissionFragment mAuthFrag;
     private ExamineeExamSessionHomeFragment mSessionFrag;
+    private ExamineeExamEndFragment mEndFrag;
 
     public void showAuthPhotoSubmission() {
         InExam = false;
@@ -100,7 +102,6 @@ public class ExamineeExamSessionActivity extends AppCompatActivity {
         mFragmentTransaction.commit();
     }
 
-
     public void showExamSessionHome() {
         InExam = true;
         mFragmentTransaction = mFragmentManager.beginTransaction();
@@ -108,6 +109,14 @@ public class ExamineeExamSessionActivity extends AppCompatActivity {
         mFragmentTransaction.replace(R.id.container, mSessionFrag);
         mFragmentTransaction.commit();
         onResume();
+    }
+
+    public void showExamEndScreen() {
+        InExam = false;
+        mFragmentTransaction = mFragmentManager.beginTransaction();
+        mEndFrag = new ExamineeExamEndFragment();
+        mFragmentTransaction.replace(R.id.container, mEndFrag);
+        mFragmentTransaction.commit();
     }
 
     @Override
@@ -173,7 +182,6 @@ public class ExamineeExamSessionActivity extends AppCompatActivity {
                 }
             }
         });
-        //TODO: store the message as well (optional)
     }
 
     // Exam session timer ==========================================================================
@@ -200,13 +208,15 @@ public class ExamineeExamSessionActivity extends AppCompatActivity {
                 mClockHandler.postDelayed(this, 1000);
                 try {
                     long timeLeft =  (examEnd.getTime() - Utils.getCurrentTime().getTime()) / 1000; // time left in seconds
-                    if (timeLeft < 1) mListenForActivity = false; // cancel listening for examinee activity
+                    if (timeLeft < 1) {
+                        mListenForActivity = false; // cancel listening for examinee activity
+                    }
 
-                    System.out.println("Time left: " + (examEnd.getTime() - Utils.getCurrentTime().getTime()) / 1000);
+                    mSessionFrag.updateTime(examEnd.getTime() - Utils.getCurrentTime().getTime());
 
                     // end auth time
                     if (!mAuthEnded && !mExamEnded && Utils.isCurrentTimeAfterTime(authEnd)) {
-                        System.out.println("Auth time has ended!");
+                        Toast.makeText(ExamineeExamSessionActivity.this, R.string.auth_ended, Toast.LENGTH_SHORT).show();
                         showExamSessionHome();
                     }
 
@@ -214,14 +224,13 @@ public class ExamineeExamSessionActivity extends AppCompatActivity {
                     if (mAuthEnded && !mExamEnded && Utils.isCurrentTimeAfterTime(examEnd)) {
                         // stop the clock
                         killClock(this);
-
-                        // todo SHREYA: can you create an examinee end screen? please just re-use the layout for the exam session and replace the text.
-                        // you can unhide a button to take you back to the dashboard or something.
-                        Toast.makeText(ExamineeExamSessionActivity.this, "Exam has ended!", Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(ExamineeExamSessionActivity.this, ExamineeHomeActivity.class));
+                        //go to exam session end screen
+                        showExamEndScreen();
                     }
 
-                    if (Utils.isCurrentTimeAfterTime(examEnd)) { killClock(this); }
+                    if (Utils.isCurrentTimeAfterTime(examEnd)) {
+                        killClock(this);
+                    }
 
                     mAuthEnded = Utils.isCurrentTimeAfterTime(authEnd);
                     mExamEnded = Utils.isCurrentTimeAfterTime(examEnd);
@@ -232,6 +241,4 @@ public class ExamineeExamSessionActivity extends AppCompatActivity {
         };
         mClockHandler.postDelayed(mClockRunnable, 1000);
     }
-
-    // =============================================================================================
 }

@@ -152,8 +152,6 @@ public class ProctorExamineeProfileFragment extends Fragment {
             // load data into views
             displayProfileAndActivityData();
 
-
-            // todo: change activity title
             getActivity().setTitle(mExaminee.getName());
             // get user profile
             DocumentReference userProfile = mFirestore.collection(OdinFirebase.FirestoreCollections.USERS).document(mExaminee.getUserId());

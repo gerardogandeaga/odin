@@ -47,11 +47,13 @@ import java.util.regex.Pattern;
 public class SignUpActivity extends AppCompatActivity {
     @BindView(R.id.etFirstName)        EditText mEtFirstName;
     @BindView(R.id.etLastName)         EditText mEtLastName;
+    @BindView(R.id.etEduId)            EditText mEtEduId;
     @BindView(R.id.etEmail)            EditText mEtEmail;
     @BindView(R.id.etPassword)         EditText mEtPassword;
     @BindView(R.id.etConfirmPassword)  EditText mEtConfirmPassword;
     @BindView(R.id.tilFirstName)       TextInputLayout mTilFirstName;
     @BindView(R.id.tilLastName)        TextInputLayout mTilLastName;
+    @BindView(R.id.tilEduId)           TextInputLayout mTilEduId;
     @BindView(R.id.tilEmail)           TextInputLayout mTilEmail;
     @BindView(R.id.tilPassword)        TextInputLayout mTilPassword;
     @BindView(R.id.tilConfirmPassword) TextInputLayout mTilConfirmPassword;
@@ -73,6 +75,7 @@ public class SignUpActivity extends AppCompatActivity {
 
     private FirebaseFirestore mFirestore;
     private FirebaseAuth mAuth;
+        //TODO: Wonky layout fix
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,12 +103,11 @@ public class SignUpActivity extends AppCompatActivity {
                                         //Sign in success, update UI with the signed-in user's information
                                         //Log.d(TAG, "createUserWithEmail:success");
                                         FirebaseUser user = mAuth.getCurrentUser();
-
                                         // Write data to user profile
                                         Map<String, Object> data = new HashMap<>();
                                         data.put(OdinFirebase.FirestoreUserProfile.NAME, mEtFirstName.getText().toString().trim() + " " + mEtLastName.getText().toString().trim());
                                         data.put(OdinFirebase.FirestoreUserProfile.EMAIL, mEtEmail.getText().toString().trim());
-                                        data.put(OdinFirebase.FirestoreUserProfile.EMAIL, mEtEmail.getText().toString().trim());
+                                        data.put(OdinFirebase.FirestoreUserProfile.EDU_ID, mEtEduId.getText().toString().trim());
                                         data.put(OdinFirebase.FirestoreUserProfile.EXAM_IDS, new ArrayList<String>());
                                         data.put(OdinFirebase.FirestoreUserProfile.ROLE, mCbRole.isChecked());
                                         DocumentReference profileRef = mFirestore.collection(OdinFirebase.FirestoreCollections.USERS).document(user.getUid());
@@ -138,10 +140,9 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     // validate input fields
-    // todo: shreya please valid the education number field and add error like below
     private boolean validInput() {
         boolean pass = true;
-        String first, last, email, pass1, pass2;
+        String first, last, email, pass1, pass2, id;
 
         //Checks for valid data
         first = mEtFirstName.getText().toString().trim();
@@ -153,6 +154,12 @@ public class SignUpActivity extends AppCompatActivity {
         last = mEtLastName.getText().toString().trim();
         if(last.isEmpty()){
             mTilLastName.setError(getString(R.string.last_name_error));
+            pass = false;
+        }
+
+        id = mEtEduId.getText().toString().trim();
+        if(id.isEmpty()) {
+            mTilEduId.setError(getString(R.string.eduId_error));
             pass = false;
         }
 
@@ -193,7 +200,6 @@ public class SignUpActivity extends AppCompatActivity {
         return pass;
     }
 
-
     public void onStart() {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
@@ -203,7 +209,3 @@ public class SignUpActivity extends AppCompatActivity {
         FirebaseUser currentUser = mAuth.getCurrentUser();
     }
 }
-
-/*TODO: SignUp
- *   show hint in RED if the user's input is invalid
- *   */

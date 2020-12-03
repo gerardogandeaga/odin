@@ -121,7 +121,6 @@ public class ExamineeDashboardFragment extends Fragment {
 
         loadExamSessions();
 
-
         // Logout of odin
         getActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
             @Override

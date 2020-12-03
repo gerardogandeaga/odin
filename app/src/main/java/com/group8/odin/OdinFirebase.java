@@ -30,7 +30,7 @@ public class OdinFirebase {
         public static final String EMAIL = "email";
         public static final String ROLE = "role";
         public static final String EXAM_IDS = "exam_ids";
-        public static final String EDU_ID = "edu_id";
+        public static final String EDU_ID = "personal_id";
     }
 
     public static class FirestoreExamSession {

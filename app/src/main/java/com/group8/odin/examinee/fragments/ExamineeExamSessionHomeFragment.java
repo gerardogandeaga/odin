@@ -31,19 +31,17 @@ import butterknife.ButterKnife;
  * Updated on 2020-12-01
  * Updated by: Matthew Tong
  * Description: removed the displaying of exam end time (mTvExamEndTime)
+ * Updated by: Shreya Jain
  */
 public class ExamineeExamSessionHomeFragment extends Fragment {
     @BindView(R.id.tvExamInfo) TextView mTvExamInfo;
     @BindView(R.id.tvExamName) TextView mTvExamName;
     @BindView(R.id.tvExamStartTime) TextView mTvExamStartTime;
-    @BindView(R.id.tvExamEndTime) TextView mTvExamEndTime;
-//    @BindView(R.id.tvTimer) TextView mTvTimer;
-//    @BindView(R.id.timer_layout) LinearLayout mTimer_layout;
-//    @BindView(R.id.tvHours) TextView mTvHours;
-//    @BindView(R.id.tvMinutes) TextView mTvMinutes;
-//    @BindView(R.id.tvSeconds) TextView mTvSeconds;
-//    @BindView(R.id.message_layout) LinearLayout mMessage_layout;
-//    @BindView(R.id.exam_finished) TextView mTvExam_finished;
+    @BindView(R.id.tvTimer) TextView mTvTimer;
+    @BindView(R.id.timer_layout) LinearLayout mTimer_layout;
+    @BindView(R.id.tvHours) TextView mTvHours;
+    @BindView(R.id.tvMinutes) TextView mTvMinutes;
+    @BindView(R.id.tvSeconds) TextView mTvSeconds;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -63,10 +61,23 @@ public class ExamineeExamSessionHomeFragment extends Fragment {
         getActivity().setTitle(R.string.exam_progress);
         mTvExamName.setText(OdinFirebase.ExamSessionContext.getTitle());
         mTvExamStartTime.setText("Start Time: " + Utils.getDateTimeStringFromDate(OdinFirebase.ExamSessionContext.getExamStartTime()));
-        //mTvExamEndTime.setText("End Time: " + Utils.getDateTimeStringFromDate(OdinFirebase.ExamSessionContext.getExamEndTime()));
     }
 
-    public void UpdateTime(String time) {
-        // update your text views...
+    private static int secondsInDay = 24*60*60*1000; //milliseconds in a day
+    private static int secondsInHour = 60*60*1000; //milliseconds in an hour
+    private static int secondsInMinute = 60 * 1000; //milliseconds in a minute
+    private static int secondsInSecond = 1000; //milliseconds in a second
+
+    public void updateTime(long time) {
+        long days = time /secondsInDay;
+        time-= days * secondsInDay;
+        long hours = time /secondsInHour;
+        time -= hours * secondsInHour;
+        long minutes = time / secondsInMinute;
+        time -= minutes * secondsInMinute;
+        long seconds = time /secondsInSecond;
+        mTvHours.setText(String.format("%02d", hours) + ":");
+        mTvMinutes.setText(String.format("%02d", minutes) + ":");
+        mTvSeconds.setText(String.format("%02d", seconds));
     }
 }

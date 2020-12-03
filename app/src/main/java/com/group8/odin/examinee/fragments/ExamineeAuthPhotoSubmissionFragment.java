@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
@@ -34,6 +35,7 @@ import com.group8.odin.OdinFirebase;
 import com.group8.odin.R;
 import com.group8.odin.R2;
 import com.group8.odin.Utils;
+import com.group8.odin.common.activities.LoginActivity;
 import com.group8.odin.examinee.activities.ExamineeExamSessionActivity;
 
 import java.io.File;
@@ -183,8 +185,8 @@ public class ExamineeAuthPhotoSubmissionFragment extends Fragment {
             public void onClick(View view) {
                     Uri uri = Uri.fromFile(new File(mAuthPhotoUri));
 
-                    // store photo in exam session folder
-                    mReference.child(OdinFirebase.ExamSessionContext.getExamId() + "/" + OdinFirebase.UserProfileContext.getUserId() + ".jpg").putFile(uri)// todo : when uploading files rename file to userid_time.jpg
+                    // store photo in exam session folder in the form "examineeID_time.jpg"
+                    mReference.child(OdinFirebase.ExamSessionContext.getExamId() + "/" + OdinFirebase.UserProfileContext.getEduId() + "_" + Utils.getDateTimeStringFromDate(Utils.getCurrentTime()) + ".jpg").putFile(uri)
                             .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                                 @Override
                                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -212,6 +214,13 @@ public class ExamineeAuthPhotoSubmissionFragment extends Fragment {
 
         // Hide progress bar
         mPbProgress.setVisibility(View.INVISIBLE);
+
+        getActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                startActivity(new Intent(getActivity(), ExamineeExamSessionActivity.class));
+            }
+        });
     }
 
     public void invokeCameraActivity() {
@@ -264,6 +273,4 @@ public class ExamineeAuthPhotoSubmissionFragment extends Fragment {
         mAuthPhotoUri = image.getAbsolutePath();
         return image;
     }
-
-    //TODO: On back press, go to exam session instead of examinee dashboard
 }

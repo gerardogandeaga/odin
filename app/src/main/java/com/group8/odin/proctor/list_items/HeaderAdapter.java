@@ -72,12 +72,12 @@ public class HeaderAdapter<Item extends IItem> extends RecyclerView.Adapter impl
             else {
                 // if active
                 if (examineeItem.getExaminee().second.getOverallStatus()) {
-                    textView.setText("No Activity"); // todo shreya: add string
+                    textView.setText(R.string.no_activity);
                     holder.itemView.setBackgroundColor(ContextCompat.getColor(textView.getContext(), R.color.online));
                 }
                 // if inactive
                 else {
-                    textView.setText("Reported Activity"); // todo shreya: add string
+                    textView.setText(R.string.reported_activity);
                     holder.itemView.setBackgroundColor(ContextCompat.getColor(textView.getContext(), R.color.offline));
                 }
             }

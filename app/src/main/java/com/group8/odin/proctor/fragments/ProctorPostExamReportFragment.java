@@ -67,6 +67,8 @@ public class ProctorPostExamReportFragment extends Fragment {
     private ItemAdapter mHeaderAdapter;
     private FastAdapter<ExamineeItem> mFastAdapter;
 
+    private int examineeCount =0;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,7 +87,7 @@ public class ProctorPostExamReportFragment extends Fragment {
         ButterKnife.bind(this, view);
 
         //set up the button
-        mFab.setText("Go to dashboard"); // todo SHREYA: create string res
+        mFab.setText(R.string.back_to_dashboard);
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -157,12 +159,14 @@ public class ProctorPostExamReportFragment extends Fragment {
         mItemAdapter.clear();
         mItemAdapter.add(items);
         mFastAdapter.notifyAdapterDataSetChanged();
+        examineeCount = mFastAdapter.getItemCount();
     }
 
     @Override
     public void onHiddenChanged(boolean hidden) {
         if (!hidden) {
-            getActivity().setTitle("Post Exam Report"); // todo SHREYA: create string res & append examinee count
+            String title = getString(R.string.post_exam_report) + ": " + Integer.toString(examineeCount);
+            getActivity().setTitle(title);
             mActivity.getSupportActionBar().setHomeButtonEnabled(false);
             mActivity.getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
