@@ -38,6 +38,8 @@ import com.mikepenz.fastadapter.adapters.ItemAdapter;
 import com.mikepenz.fastadapter.listeners.OnClickListener;
 import com.mikepenz.fastadapter.listeners.OnLongClickListener;
 
+import java.util.ArrayList;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -152,9 +154,35 @@ public class ProctorDashboardFragment extends Fragment {
     }
 
     // Load user exam sessions
+//    public void loadExamSessions() {
+//        for (String id : OdinFirebase.UserProfileContext.getExamSessionIds()) {
+//            DocumentReference exam = mFirestore.collection(OdinFirebase.FirestoreCollections.EXAM_SESSIONS).document(id);
+//            exam.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//                @Override
+//                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+//                    if (task.isSuccessful()) {
+//                        DocumentSnapshot examSessionDoc = task.getResult();
+//                        ExamSession session = new ExamSession(examSessionDoc);
+//                        OdinFirebase.UserProfileContext.getExamSessions().add(session);
+//
+//                        // Display exam sessions in recycler view
+//                        mItemAdapter.add(new RegisteredExamItem().setExamSession(session));
+//                    }
+//                    else {
+//                        Log.e("UserProfile -> LoadExamSessions: ", "Error loading exam sessions");
+//                    }
+//                }
+//            });
+//        }
+//    }
+
+    // Load user exam sessions
     public void loadExamSessions() {
-        for (String id : OdinFirebase.UserProfileContext.getExamSessionIds()) {
-            DocumentReference exam = mFirestore.collection(OdinFirebase.FirestoreCollections.EXAM_SESSIONS).document(id);
+        OdinFirebase.UserProfileContext.setExamSessions(new ArrayList<ExamSession>()); // clear exam sessions list for re-population
+        System.out.println("loading exam sessions");
+        for (String id : OdinFirebase.UserProfileContext.getExamSessionIds())
+        {
+            final DocumentReference exam = mFirestore.collection(OdinFirebase.FirestoreCollections.EXAM_SESSIONS).document(id);
             exam.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -164,11 +192,20 @@ public class ProctorDashboardFragment extends Fragment {
                         OdinFirebase.UserProfileContext.getExamSessions().add(session);
 
                         // Display exam sessions in recycler view
-                        mItemAdapter.add(new RegisteredExamItem().setExamSession(session));
-                    }
-                    else {
+
+                        if (OdinFirebase.UserProfileContext.getExamSessions().size() == OdinFirebase.UserProfileContext.getExamSessionIds().size()) {
+                            ArrayList<RegisteredExamItem> adapterItems = new ArrayList<>(); // list item (gui)
+
+                            // creates registered exam sessions and puts them in list
+                            for (ExamSession examSession: OdinFirebase.UserProfileContext.getExamSessions()) adapterItems.add(new RegisteredExamItem().setExamSession(examSession));
+
+                            // sort
+                            adapterItems.sort(new RegisteredExamItem.Comparison());
+                            // add to adapter
+                            mItemAdapter.add(adapterItems);
+                        }
+                    } else
                         Log.e("UserProfile -> LoadExamSessions: ", "Error loading exam sessions");
-                    }
                 }
             });
         }

@@ -1,9 +1,13 @@
 package com.group8.odin.examinee.list_items;
 
+import android.content.Context;
 import android.view.View;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.content.res.AppCompatResources;
+import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.util.Util;
 import com.group8.odin.OdinFirebase;
@@ -14,6 +18,7 @@ import com.group8.odin.common.models.UserProfile;
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.items.AbstractItem;
 
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -56,6 +61,9 @@ public class RegisteredExamItem extends AbstractItem<RegisteredExamItem, Registe
 
     // List item view
     protected static class ViewHolder extends FastAdapter.ViewHolder<RegisteredExamItem> {
+        Context context;
+        @BindView(R.id.tvStatus)        TextView status;
+        @BindView(R.id.cardStatus)      CardView cardStatus;
         @BindView(R.id.tvExamTitle)     TextView examTitle;
         @BindView(R.id.tvExamId)        TextView examId;
         @BindView(R.id.tvExamStartTime) TextView examStartTime;
@@ -66,6 +74,7 @@ public class RegisteredExamItem extends AbstractItem<RegisteredExamItem, Registe
             super(view);
             // Bind views to this target (the list item view we created)
             ButterKnife.bind(this, view);
+            context = view.getContext();
         }
 
         @Override
@@ -82,6 +91,22 @@ public class RegisteredExamItem extends AbstractItem<RegisteredExamItem, Registe
             examStartTime.setText("Starts: " + item.examSession.getExamStartTime().toString());
             examEndTime.setText("Ends: " + item.examSession.getExamEndTime().toString());
             authTime.setText("ID check ends at " + Utils.getTimeStringFromDate(item.examSession.getAuthEndTime()));
+
+            // set the card status
+            if (Utils.isCurrentTimeBeforeTime(item.examSession.getExamStartTime())) {
+                status.setText("Upcoming");
+                cardStatus.setBackgroundColor(ContextCompat.getColor(context, R.color.upcoming));
+            }
+            else
+            if (Utils.isCurrentTimeBetweenTimes(item.examSession.getExamStartTime(), item.examSession.getExamEndTime())) {
+                status.setText("Active");
+                cardStatus.setBackgroundColor(ContextCompat.getColor(context, R.color.active));
+            }
+            else
+            if (Utils.isCurrentTimeAfterTime(item.examSession.getExamEndTime())) {
+                status.setText("Passed");
+                cardStatus.setBackgroundColor(ContextCompat.getColor(context, R.color.passed));
+            }
         }
 
         @Override
@@ -91,6 +116,23 @@ public class RegisteredExamItem extends AbstractItem<RegisteredExamItem, Registe
             examStartTime.setText(null);
             examEndTime.setText(null);
             authTime.setText(null);
+        }
+    }
+
+    // custom Registered Exam comparator
+    public static class Comparison implements Comparator<RegisteredExamItem> {
+
+        @Override
+        public int compare(RegisteredExamItem a, RegisteredExamItem b) {
+            int comp = a.getExamSession().getExamStartTime().compareTo(b.getExamSession().getExamStartTime());
+            // if they have the same status value then compare by title
+            if (comp == 0) {
+                return a.getExamSession().getTitle().compareTo(b.getExamSession().getTitle());
+            }
+            // if they are different status values then compare by status
+            else {
+                return -(comp);
+            }
         }
     }
 }
