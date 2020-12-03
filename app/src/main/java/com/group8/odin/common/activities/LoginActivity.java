@@ -107,7 +107,8 @@ public class LoginActivity extends AppCompatActivity {
                                         });
                                     } else {
                                         // If sign in fails, display a message to the user.
-                                        Log.w(TAG, "signInWithEmail:failure", task.getException()); // todo make a til error message
+                                        Log.w(TAG, "signInWithEmail:failure", task.getException());
+                                        mTilEmail.setError(getString(R.string.signIn_fail));
                                     }
                                 }
                             });
@@ -144,7 +145,6 @@ public class LoginActivity extends AppCompatActivity {
 
         return pass;
     }
-    
 
     // send user out of application
     @Override
@@ -156,5 +156,3 @@ public class LoginActivity extends AppCompatActivity {
     }
 }
 
-/*TODO:  create fragment for forgot password
- */

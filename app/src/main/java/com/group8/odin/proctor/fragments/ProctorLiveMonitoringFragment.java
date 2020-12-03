@@ -54,6 +54,8 @@ public class ProctorLiveMonitoringFragment extends Fragment {
     private ItemAdapter mHeaderAdapter;
     private FastAdapter<ExamineeItem> mFastAdapter;
 
+    private int examineeCount = 0;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -146,14 +148,14 @@ public class ProctorLiveMonitoringFragment extends Fragment {
         mItemAdapter.clear();
         mItemAdapter.add(items);
         mFastAdapter.notifyAdapterDataSetChanged();
-        mItemAdapter.getAdapterItems().size();
+        examineeCount = mItemAdapter.getAdapterItems().size();
     }
 
     @Override
     public void onHiddenChanged(boolean hidden) {
         if (!hidden) {
-//            mItemAdapter.getAdapterItems().size();
-            getActivity().setTitle(R.string.live_monitor); // todo SHREYA: append examinee count
+            String title = getString(R.string.live_monitor) + ": " +Integer.toString(examineeCount);
+            getActivity().setTitle(title);
             mActivity.getSupportActionBar().setHomeButtonEnabled(false);
             mActivity.getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 

@@ -1,7 +1,9 @@
 package com.group8.odin.proctor.fragments;
 
+import android.app.AlertDialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -100,26 +102,6 @@ public class ProctorDashboardFragment extends Fragment {
                     startActivity(new Intent(getActivity(), ProctorExamSessionActivity.class));
                 }
                 return true;
-
-//                if(Utils.isCurrentTimeAfterTime(examStart) || Utils.isCurrentTimeEqualToTime(examStart)) {
-//                    if(Utils.isCurrentTimeBeforeTime(examEnd) || Utils.isCurrentTimeEqualToTime(examEnd)) {
-//                        Intent examSessionIntent = new Intent(getActivity(), ProctorExamSessionActivity.class);
-//                        startActivity(examSessionIntent);
-//                        return true;
-//                    } else {
-//                        //Exam has ended
-//                        //TODO: Add path to post exam report for this exam. For now, dummy path to auth photos
-//                        Intent examSessionIntent = new Intent(getActivity(), ProctorExamSessionActivity.class);
-//                        startActivity(examSessionIntent);
-//                        return true;
-//                    }
-//                }
-//                else {
-//                    //Exam has not yet started.
-//                    //TODO: Updating existing exam. Hence, change to showProctorExamUpdate() once made the necessary function for the same.
-//                    ((ProctorHomeActivity)getActivity()).showProctorExamCreation();
-//                    return true;
-//                }
             }
         });
 
@@ -149,7 +131,19 @@ public class ProctorDashboardFragment extends Fragment {
         // Logout of odin
         getActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
             @Override
-            public void handleOnBackPressed() { startActivity(new Intent(getActivity(), LoginActivity.class)); }
+            public void handleOnBackPressed() {
+                new AlertDialog.Builder(getContext())
+                        .setTitle(R.string.logout)
+                        .setMessage(R.string.logout_confirm)
+                        .setPositiveButton(R.string.logout, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                startActivity(new Intent(getActivity(), LoginActivity.class));
+                            }
+                        })
+                        .setNegativeButton(R.string.cancel, null)
+                        .show();
+            }
         });
     }
 
