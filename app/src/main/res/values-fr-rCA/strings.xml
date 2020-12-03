@@ -127,4 +127,7 @@
     <string name="cancel">Annuler</string>
     <string name="no_activity">Aucune activité</string>
     <string name="reported_activity">Activité signalée</string>
+    <string name="exam_start">Heure de début de l\'examen</string>
+    <string name="exam_end">Heure de fin de l\'examen</string>
+    <string name="update_exam">Mettre à jour l\'examen</string>
 </resources>

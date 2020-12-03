@@ -127,4 +127,7 @@
     <string name="exam_edit_error">¡Error al editar el examen! Inténtalo de nuevo.</string>
     <string name="auth_start_after_exam_ends_error">La autenticación debe comenzar antes de que finalice el examen</string>
     <string name="auth_longer_than_exam">La autenticación debe finalizar antes de que finalice el examen</string>
+    <string name="exam_start">Hora de inicio del examen</string>
+    <string name="exam_end">Hora de finalización del examen</string>
+    <string name="update_exam">Actualizar examen</string>
 </resources>

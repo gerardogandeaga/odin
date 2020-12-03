@@ -51,6 +51,14 @@ public class ExamineeExamSessionActivity extends AppCompatActivity {
     private static FragmentTransaction mFragmentTransaction;
     public static boolean InExam;
 
+    public static String Uid = OdinFirebase.UserProfileContext.getUserId();
+
+    private Runnable mClockRunnable;
+    private Handler mClockHandler;
+    private boolean mAuthEnded;
+    private boolean mExamEnded;
+    private boolean mListenForActivity;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,6 +66,10 @@ public class ExamineeExamSessionActivity extends AppCompatActivity {
 
         // Setup fragment manager
         mFragmentManager = getSupportFragmentManager();
+
+        // create a new handler for the clock
+        mClockHandler = new Handler();
+        mListenForActivity = true;
 
         //check if auth time has ended
         if (Utils.isCurrentTimeBeforeTime(OdinFirebase.ExamSessionContext.getAuthEndTime())) {
@@ -83,11 +95,6 @@ public class ExamineeExamSessionActivity extends AppCompatActivity {
         else {
             showExamSessionHome();
         }
-
-        // create a new handler for the clock
-        mClockHandler = new Handler();
-
-        mListenForActivity = true;
     }
 
     private ExamineeAuthPhotoSubmissionFragment mAuthFrag;
@@ -185,12 +192,6 @@ public class ExamineeExamSessionActivity extends AppCompatActivity {
     }
 
     // Exam session timer ==========================================================================
-
-    private Runnable mClockRunnable;
-    private Handler mClockHandler;
-    private boolean mAuthEnded;
-    private boolean mExamEnded;
-    private boolean mListenForActivity;
 
     public void killClock(Runnable runnable) {
         System.out.println("Killing exam clock...");

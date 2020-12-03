@@ -11,7 +11,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.group8.odin.OdinFirebase;
 import com.group8.odin.R;
+import com.group8.odin.common.models.UserProfile;
+import com.group8.odin.examinee.activities.ExamineeExamSessionActivity;
 import com.group8.odin.examinee.activities.ExamineeHomeActivity;
 
 import butterknife.BindView;
@@ -44,10 +51,20 @@ public class ExamineeExamEndFragment extends Fragment {
         ButterKnife.bind(this, view);
         getActivity().setTitle(R.string.exam_finished_title);
 
+        //TODO: Gerardo please implement: Go back to dashboard. rn crashing
         mBtnBackToDB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((ExamineeHomeActivity)getActivity()).showExamineeDashboard();
+                // get user profile
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                DocumentReference userProfile = db.collection(OdinFirebase.FirestoreCollections.USERS).document(ExamineeExamSessionActivity.Uid);
+                userProfile.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot snapshot) {
+                        OdinFirebase.UserProfileContext = new UserProfile(snapshot);
+                    }
+                });
+                ((ExamineeHomeActivity) getActivity()).showExamineeDashboard();
             }
         });
     }

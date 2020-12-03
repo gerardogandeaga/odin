@@ -131,6 +131,7 @@
     <string name="logout">Logout</string>
     <string name="logout_confirm">Are you sure you want to logout?</string>
     <string name="cancel">Cancel</string>
+    <string name="update_exam">Update Exam</string>
 
     <!--Exam Item -->
     <string name="id">Exam ID</string>
@@ -140,6 +141,8 @@
     <string name="exam_date">Exam Date</string>
     <string name="auth_time">Auth Time</string>
     <string name="time_left">Time Left: </string>
+    <string name="exam_start">Exam Start Time</string>
+    <string name="exam_end">Exam End Time</string>
 
 
     <!--Examinee Item-->

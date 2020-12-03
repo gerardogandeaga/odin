@@ -148,12 +148,13 @@ public class ProctorLiveMonitoringFragment extends Fragment {
         mItemAdapter.clear();
         mItemAdapter.add(items);
         mFastAdapter.notifyAdapterDataSetChanged();
-        examineeCount = mItemAdapter.getAdapterItems().size();
     }
 
+    //TODO: Gerardo, please Update examinee count. Current code not working?
     @Override
     public void onHiddenChanged(boolean hidden) {
         if (!hidden) {
+            examineeCount = mItemAdapter.getAdapterItems().size();
             String title = getString(R.string.live_monitor) + ": " +Integer.toString(examineeCount);
             getActivity().setTitle(title);
             mActivity.getSupportActionBar().setHomeButtonEnabled(false);

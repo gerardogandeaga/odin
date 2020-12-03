@@ -1,5 +1,7 @@
 package com.group8.odin.examinee.fragments;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -86,8 +88,8 @@ public class ExamineeDashboardFragment extends Fragment {
                 }
                 else
                 if (Utils.isCurrentTimeBetweenTimes(item.getExamSession().getExamStartTime(), item.getExamSession().getExamEndTime())) {
-                    startActivity(new Intent(getActivity(), ExamineeExamSessionActivity.class));
                     OdinFirebase.ExamSessionContext = item.getExamSession();
+                    startActivity(new Intent(getActivity(), ExamineeExamSessionActivity.class));
                 }
                 else
                 if (Utils.isCurrentTimeAfterTime(item.getExamSession().getExamEndTime())) {
@@ -123,7 +125,19 @@ public class ExamineeDashboardFragment extends Fragment {
         // Logout of odin
         getActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
             @Override
-            public void handleOnBackPressed() { startActivity(new Intent(getActivity(), LoginActivity.class)); }
+            public void handleOnBackPressed() {
+                new AlertDialog.Builder(getContext())
+                        .setTitle(R.string.logout)
+                        .setMessage(R.string.logout_confirm)
+                        .setPositiveButton(R.string.logout, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                startActivity(new Intent(getActivity(), LoginActivity.class));
+                            }
+                        })
+                        .setNegativeButton(R.string.cancel, null)
+                        .show();
+            }
         });
     }
 

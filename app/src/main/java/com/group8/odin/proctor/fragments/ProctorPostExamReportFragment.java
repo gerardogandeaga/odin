@@ -159,12 +159,13 @@ public class ProctorPostExamReportFragment extends Fragment {
         mItemAdapter.clear();
         mItemAdapter.add(items);
         mFastAdapter.notifyAdapterDataSetChanged();
-        examineeCount = mFastAdapter.getItemCount();
     }
 
+    //TODO: Gerardo, please Update examinee count. Current code not working?
     @Override
     public void onHiddenChanged(boolean hidden) {
         if (!hidden) {
+            examineeCount = mItemAdapter.getAdapterItems().size();
             String title = getString(R.string.post_exam_report) + ": " + Integer.toString(examineeCount);
             getActivity().setTitle(title);
             mActivity.getSupportActionBar().setHomeButtonEnabled(false);

@@ -83,7 +83,7 @@ public class ProctorExamCreationFragment extends Fragment {
     boolean mExamDateSet;
 
     // Exam time
-    private int mStartExamHour, mStartExamMinute, mEndExamHour, mEndExamMinute;
+    private int mStartExamHour, mStartExamMinute, mEndExamHour, mEndExamMinute, mAuthHour, mAuthMin;
     // Auth duration
     private int mAuthDuration;
 
@@ -109,7 +109,7 @@ public class ProctorExamCreationFragment extends Fragment {
 
         if (mIsNew) {
             getActivity().setTitle(R.string.exam_creation);
-            mBtnCreateExam.setText("Create Exam");
+            mBtnCreateExam.setText(R.string.create_exam);
         }
         else {
             getActivity().setTitle("Exam Session Details");
@@ -121,7 +121,7 @@ public class ProctorExamCreationFragment extends Fragment {
             mEtAD_M.setText(Integer.toString(new Date(mExamSessionEdit.getAuthDuration()).getMinutes()));
             mTvExamDate.setText(Utils.getDateStringFromDate(mExamSessionEdit.getExamStartTime()));
             mEtExamTitle.setText(mExamSessionEdit.getTitle());
-            mBtnCreateExam.setText("Update Exam");
+            mBtnCreateExam.setText(R.string.update_exam);
         }
 
         // Handle on back button pressed in the fragment
@@ -132,8 +132,6 @@ public class ProctorExamCreationFragment extends Fragment {
                 ((ProctorHomeActivity)getActivity()).showProctorDashboard();
             }
         });
-
-        // Lock date and time fields
 
         // Initialize date picker
         mImgCalendar.setOnClickListener(new View.OnClickListener() {
@@ -171,6 +169,8 @@ public class ProctorExamCreationFragment extends Fragment {
                 mStartExamMinute = Integer.parseInt(mEtEST_M.getText().toString().trim());
                 mEndExamHour = Integer.parseInt(mEtEET_H.getText().toString().trim());
                 mEndExamMinute = Integer.parseInt(mEtEET_M.getText().toString().trim());
+                mAuthHour = Integer.parseInt(mEtAD_H.getText().toString().trim());
+                mAuthMin = Integer.parseInt(mEtAD_M.getText().toString().trim());
 
                 if (checkFieldsAreValid()) {
 
@@ -214,14 +214,14 @@ public class ProctorExamCreationFragment extends Fragment {
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {
-                                        Toast.makeText(getActivity(), "Exam details updated!", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(getActivity(), R.string.exam_edit_success, Toast.LENGTH_SHORT).show();
                                         ((ProctorHomeActivity)getActivity()).showProctorDashboard();
                                     }
                                 })
                                 .addOnFailureListener(new OnFailureListener() {
                                     @Override
                                     public void onFailure(@NonNull Exception e) {
-                                        Toast.makeText(getActivity(), "Could not update exam details.", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(getActivity(), R.string.exam_edit_error, Toast.LENGTH_SHORT).show();
                                     }
                                 });
                     }
@@ -308,10 +308,11 @@ public class ProctorExamCreationFragment extends Fragment {
         return startHour < endHour;
     }
 
-    // Check if auth and exam times are valid with respect to each other
-//    private boolean validExamAndAuthTimes() {
-//        return (validStartEndTimes(mStartExamHour, mStartExamMinute, mStartAuthHour, mStartAuthMinute) && validStartEndTimes(mEndAuthHour, mEndAuthMinute, mEndExamHour, mEndExamMinute));
-//    }
+    private boolean validAuthTime(int startHour, int startMin, int endHour, int endMin, int authHour, int authMin){
+        int examDuration = ((endHour - startHour) * 60 ) + (endMin - startMin);
+        int authDuration = (authHour * 60) + authMin;
+        return authDuration <= examDuration;
+    }
 
     // Checks if the exam creation fields are valid
     private boolean checkFieldsAreValid() {
@@ -329,15 +330,11 @@ public class ProctorExamCreationFragment extends Fragment {
             Toast.makeText(getActivity(), R.string.time_error, Toast.LENGTH_SHORT).show();
             return false;
         }
-//        if (!validStartEndTimes(mStartAuthHour, mStartAuthMinute, mEndAuthHour, mEndAuthMinute)) {
-//            Toast.makeText(getActivity(), R.string.time_error, Toast.LENGTH_SHORT).show();
-//            return false;
-//        }
-//        if (!validExamAndAuthTimes()) {
-//            Toast.makeText(getActivity(), R.string.time_logic_error, Toast.LENGTH_SHORT).show();
-//            return false;
-//        }
 
+        if(!validAuthTime(mStartExamHour, mStartExamMinute, mEndExamHour, mEndExamMinute, mAuthHour, mAuthMin)) {
+            Toast.makeText(getActivity(), R.string.auth_longer_than_exam, Toast.LENGTH_SHORT).show();
+            return false;
+        }
         return true;
     }
 

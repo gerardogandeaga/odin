@@ -33,6 +33,8 @@ import butterknife.ButterKnife;
  * Description: removed the displaying of exam end time (mTvExamEndTime)
  * Updated by: Shreya Jain
  */
+
+//TODO: Better layout?
 public class ExamineeExamSessionHomeFragment extends Fragment {
     @BindView(R.id.tvExamInfo) TextView mTvExamInfo;
     @BindView(R.id.tvExamName) TextView mTvExamName;

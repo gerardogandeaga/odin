@@ -75,7 +75,6 @@ public class SignUpActivity extends AppCompatActivity {
 
     private FirebaseFirestore mFirestore;
     private FirebaseAuth mAuth;
-        //TODO: Wonky layout fix
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
