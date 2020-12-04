@@ -62,7 +62,7 @@ public class ExamineeExamSessionHomeFragment extends Fragment {
         getActivity().setTitle(R.string.exam_progress);
         mTvExamTitle.setText(OdinFirebase.ExamSessionContext.getTitle());
         mTvExamStartTime.setText("Started: " + Utils.getDateTimeStringFromDate(OdinFirebase.ExamSessionContext.getExamStartTime()));
-        mTvExamEndTime.setText("Ends: " + Utils.getDateTimeStringFromDate(OdinFirebase.ExamSessionContext.getExamStartTime()));
+        mTvExamEndTime.setText("Ends: " + Utils.getDateTimeStringFromDate(OdinFirebase.ExamSessionContext.getExamEndTime()));
     }
 
     private static int secondsInDay = 24*60*60*1000; //milliseconds in a day

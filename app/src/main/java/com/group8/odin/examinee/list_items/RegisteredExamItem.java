@@ -92,17 +92,17 @@ public class RegisteredExamItem extends AbstractItem<RegisteredExamItem, Registe
             // set the card status
             if (Utils.isCurrentTimeBeforeTime(item.examSession.getExamStartTime())) {
                 status.setText("Upcoming");
-                cardStatus.setBackgroundColor(ContextCompat.getColor(context, R.color.upcoming));
+                cardStatus.setCardBackgroundColor(ContextCompat.getColor(context, R.color.upcoming));
             }
             else
             if (Utils.isCurrentTimeBetweenTimes(item.examSession.getExamStartTime(), item.examSession.getExamEndTime())) {
                 status.setText("Active");
-                cardStatus.setBackgroundColor(ContextCompat.getColor(context, R.color.active));
+                cardStatus.setCardBackgroundColor(ContextCompat.getColor(context, R.color.active));
             }
             else
             if (Utils.isCurrentTimeAfterTime(item.examSession.getExamEndTime())) {
                 status.setText("Ended");
-                cardStatus.setBackgroundColor(ContextCompat.getColor(context, R.color.ended));
+                cardStatus.setCardBackgroundColor(ContextCompat.getColor(context, R.color.ended));
             }
         }
 

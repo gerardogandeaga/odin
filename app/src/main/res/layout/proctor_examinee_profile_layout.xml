@@ -21,9 +21,14 @@ Updated on: 2020-11-21
             android:id="@+id/imgAuthPhoto"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:maxHeight="400dp"
-            android:minHeight="150dp"
+            android:tint="@color/black" />
+
+        <ImageView
+            android:id="@+id/imgFailed"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:src="@drawable/ic_profile"
+            android:minHeight="150dp"
             android:tint="@color/black" />
 
         <TextView
@@ -34,8 +39,7 @@ Updated on: 2020-11-21
             android:textColor="@color/black"
             android:textStyle="bold"
             android:layout_marginEnd="16dp"
-            android:layout_gravity="right"
-            app:layout_constraintTop_toBottomOf="@+id/imgAuthPhoto" />
+            android:layout_gravity="right" />
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cardInformation"

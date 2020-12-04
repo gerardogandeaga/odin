@@ -52,6 +52,7 @@ import butterknife.ButterKnife;
 
 public class ProctorExamineeProfileFragment extends Fragment {
     @BindView(R.id.imgAuthPhoto)    ImageView mImgAuthPhoto;
+    @BindView(R.id.imgFailed)       ImageView mImgFailed;
     @BindView(R.id.tvAuthTimeStamp) TextView mTvAuthPhotoTimestamp;
     @BindView(R.id.tvEmail)         TextView mTvEmail;
     @BindView(R.id.tvId)            TextView mTvId;
@@ -108,15 +109,19 @@ public class ProctorExamineeProfileFragment extends Fragment {
         // load auth photo into imageview
         GlideApp.with(mActivity)
                 .load(authPhoto)
-                .placeholder(R.drawable.ic_profile)
+//                .placeholder(R.drawable.ic_profile)
                 .addListener(new RequestListener<Drawable>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        mImgAuthPhoto.setVisibility(View.GONE);
+                        mImgFailed.setVisibility(View.VISIBLE);
                         return false;
                     }
 
                     @Override
                     public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        mImgAuthPhoto.setVisibility(View.VISIBLE);
+                        mImgFailed.setVisibility(View.GONE);
                         mImgAuthPhoto.setColorFilter(Color.TRANSPARENT);
                         return false;
                     }
@@ -140,7 +145,7 @@ public class ProctorExamineeProfileFragment extends Fragment {
 
         // set icon
         Drawable icon = ContextCompat.getDrawable(mActivity, R.drawable.ic_small_dot);
-        icon.setTint(Utils.getExamineeStatusColour(mActivity, mExamineeActivityLog.getStatus()));
+        icon.setTint(Utils.getExamineeStatusColour(mActivity, ((ProctorExamSessionActivity) getActivity()).IsLive ? mExamineeActivityLog.getStatus() : mExamineeActivityLog.getOverallStatus()));
         mActivity.getSupportActionBar().setHomeAsUpIndicator(icon);
     }
 

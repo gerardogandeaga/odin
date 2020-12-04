@@ -86,10 +86,14 @@ public class SignUpActivity extends AppCompatActivity {
 
         mFirestore = FirebaseFirestore.getInstance();
 
+        mTilPassword.setPasswordVisibilityToggleEnabled(true);
+        mTilConfirmPassword.setPasswordVisibilityToggleEnabled(true);
+
         // when create button is clicked
         mBtnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                resetInputs();
                 if (!validInput()) return;
 
                 // Begin firebase authentication
@@ -197,6 +201,15 @@ public class SignUpActivity extends AppCompatActivity {
         }
 
         return pass;
+    }
+
+    private void resetInputs() {
+        mTilFirstName.setError(null);
+        mTilLastName.setError(null);
+        mTilEmail.setError(null);
+        mTilEduId.setError(null);
+        mTilPassword.setError(null);
+        mTilConfirmPassword.setError(null);
     }
 
     public void onStart() {

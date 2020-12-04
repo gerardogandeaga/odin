@@ -20,6 +20,7 @@ import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import com.bumptech.glide.util.Util;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.Timestamp;
@@ -127,11 +128,9 @@ public class ProctorExamCreationFragment extends Fragment {
             mEtAD_M.setText(Integer.toString(new Date(mExamSessionEdit.getAuthDuration()).getMinutes()));
             mTvExamDate.setText(Utils.getDateStringFromDate(mExamSessionEdit.getExamStartTime()));
             Date examDate = mExamSessionEdit.getExamStartTime();
-            Calendar cal = Calendar.getInstance();
-            cal.setTime(examDate);
-            mYear = cal.get(Calendar.YEAR);
-            mMonth = cal.get(Calendar.MONTH);
-            mDay = cal.get(Calendar.DAY_OF_MONTH);
+            mYear = examDate.getYear();
+            mMonth = examDate.getMonth();
+            mDay = examDate.getDay();
             mExamDateSet = true;
             mEtExamTitle.setText(mExamSessionEdit.getTitle());
             mBtnCreateExam.setText(R.string.update_exam);
@@ -259,7 +258,7 @@ public class ProctorExamCreationFragment extends Fragment {
         String eet_m = mEtEET_M.getText().toString().trim();
         String ad_h = mEtAD_H.getText().toString().trim();
         String ad_m = mEtAD_M.getText().toString().trim();
-        Date examDate = new Date(mYear, mMonth, mDay, Integer.parseInt(est_h), Integer.parseInt(est_m));
+        Date examDate = new Date(mYear - 1900, mMonth, mDay, Integer.parseInt(est_h), Integer.parseInt(est_m));
 
         if (est_h.isEmpty() | est_m.isEmpty()) {
             errorInExamStart();
@@ -322,7 +321,7 @@ public class ProctorExamCreationFragment extends Fragment {
 
         if(!validExamDate(examDate)) {
             errorInExamDate();
-            Toast.makeText(getActivity(), "Invalid date", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Date cannot be in the past", Toast.LENGTH_SHORT).show();
             pass = false;
         }
 
@@ -339,8 +338,24 @@ public class ProctorExamCreationFragment extends Fragment {
         return pass;
     }
 
-    private boolean validExamDate(Date exam_date) {
-        return exam_date.after(Utils.getCurrentTime());
+    // check that the date date is not before the current date
+    private boolean validExamDate(Date examDate) {
+        Date today = Utils.getCurrentTime();
+
+        // if the the exam is in a futuer year
+        if (examDate.getYear() > today.getYear()) return true;
+        // if they exam is the year of
+        if (examDate.getYear() == today.getYear()) {
+            // if the month is the next month
+            if (examDate.getMonth() > today.getMonth()) {
+                return true;
+            }
+            // if the month is right now and a now date or future date
+            else {
+                return examDate.getMonth() == today.getMonth() && examDate.getDay() >= today.getDay();
+            }
+        }
+        return false;
     }
 
     private boolean validTime(int hour, int minute) {
@@ -400,26 +415,26 @@ public class ProctorExamCreationFragment extends Fragment {
     }
 
     private void errorInExamDate() {
-        mCardExamDate.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.card_error));
+        mCardExamDate.setCardBackgroundColor(ContextCompat.getColor(getActivity(), R.color.card_error));
     }
 
     private void errorInAuthDuration() {
-        mCardAuthDuration.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.card_error));
+        mCardAuthDuration.setCardBackgroundColor(ContextCompat.getColor(getActivity(), R.color.card_error));
     }
 
     private void errorInExamStart() {
-        mCardExamStart.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.card_error));
+        mCardExamStart.setCardBackgroundColor(ContextCompat.getColor(getActivity(), R.color.card_error));
     }
 
     private void errorInExamEnd() {
-        mCardExamEnd.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.card_error));
+        mCardExamEnd.setCardBackgroundColor(ContextCompat.getColor(getActivity(), R.color.card_error));
     }
 
     // reset the card colors
     private void resetCards() {
-        mCardExamDate.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.white));
-        mCardAuthDuration.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.white));
-        mCardExamEnd.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.white));
-        mCardExamEnd.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.white));
+        mCardExamDate.setCardBackgroundColor(ContextCompat.getColor(getActivity(), R.color.white));
+        mCardAuthDuration.setCardBackgroundColor(ContextCompat.getColor(getActivity(), R.color.white));
+        mCardExamEnd.setCardBackgroundColor(ContextCompat.getColor(getActivity(), R.color.white));
+        mCardExamEnd.setCardBackgroundColor(ContextCompat.getColor(getActivity(), R.color.white));
     }
 }

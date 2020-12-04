@@ -14,7 +14,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.bumptech.glide.util.Util;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
@@ -29,10 +28,7 @@ import com.group8.odin.OdinFirebase;
 import com.group8.odin.R;
 import com.group8.odin.Utils;
 import com.group8.odin.common.models.ActivityLog;
-import com.group8.odin.common.models.ExamSession;
 import com.group8.odin.common.models.UserProfile;
-import com.group8.odin.examinee.activities.ExamineeExamSessionActivity;
-import com.group8.odin.examinee.activities.ExamineeHomeActivity;
 import com.group8.odin.proctor.fragments.ProctorAuthPhotosFragment;
 import com.group8.odin.proctor.fragments.ProctorExamineeProfileFragment;
 import com.group8.odin.proctor.fragments.ProctorLiveMonitoringFragment;
@@ -56,10 +52,9 @@ public class ProctorExamSessionActivity extends AppCompatActivity {
     private static final String TAG = "ProctorExamSessionActiv";
     private FirebaseFirestore mFirestore;
     private FragmentManager mFragmentManager;
-    private boolean mLive = true;
+    public boolean IsLive = true;
 
     // fragments
-//    private ProctorEditExamSessionFragment mProctorEditExamSessionFragment;
     private ProctorExamineeProfileFragment mProctorExamineeProfileFragment;
     private ProctorLiveMonitoringFragment mProctorMonitoringFragment;
     private ProctorAuthPhotosFragment mProctorAuthPhotoFragment;
@@ -108,7 +103,6 @@ public class ProctorExamSessionActivity extends AppCompatActivity {
         // if exam time is over show the post exam report
         if (Utils.isCurrentTimeAfterTime(OdinFirebase.ExamSessionContext.getExamEndTime()) ||
                 Utils.isCurrentTimeEqualToTime(OdinFirebase.ExamSessionContext.getExamEndTime())) {
-            mLive = false;
             showPostExamReport();
             generateReport();
         }
@@ -288,6 +282,7 @@ public class ProctorExamSessionActivity extends AppCompatActivity {
 
     public void showPostExamReport() {
         mExamineeProfileContext = null;
+        IsLive = false;
         mFragmentTransaction = mFragmentManager.beginTransaction();
         mFragmentTransaction.hide(mProctorMonitoringFragment);
         mFragmentTransaction.hide(mProctorAuthPhotoFragment);
@@ -304,7 +299,7 @@ public class ProctorExamSessionActivity extends AppCompatActivity {
         }
         else
         if (!mProctorExamineeProfileFragment.isHidden()) {
-            if(mLive) {
+            if(IsLive) {
                 showLiveMonitoring();
             } else {
                 showPostExamReport();
@@ -339,6 +334,7 @@ public class ProctorExamSessionActivity extends AppCompatActivity {
                     if (!mExamEnded && Utils.isCurrentTimeAfterTime(examEnd)) {
                         System.out.println("showing post exam report");
                         //go to exam session end screen
+                        generateReport();
                         showPostExamReport();
                         // stop the clock
                         killClock(this);

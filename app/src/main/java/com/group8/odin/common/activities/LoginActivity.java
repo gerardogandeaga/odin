@@ -58,6 +58,9 @@ public class LoginActivity extends AppCompatActivity {
 
             setTitle(R.string.login);
 
+            mTilPassword.setPasswordVisibilityToggleEnabled(true);
+            
+
             // Initialize Firebase Auth
             mAuth = FirebaseAuth.getInstance();
 
@@ -65,6 +68,7 @@ public class LoginActivity extends AppCompatActivity {
             mBtnLogIn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    resetInputs();
                     if (!validInput()) return;
 
                     //Begin firebase authentication (log in)
@@ -144,6 +148,11 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         return pass;
+    }
+
+    private void resetInputs() {
+        mTilEmail.setError(null);
+        mTilPassword.setError(null);
     }
 
     // send user out of application

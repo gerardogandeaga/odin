@@ -88,7 +88,7 @@ public class ExamineeExamSessionActivity extends AppCompatActivity {
                 @Override
                 public void onSuccess(Uri uri) {
                     // auth photo exists in storage
-                    showExamSessionHome(false);
+                    showExamSessionHome(true);
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override

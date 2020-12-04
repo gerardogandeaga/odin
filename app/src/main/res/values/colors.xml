@@ -19,5 +19,5 @@
     <color name="ended">#E53935</color>
 
     <!-- exam create/update errors -->
-    <color name="card_error">#E53935</color>
+    <color name="card_error">#ECA2A0</color>
 </resources>
