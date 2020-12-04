@@ -56,6 +56,7 @@ public class ProctorExamSessionActivity extends AppCompatActivity {
     private static final String TAG = "ProctorExamSessionActiv";
     private FirebaseFirestore mFirestore;
     private FragmentManager mFragmentManager;
+    private boolean mLive = true;
 
     // fragments
 //    private ProctorEditExamSessionFragment mProctorEditExamSessionFragment;
@@ -107,6 +108,7 @@ public class ProctorExamSessionActivity extends AppCompatActivity {
         // if exam time is over show the post exam report
         if (Utils.isCurrentTimeAfterTime(OdinFirebase.ExamSessionContext.getExamEndTime()) ||
                 Utils.isCurrentTimeEqualToTime(OdinFirebase.ExamSessionContext.getExamEndTime())) {
+            mLive = false;
             showPostExamReport();
             generateReport();
         }
@@ -116,7 +118,6 @@ public class ProctorExamSessionActivity extends AppCompatActivity {
             showLiveMonitoring();
         }
     }
-
 
     // load a user profile, this will implicitly be an examinee profile
     private void loadUserProfileToLive(String id, final ActivityLog activityLog) {
@@ -303,7 +304,12 @@ public class ProctorExamSessionActivity extends AppCompatActivity {
         }
         else
         if (!mProctorExamineeProfileFragment.isHidden()) {
-            showLiveMonitoring();
+            if(mLive) {
+                showLiveMonitoring();
+            } else {
+                showPostExamReport();
+                generateReport();
+            }
         }
     }
 

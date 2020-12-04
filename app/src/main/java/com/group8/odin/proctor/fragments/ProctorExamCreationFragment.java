@@ -34,6 +34,8 @@ import com.group8.odin.common.models.ExamSession;
 import com.group8.odin.common.models.UserProfile;
 import com.group8.odin.proctor.activities.ProctorHomeActivity;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -56,7 +58,7 @@ import butterknife.ButterKnife;
  * Updated on 2020-12-01
  * Description: fixed time format display and changed icons appearances
  * Updated by: Shreya Jain - added validation programming
- * TODO: Gerardo, updating only exam end time and not start time crashes the app. I think that is because of setting values from firebase. Please investigate.
+ * TODO: Gerardo please check the code for validExamDate. Currently, date before current date is accepted which shouldn't be. Everything else working fine. Please fix it.
  */
 public class ProctorExamCreationFragment extends Fragment {
     // Bind views
@@ -124,6 +126,13 @@ public class ProctorExamCreationFragment extends Fragment {
             mEtAD_H.setText(Integer.toString(new Date(mExamSessionEdit.getAuthDuration()).getHours()));
             mEtAD_M.setText(Integer.toString(new Date(mExamSessionEdit.getAuthDuration()).getMinutes()));
             mTvExamDate.setText(Utils.getDateStringFromDate(mExamSessionEdit.getExamStartTime()));
+            Date examDate = mExamSessionEdit.getExamStartTime();
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(examDate);
+            mYear = cal.get(Calendar.YEAR);
+            mMonth = cal.get(Calendar.MONTH);
+            mDay = cal.get(Calendar.DAY_OF_MONTH);
+            mExamDateSet = true;
             mEtExamTitle.setText(mExamSessionEdit.getTitle());
             mBtnCreateExam.setText(R.string.update_exam);
         }
@@ -183,10 +192,11 @@ public class ProctorExamCreationFragment extends Fragment {
 
                 // Convert times to dates
                 //The year is taken as (Year+1900) by the date picker.
+                mYear = mYear - 1900;
                 Date examStart, examEnd;
-                examStart = new Date(mYear - 1900, mMonth, mDay, mStartExamHour, mStartExamMinute);
-                examEnd = new Date(mYear - 1900, mMonth, mDay, mEndExamHour, mEndExamMinute);
-                long authDuration = new Date(mYear - 1900, mMonth, mDay, Integer.parseInt(mEtAD_H.getText().toString().trim()), Integer.parseInt(mEtAD_M.getText().toString().trim()), 0).getTime();
+                examStart = new Date(mYear, mMonth, mDay, mStartExamHour, mStartExamMinute);
+                examEnd = new Date(mYear, mMonth, mDay, mEndExamHour, mEndExamMinute);
+                long authDuration = new Date(mYear , mMonth, mDay, Integer.parseInt(mEtAD_H.getText().toString().trim()), Integer.parseInt(mEtAD_M.getText().toString().trim()), 0).getTime();
 
                 // Add a new document with a generated id.
                 Map<String, Object> data = new HashMap<>();
@@ -249,6 +259,7 @@ public class ProctorExamCreationFragment extends Fragment {
         String eet_m = mEtEET_M.getText().toString().trim();
         String ad_h = mEtAD_H.getText().toString().trim();
         String ad_m = mEtAD_M.getText().toString().trim();
+        Date examDate = new Date(mYear, mMonth, mDay, Integer.parseInt(est_h), Integer.parseInt(est_m));
 
         if (est_h.isEmpty() | est_m.isEmpty()) {
             errorInExamStart();
@@ -309,18 +320,27 @@ public class ProctorExamCreationFragment extends Fragment {
             }
         }
 
+        if(!validExamDate(examDate)) {
+            errorInExamDate();
+            Toast.makeText(getActivity(), "Invalid date", Toast.LENGTH_SHORT).show();
+            pass = false;
+        }
+
         if (mEtExamTitle.getText().toString().trim().isEmpty()) {
             Toast.makeText(getActivity(), R.string.exam_title_error, Toast.LENGTH_SHORT).show();
             pass = false;
         }
 
-        String examDate = (String) mTvExamDate.getText();
-        if (examDate.isEmpty()) {
+        if (!mExamDateSet) {
             errorInExamDate();
             Toast.makeText(getActivity(), R.string.exam_date_error, Toast.LENGTH_SHORT).show();
             pass = false;
         }
         return pass;
+    }
+
+    private boolean validExamDate(Date exam_date) {
+        return exam_date.after(Utils.getCurrentTime());
     }
 
     private boolean validTime(int hour, int minute) {
@@ -337,9 +357,11 @@ public class ProctorExamCreationFragment extends Fragment {
 
     // Function will check if we have a valid start and end time respective to each other
     private boolean invalidStartEndTimes(int startHour, int startMin, int endHour, int endMin) {
-        if (startHour == endHour)
+        if (startHour == endHour) {
             return startMin >= endMin;
-        return startHour < endHour;
+        } else {
+            return startHour > endHour;
+        }
     }
 
     private boolean validAuthTime(int startHour, int startMin, int endHour, int endMin, int authHour, int authMin){
