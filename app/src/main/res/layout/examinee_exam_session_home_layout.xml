@@ -7,13 +7,11 @@
     <!-- Created by: Gerardo Gandeaga
         Updated by: Shreya Jain
     -->
-
-    <!--        todo Shreya: create string resource  in this text view -->
     <TextView
         android:id="@+id/tvExamTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Exam Title"
+        android:text="@string/exam_title"
         android:textAlignment="center"
         android:textSize="24sp"
         android:padding="16dp"
@@ -26,12 +24,11 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.2" />
 
-    <!--        todo Shreya: create string resource in this text view -->
     <TextView
         android:id="@+id/tvExamStartTime"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Exam Start Time"
+        android:text="@string/exam_start"
         android:padding="8dp"
         android:textAlignment="center"
         android:textSize="20sp"
@@ -41,13 +38,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvExamTitle" />
 
-    <!--        todo Shreya: create string resource in this text view  -->
     <TextView
         android:id="@+id/tvExamEndTime"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="8dp"
-        android:text="Exam End Time"
+        android:text="@string/exam_end"
         android:textAlignment="center"
         android:textSize="20sp"
         android:textStyle="bold"

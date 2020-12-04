@@ -30,8 +30,6 @@
     <string name="exam_create_error">La création de l’examen a échoué! S’ll vous plaît, réessaiez.</string>
     <string name="exam_title_error">Le titre de l’examen ne peut pas être vide. S’ll vous plaît, réessaiez.</string>
     <string name="exam_date_error">Date d’examen non fixée!</string>
-    <string name="exam_time_error">L’heure de l’examen n’est pas réglée!</string>
-    <string name="auth_time_error">Temps d’authentification non défini!</string>
     <string name="time_error">Période de temps invalide! Veuillez vérifier que l’heure de fin est après l’heure de début.</string>
     <string name="time_logic_error">Temps d’examen et d’authentification invalides! Le temps d’authentification ne peut pas être en dehors de la session d’examen</string>
     <string name="general_error">Quelque chose s’est mal passé… S’ll vous plaît, rafraîchissez-vous.</string>
@@ -130,4 +128,13 @@
     <string name="exam_start">Heure de début de l\'examen</string>
     <string name="exam_end">Heure de fin de l\'examen</string>
     <string name="update_exam">Mettre à jour l\'examen</string>
+    <string name="hours">Heures</string>
+    <string name="mins">Mins</string>
+    <string name="exam_start_time_error">Les champs de début d\'examen ne peuvent pas être vides</string>
+    <string name="exam_end_time_error">Les champs de fin d\'examen ne peuvent pas être vides</string>
+    <string name="ad_time_error">Les champs de durée d\'authentification ne peuvent pas être vides</string>
+    <string name="est_error">Heure de début de l\'examen non valide</string>
+    <string name="eet_error">Heure de fin d\'examen non valide</string>
+    <string name="ad_error">Durée d\'authentification non valide</string>
+    <string name="exam_duration_error">La durée de l\'examen ne peut pas être de 0 minute.</string>
 </resources>

@@ -30,8 +30,6 @@
     <string name="exam_create_error">¡Falló la creación del examen! Inténtalo de nuevo.</string>
     <string name="exam_title_error">El título del examen no puede estar vacío. Inténtalo de nuevo.</string>
     <string name="exam_date_error">¡La fecha del examen no está establecida!</string>
-    <string name="exam_time_error">¡Hora del examen no establecida!</string>
-    <string name="auth_time_error">¡Hora de autenticación no establecida!</string>
     <string name="time_error">¡Período de tiempo no válido! Verifique que la hora de finalización sea posterior a la hora de inicio.</string>
     <string name="time_logic_error">¡Horarios de autorización y examen no válidos! El tiempo de autorización no puede estar fuera de la sesión de examen</string>
     <string name="general_error">Algo salió mal … Actualice.</string>
@@ -130,4 +128,13 @@
     <string name="exam_start">Hora de inicio del examen</string>
     <string name="exam_end">Hora de finalización del examen</string>
     <string name="update_exam">Actualizar examen</string>
+    <string name="hours">Horas</string>
+    <string name="mins">Mins</string>
+    <string name="ad_error">Duración de la autenticación no válida</string>
+    <string name="eet_error">Hora de finalización del examen no válida</string>
+    <string name="est_error">Hora de inicio del examen no válida</string>
+    <string name="ad_time_error">Los campos de duración de la autenticación no pueden estar vacíos</string>
+    <string name="exam_end_time_error">Los campos de fin de examen no pueden estar vacíos</string>
+    <string name="exam_start_time_error">Los campos de inicio del examen no pueden estar vacíos</string>
+    <string name="exam_duration_error">La duración del examen no puede ser de 0 minutos.</string>
 </resources>

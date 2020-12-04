@@ -94,7 +94,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="HH"
+                        android:text="00"
                         android:textAlignment="center" />
 
                     <TextView
@@ -109,9 +109,29 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="MM"
+                        android:text="00"
                         android:textAlignment="center" />
 
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/hintEST_H"
+                        android:layout_width="51dp"
+                        android:layout_height="match_parent"
+                        android:text="@string/hours"
+                        android:textAlignment="center" />
+
+                    <TextView
+                        android:id="@+id/hintEST_M"
+                        android:layout_width="55dp"
+                        android:layout_height="match_parent"
+                        android:text="@string/mins"
+                        android:textAlignment="center"/>
                 </LinearLayout>
 
             </LinearLayout>
@@ -155,7 +175,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="HH"
+                        android:text="00"
                         android:textAlignment="center" />
 
                     <TextView
@@ -170,9 +190,29 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="MM"
+                        android:text="00"
                         android:textAlignment="center" />
 
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/hintEET_H"
+                        android:layout_width="51dp"
+                        android:layout_height="match_parent"
+                        android:text="@string/hours"
+                        android:textAlignment="center" />
+
+                    <TextView
+                        android:id="@+id/hintEET_M"
+                        android:layout_width="55dp"
+                        android:layout_height="match_parent"
+                        android:text="@string/mins"
+                        android:textAlignment="center"/>
                 </LinearLayout>
 
             </LinearLayout>
@@ -293,7 +333,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="HH"
+                        android:text="00"
                         android:textAlignment="center" />
 
                     <TextView
@@ -308,9 +348,29 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="MM"
+                        android:text="00"
                         android:textAlignment="center" />
 
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/hintAD_H"
+                        android:layout_width="51dp"
+                        android:layout_height="match_parent"
+                        android:text="@string/hours"
+                        android:textAlignment="center" />
+
+                    <TextView
+                        android:id="@+id/hintAD_M"
+                        android:layout_width="42dp"
+                        android:layout_height="match_parent"
+                        android:text="@string/mins"
+                        android:textAlignment="center" />
                 </LinearLayout>
 
             </LinearLayout>

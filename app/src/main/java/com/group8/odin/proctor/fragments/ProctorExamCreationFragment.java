@@ -1,9 +1,8 @@
 package com.group8.odin.proctor.fragments;
 
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
-import android.app.TimePickerDialog;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +11,6 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
@@ -31,15 +29,11 @@ import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.group8.odin.OdinFirebase;
 import com.group8.odin.R;
-import com.group8.odin.R2;
 import com.group8.odin.Utils;
 import com.group8.odin.common.models.ExamSession;
 import com.group8.odin.common.models.UserProfile;
 import com.group8.odin.proctor.activities.ProctorHomeActivity;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -61,13 +55,8 @@ import butterknife.ButterKnife;
  * Updated by: Matthew Tong
  * Updated on 2020-12-01
  * Description: fixed time format display and changed icons appearances
- * todo Shreya: input validation for the text fields, make sure that end time is greater than start time. make sure that all inputs are integers, remove the hints you have that are directly in the edit text (the HH:MM) set the defaults of the fields are 00:.
- * todo: continued -> for the hints add a text box below the dit texts aligned with each edit text saying either HH or MM OR Hours Minutes. Make sure that authentication duration is less than the exam duration. Make sure you test negative values.
- * todo: continued -> make sure that you performs test for exam create and exam update contexts.
- * todo: continued -> please use the utility functions at the end of the file to indicate errors in fields
- * todo: lastly -> make sure to test, the objective is to prevent errors and inform the user where the errors are.
- *
- * todo Shreya: Note -> please do not make any changes with what data is put or retieved from firebase.
+ * Updated by: Shreya Jain - added validation programming
+ * TODO: Gerardo, updating only exam end time and not start time crashes the app. I think that is because of setting values from firebase. Please investigate.
  */
 public class ProctorExamCreationFragment extends Fragment {
     // Bind views
@@ -116,6 +105,7 @@ public class ProctorExamCreationFragment extends Fragment {
         return inflater.inflate(R.layout.proctor_exam_creation_layout, container, false);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -177,12 +167,12 @@ public class ProctorExamCreationFragment extends Fragment {
         mBtnCreateExam.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // todo Shreya: every time the user clicks the button the fields will be checked for validation
                 // first we reset the card views
                 resetCards();
 
-                // todo Shreya: this function should be the only input validator please move the code from the checkFieldsAreValid() function and move them into the validInput().
-                if (!validInput()) return;
+                if (!validInput()) {
+                    return;
+                }
 
                 mStartExamHour = Integer.parseInt(mEtEST_H.getText().toString().trim());
                 mStartExamMinute = Integer.parseInt(mEtEST_M.getText().toString().trim());
@@ -191,30 +181,27 @@ public class ProctorExamCreationFragment extends Fragment {
                 mAuthHour = Integer.parseInt(mEtAD_H.getText().toString().trim());
                 mAuthMin = Integer.parseInt(mEtAD_M.getText().toString().trim());
 
-                // todo Shreya: once the function is merged we do not need this if statement
-                if (checkFieldsAreValid()) {
+                // Convert times to dates
+                //The year is taken as (Year+1900) by the date picker.
+                Date examStart, examEnd;
+                examStart = new Date(mYear - 1900, mMonth, mDay, mStartExamHour, mStartExamMinute);
+                examEnd = new Date(mYear - 1900, mMonth, mDay, mEndExamHour, mEndExamMinute);
+                long authDuration = new Date(mYear - 1900, mMonth, mDay, Integer.parseInt(mEtAD_H.getText().toString().trim()), Integer.parseInt(mEtAD_M.getText().toString().trim()), 0).getTime();
 
-                    // Convert times to dates
-                    //The year is taken as (Year+1900) by the date picker.
-                    Date examStart, examEnd;
-                    examStart = new Date(mYear - 1900, mMonth, mDay, mStartExamHour, mStartExamMinute);
-                    examEnd = new Date(mYear - 1900, mMonth, mDay, mEndExamHour, mEndExamMinute);
-                    long authDuration = new Date(mYear - 1900, mMonth, mDay, Integer.parseInt(mEtAD_H.getText().toString().trim()), Integer.parseInt(mEtAD_M.getText().toString().trim()), 0).getTime();
+                // Add a new document with a generated id.
+                Map<String, Object> data = new HashMap<>();
+                data.put(OdinFirebase.FirestoreExamSession.TITLE, mEtExamTitle.getText().toString().trim());
+                data.put(OdinFirebase.FirestoreExamSession.EXAM_START_TIME, new Timestamp(examStart));
+                data.put(OdinFirebase.FirestoreExamSession.EXAM_END_TIME, new Timestamp(examEnd));
+                data.put(OdinFirebase.FirestoreExamSession.AUTH_DURATION, authDuration);
 
-                    // Add a new document with a generated id.
-                    Map<String, Object> data = new HashMap<>();
-                    data.put(OdinFirebase.FirestoreExamSession.TITLE, mEtExamTitle.getText().toString().trim());
-                    data.put(OdinFirebase.FirestoreExamSession.EXAM_START_TIME, new Timestamp(examStart));
-                    data.put(OdinFirebase.FirestoreExamSession.EXAM_END_TIME, new Timestamp(examEnd));
-                    data.put(OdinFirebase.FirestoreExamSession.AUTH_DURATION, authDuration);
-
-                    // create a new exam session
-                    if (mIsNew) {
-                        final Map<String, Object> ghostData = new HashMap<>();
-                        // add exam session
-                        mFirestore.collection(OdinFirebase.FirestoreCollections.EXAM_SESSIONS)
-                                .add(data)
-                                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                // create a new exam session
+                if (mIsNew) {
+                    final Map<String, Object> ghostData = new HashMap<>();
+                    // add exam session
+                    mFirestore.collection(OdinFirebase.FirestoreCollections.EXAM_SESSIONS)
+                            .add(data)
+                            .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                                     @Override
                                     public void onSuccess(DocumentReference documentReference) {
                                         linkExamToProctorProfile(documentReference);
@@ -245,7 +232,6 @@ public class ProctorExamCreationFragment extends Fragment {
                                     }
                                 });
                     }
-                }
             }
         });
     }
@@ -255,7 +241,6 @@ public class ProctorExamCreationFragment extends Fragment {
         mExamSessionEdit = examSession;
     }
 
-    // todo shreya: thise should be the only input validator function
     private boolean validInput() {
         boolean pass = true;
         String est_h = mEtEST_H.getText().toString().trim();
@@ -266,20 +251,20 @@ public class ProctorExamCreationFragment extends Fragment {
         String ad_m = mEtAD_M.getText().toString().trim();
 
         if (est_h.isEmpty() | est_m.isEmpty()) {
-            // todo shreya: makre to mark the card fields with errors by setting their card colour. For example, if there is an error here then the card field for exam start time has an error
-            errorInExamStart(); // todo shreya: call this function to set the error.
-            Toast.makeText(getActivity(), "Exam start fields cannot be empty", Toast.LENGTH_SHORT).show();
+            errorInExamStart();
+            Toast.makeText(getActivity(), R.string.exam_start_time_error, Toast.LENGTH_SHORT).show();
             pass = false;
         }
 
         if (eet_h.isEmpty() | eet_m.isEmpty()) {
-            Toast.makeText(getActivity(), "Exam end fields cannot be empty", Toast.LENGTH_SHORT).show();
+            errorInExamEnd();
+            Toast.makeText(getActivity(), R.string.exam_end_time_error, Toast.LENGTH_SHORT).show();
             pass = false;
         }
 
-
         if (ad_h.isEmpty() | ad_m.isEmpty()) {
-            Toast.makeText(getActivity(), "Authentication duration fields cannot be empty", Toast.LENGTH_SHORT).show();
+            errorInAuthDuration();
+            Toast.makeText(getActivity(), R.string.ad_time_error, Toast.LENGTH_SHORT).show();
             pass = false;
         }
 
@@ -293,28 +278,53 @@ public class ProctorExamCreationFragment extends Fragment {
             int ad_h_val = Integer.parseInt(ad_h);
             int ad_m_val = Integer.parseInt(ad_m);
 
-            // todo Shreya: make sure to set the error colours here to... pretty much for every if, the error colour should be set.
-            if (!validTime(est_h_val, est_m_val)) {
-                Toast.makeText(getActivity(), "Invalid time start time", Toast.LENGTH_SHORT).show();
+            if (validTime(est_h_val, est_m_val)) {
+                errorInExamStart();
+                Toast.makeText(getActivity(), R.string.est_error, Toast.LENGTH_SHORT).show();
                 pass = false;
             }
 
-            if (!validTime(eet_h_val, eet_m_val)) {
-                Toast.makeText(getActivity(), "Invalid time end time", Toast.LENGTH_SHORT).show();
+            if (validTime(eet_h_val, eet_m_val)) {
+                errorInExamEnd();
+                Toast.makeText(getActivity(), R.string.eet_error, Toast.LENGTH_SHORT).show();
                 pass = false;
             }
 
-            if (!validTime(ad_h_val, ad_m_val)) {
-                Toast.makeText(getActivity(), "Invalid authentication duration", Toast.LENGTH_SHORT).show();
+            if (validTime(ad_h_val, ad_m_val)) {
+                errorInAuthDuration();
+                Toast.makeText(getActivity(), R.string.ad_error, Toast.LENGTH_SHORT).show();
+                pass = false;
+            }
+
+            if (invalidStartEndTimes(est_h_val, est_m_val, eet_h_val, eet_m_val)) {
+                errorInExamEnd();
+                Toast.makeText(getActivity(), R.string.time_error, Toast.LENGTH_SHORT).show();
+                pass = false;
+            }
+
+            if(!validAuthTime(est_h_val, est_m_val, eet_h_val, eet_m_val, ad_h_val, ad_m_val)) {
+                errorInAuthDuration();
+                Toast.makeText(getActivity(), R.string.auth_longer_than_exam, Toast.LENGTH_SHORT).show();
                 pass = false;
             }
         }
 
+        if (mEtExamTitle.getText().toString().trim().isEmpty()) {
+            Toast.makeText(getActivity(), R.string.exam_title_error, Toast.LENGTH_SHORT).show();
+            pass = false;
+        }
+
+        String examDate = (String) mTvExamDate.getText();
+        if (examDate.isEmpty()) {
+            errorInExamDate();
+            Toast.makeText(getActivity(), R.string.exam_date_error, Toast.LENGTH_SHORT).show();
+            pass = false;
+        }
         return pass;
     }
 
     private boolean validTime(int hour, int minute) {
-        return validHour(hour) && validMinute(minute);
+        return !validHour(hour) || !validMinute(minute);
     }
 
     private boolean validHour(int hour) {
@@ -326,42 +336,16 @@ public class ProctorExamCreationFragment extends Fragment {
     }
 
     // Function will check if we have a valid start and end time respective to each other
-    private boolean validStartEndTimes(int startHour, int startMin, int endHour, int endMin) {
+    private boolean invalidStartEndTimes(int startHour, int startMin, int endHour, int endMin) {
         if (startHour == endHour)
-            return startMin <= endMin;
+            return startMin >= endMin;
         return startHour < endHour;
     }
 
     private boolean validAuthTime(int startHour, int startMin, int endHour, int endMin, int authHour, int authMin){
         int examDuration = ((endHour - startHour) * 60 ) + (endMin - startMin);
         int authDuration = (authHour * 60) + authMin;
-        return authDuration <= examDuration;
-    }
-
-    // Checks if the exam creation fields are valid
-    // todo Shreya: merge this could with the validInput() function, please think about what you are checking, what could be added or removed if we have redundecies
-    // todo continued -> maksure to set to error card colours with the utiity functions
-    private boolean checkFieldsAreValid() {
-        if (mEtExamTitle.getText().toString().trim().isEmpty()) {
-            Toast.makeText(getActivity(), R.string.exam_title_error, Toast.LENGTH_SHORT).show();
-            return false;
-        }
-
-        if (!mExamDateSet) {
-            Toast.makeText(getActivity(), R.string.exam_date_error, Toast.LENGTH_SHORT).show();
-            return false;
-        }
-
-        if (!validStartEndTimes(mStartExamHour, mStartExamMinute, mEndExamHour, mEndExamMinute)) {
-            Toast.makeText(getActivity(), R.string.time_error, Toast.LENGTH_SHORT).show();
-            return false;
-        }
-
-        if(!validAuthTime(mStartExamHour, mStartExamMinute, mEndExamHour, mEndExamMinute, mAuthHour, mAuthMin)) {
-            Toast.makeText(getActivity(), R.string.auth_longer_than_exam, Toast.LENGTH_SHORT).show();
-            return false;
-        }
-        return true;
+        return authDuration < examDuration;
     }
 
     // Add exam to user profile
@@ -392,8 +376,6 @@ public class ProctorExamCreationFragment extends Fragment {
                     }
                 });
     }
-
-    // todo use these error functions to indicate to the user that a field has errors (use toast messages to let them know also)
 
     private void errorInExamDate() {
         mCardExamDate.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.card_error));
