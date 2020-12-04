@@ -1,6 +1,8 @@
 package com.group8.odin.proctor.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.util.Pair;
 import android.widget.Toast;
@@ -29,12 +31,15 @@ import com.group8.odin.Utils;
 import com.group8.odin.common.models.ActivityLog;
 import com.group8.odin.common.models.ExamSession;
 import com.group8.odin.common.models.UserProfile;
+import com.group8.odin.examinee.activities.ExamineeExamSessionActivity;
+import com.group8.odin.examinee.activities.ExamineeHomeActivity;
 import com.group8.odin.proctor.fragments.ProctorAuthPhotosFragment;
 import com.group8.odin.proctor.fragments.ProctorExamineeProfileFragment;
 import com.group8.odin.proctor.fragments.ProctorLiveMonitoringFragment;
 import com.group8.odin.proctor.fragments.ProctorPostExamReportFragment;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 /*
@@ -96,6 +101,9 @@ public class ProctorExamSessionActivity extends AppCompatActivity {
         mFragmentTransaction.hide(mProctorPostExamReportFragment);
         mFragmentTransaction.commit();
 
+        // create a new handler for the clock
+        mClockHandler = new Handler();
+
         // if exam time is over show the post exam report
         if (Utils.isCurrentTimeAfterTime(OdinFirebase.ExamSessionContext.getExamEndTime()) ||
                 Utils.isCurrentTimeEqualToTime(OdinFirebase.ExamSessionContext.getExamEndTime())) {
@@ -108,6 +116,7 @@ public class ProctorExamSessionActivity extends AppCompatActivity {
             showLiveMonitoring();
         }
     }
+
 
     // load a user profile, this will implicitly be an examinee profile
     private void loadUserProfileToLive(String id, final ActivityLog activityLog) {
@@ -284,5 +293,73 @@ public class ProctorExamSessionActivity extends AppCompatActivity {
         mFragmentTransaction.hide(mProctorExamineeProfileFragment);
         mFragmentTransaction.show(mProctorPostExamReportFragment);
         mFragmentTransaction.commit();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (!mProctorPostExamReportFragment.isHidden() || !mProctorAuthPhotoFragment.isHidden() || !mProctorMonitoringFragment.isHidden()) {
+            killClock(mClockRunnable);
+            startActivity(new Intent(this, ProctorHomeActivity.class));
+        }
+        else
+        if (!mProctorExamineeProfileFragment.isHidden()) {
+            showLiveMonitoring();
+        }
+    }
+
+    // Exam session timer ==========================================================================
+
+    private Runnable mClockRunnable;
+    private Handler mClockHandler;
+    private boolean mExamEnded;
+
+    public void killClock(Runnable runnable) {
+        System.out.println("Killing exam clock...");
+        mClockHandler.removeCallbacks(runnable);
+    }
+
+    public void startClock() {
+        final Date examEnd = OdinFirebase.ExamSessionContext.getExamEndTime();
+        mExamEnded = false;
+
+        System.out.println("Starting exam clock...");
+        mClockRunnable = new Runnable() {
+            @Override
+            public void run() {
+                mClockHandler.postDelayed(mClockRunnable, 1000);
+                try {
+                    System.out.println("Proctor tick!");
+                    // end exam session
+                    if (!mExamEnded && Utils.isCurrentTimeAfterTime(examEnd)) {
+                        System.out.println("showing post exam report");
+                        //go to exam session end screen
+                        showPostExamReport();
+                        // stop the clock
+                        killClock(this);
+                    }
+
+                    if (Utils.isCurrentTimeAfterTime(examEnd)) {
+                        killClock(this);
+                    }
+
+                    mExamEnded = Utils.isCurrentTimeAfterTime(examEnd);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        mClockHandler.postDelayed(mClockRunnable, 1000);
+    }
+
+    @Override
+    protected void onResume() {
+        startClock();
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        killClock(mClockRunnable);
+        super.onPause();
     }
 }

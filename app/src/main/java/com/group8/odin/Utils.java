@@ -23,6 +23,8 @@ public class Utils {
     public static String getTimeStringFromDate(Date date) { return new SimpleDateFormat("HH:mm:ss").format(date); }
     public static String getDateTimeStringFromDate(Date date) { return new SimpleDateFormat("dd MMM yyyy HH:mm:ss").format(date); }
     public static String getDateStringFromDate(Date date) { return new SimpleDateFormat("dd MMM yyyy").format(date); }
+    public static String getFullDateFromDate(Date date) { return new SimpleDateFormat("EEEE, MMMM dd yyyy").format(date); }
+    public static String getTimeNoSecondsStringFromDate(Date date) { return new SimpleDateFormat("HH:mm").format(date); }
 
     public static int getExamineeStatusColour(Context context, boolean online) {
         // set icon colour tints

@@ -1,5 +1,6 @@
 package com.group8.odin.examinee.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -51,20 +52,11 @@ public class ExamineeExamEndFragment extends Fragment {
         ButterKnife.bind(this, view);
         getActivity().setTitle(R.string.exam_finished_title);
 
-        //TODO: Gerardo please implement: Go back to dashboard. rn crashing
+        // leave the exam session
         mBtnBackToDB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // get user profile
-                FirebaseFirestore db = FirebaseFirestore.getInstance();
-                DocumentReference userProfile = db.collection(OdinFirebase.FirestoreCollections.USERS).document(ExamineeExamSessionActivity.Uid);
-                userProfile.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot snapshot) {
-                        OdinFirebase.UserProfileContext = new UserProfile(snapshot);
-                    }
-                });
-                ((ExamineeHomeActivity) getActivity()).showExamineeDashboard();
+                getActivity().startActivity(new Intent(getActivity(), ExamineeHomeActivity.class));
             }
         });
     }

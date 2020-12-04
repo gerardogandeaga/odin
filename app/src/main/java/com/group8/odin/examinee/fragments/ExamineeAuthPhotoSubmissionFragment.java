@@ -185,14 +185,14 @@ public class ExamineeAuthPhotoSubmissionFragment extends Fragment {
             public void onClick(View view) {
                     Uri uri = Uri.fromFile(new File(mAuthPhotoUri));
 
-                    // store photo in exam session folder in the form "examineeID_time.jpg"
-                    mReference.child(OdinFirebase.ExamSessionContext.getExamId() + "/" + OdinFirebase.UserProfileContext.getEduId() + "_" + Utils.getDateTimeStringFromDate(Utils.getCurrentTime()) + ".jpg").putFile(uri)
+                    // store photo in exam session folder in the form "examineeID.jpg"
+                    mReference.child(OdinFirebase.ExamSessionContext.getExamId() + "/" + OdinFirebase.UserProfileContext.getUserId() + ".jpg").putFile(uri)
                             .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                                 @Override
                                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                    Toast.makeText(getActivity(), R.string.upload_success, Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getContext(), R.string.upload_success, Toast.LENGTH_SHORT).show();
                                     mPbProgress.setVisibility(View.VISIBLE);
-                                    ((ExamineeExamSessionActivity) getActivity()).showExamSessionHome();
+                                    ((ExamineeExamSessionActivity) getActivity()).showExamSessionHome(true);
                                 }
                             })
                             .addOnFailureListener(new OnFailureListener() {
@@ -214,13 +214,6 @@ public class ExamineeAuthPhotoSubmissionFragment extends Fragment {
 
         // Hide progress bar
         mPbProgress.setVisibility(View.INVISIBLE);
-
-        getActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
-            @Override
-            public void handleOnBackPressed() {
-                startActivity(new Intent(getActivity(), ExamineeExamSessionActivity.class));
-            }
-        });
     }
 
     public void invokeCameraActivity() {

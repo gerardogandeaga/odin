@@ -34,11 +34,10 @@ import butterknife.ButterKnife;
  * Updated by: Shreya Jain
  */
 
-//TODO: Better layout?
 public class ExamineeExamSessionHomeFragment extends Fragment {
-    @BindView(R.id.tvExamInfo) TextView mTvExamInfo;
-    @BindView(R.id.tvExamName) TextView mTvExamName;
+    @BindView(R.id.tvExamTitle) TextView mTvExamTitle;
     @BindView(R.id.tvExamStartTime) TextView mTvExamStartTime;
+    @BindView(R.id.tvExamEndTime) TextView mTvExamEndTime;
     @BindView(R.id.tvTimer) TextView mTvTimer;
     @BindView(R.id.timer_layout) LinearLayout mTimer_layout;
     @BindView(R.id.tvHours) TextView mTvHours;
@@ -61,8 +60,9 @@ public class ExamineeExamSessionHomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
         getActivity().setTitle(R.string.exam_progress);
-        mTvExamName.setText(OdinFirebase.ExamSessionContext.getTitle());
-        mTvExamStartTime.setText("Start Time: " + Utils.getDateTimeStringFromDate(OdinFirebase.ExamSessionContext.getExamStartTime()));
+        mTvExamTitle.setText(OdinFirebase.ExamSessionContext.getTitle());
+        mTvExamStartTime.setText("Started: " + Utils.getDateTimeStringFromDate(OdinFirebase.ExamSessionContext.getExamStartTime()));
+        mTvExamEndTime.setText("Ends: " + Utils.getDateTimeStringFromDate(OdinFirebase.ExamSessionContext.getExamStartTime()));
     }
 
     private static int secondsInDay = 24*60*60*1000; //milliseconds in a day

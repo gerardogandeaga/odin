@@ -54,16 +54,6 @@ public class ProctorAuthPhotosFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        // Handle on back button pressed in the fragment
-        getActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
-            @Override
-            public void handleOnBackPressed() {
-                // return to the exminee dashboard
-                Intent back = new Intent(getActivity(), ProctorHomeActivity.class);
-                startActivity(back);
-            }
-        });
-
         return inflater.inflate(R.layout.common_dashboard_layout, container, false);
     }
 
@@ -101,12 +91,9 @@ public class ProctorAuthPhotosFragment extends Fragment {
 
     @Override
     public void onHiddenChanged(boolean hidden) {
-        if (!hidden) getActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
-            @Override
-            public void handleOnBackPressed() {
-                getActivity().startActivity(new Intent(getActivity(), ProctorHomeActivity.class));
-            }
-        });
+        if (!hidden) {
+            getActivity().setTitle(R.string.auth_photo_submission);
+        }
         super.onHiddenChanged(hidden);
     }
 }

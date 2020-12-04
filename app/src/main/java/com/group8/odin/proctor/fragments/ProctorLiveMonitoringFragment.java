@@ -1,5 +1,6 @@
 package com.group8.odin.proctor.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Pair;
 import android.view.LayoutInflater;
@@ -15,7 +16,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.group8.odin.R;
 import com.group8.odin.common.models.ActivityLog;
 import com.group8.odin.common.models.UserProfile;
@@ -54,12 +54,13 @@ public class ProctorLiveMonitoringFragment extends Fragment {
     private ItemAdapter mHeaderAdapter;
     private FastAdapter<ExamineeItem> mFastAdapter;
 
-    private int examineeCount = 0;
+    private int mExamineeCount;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mActivity = (ProctorExamSessionActivity) getActivity();
+        mExamineeCount = 0;
     }
 
     @Nullable
@@ -148,23 +149,34 @@ public class ProctorLiveMonitoringFragment extends Fragment {
         mItemAdapter.clear();
         mItemAdapter.add(items);
         mFastAdapter.notifyAdapterDataSetChanged();
+
+        updateTitle();
     }
 
-    //TODO: Gerardo, please Update examinee count. Current code not working?
+    // display the fragment title and show examinee count.
+    // only update when the fragment is not hidden
+    private void updateTitle() {
+        if (!isHidden()) {
+            mExamineeCount = mItemAdapter.getAdapterItems().size();
+            String title = getString(R.string.live_monitor) + ": " + mExamineeCount + " Examinees";
+            getActivity().setTitle(title);
+        }
+    }
+
     @Override
     public void onHiddenChanged(boolean hidden) {
         if (!hidden) {
-            examineeCount = mItemAdapter.getAdapterItems().size();
-            String title = getString(R.string.live_monitor) + ": " +Integer.toString(examineeCount);
-            getActivity().setTitle(title);
+            updateTitle();
             mActivity.getSupportActionBar().setHomeButtonEnabled(false);
             mActivity.getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
+            // Handle on back button pressed in the fragment
             getActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
                 @Override
                 public void handleOnBackPressed() {
-                    getActivity().setTitle(R.string.photo_submission);
-                    ((ProctorExamSessionActivity) getActivity()).showAuthPhotos();
+                    // return to the exminee dashboard
+                    Intent back = new Intent(getActivity(), ProctorHomeActivity.class);
+                    startActivity(back);
                 }
             });
         }

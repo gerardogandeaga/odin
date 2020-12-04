@@ -18,6 +18,8 @@ import android.widget.Toast;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -59,9 +61,21 @@ import butterknife.ButterKnife;
  * Updated by: Matthew Tong
  * Updated on 2020-12-01
  * Description: fixed time format display and changed icons appearances
+ * todo Shreya: input validation for the text fields, make sure that end time is greater than start time. make sure that all inputs are integers, remove the hints you have that are directly in the edit text (the HH:MM) set the defaults of the fields are 00:.
+ * todo: continued -> for the hints add a text box below the dit texts aligned with each edit text saying either HH or MM OR Hours Minutes. Make sure that authentication duration is less than the exam duration. Make sure you test negative values.
+ * todo: continued -> make sure that you performs test for exam create and exam update contexts.
+ * todo: continued -> please use the utility functions at the end of the file to indicate errors in fields
+ * todo: lastly -> make sure to test, the objective is to prevent errors and inform the user where the errors are.
+ *
+ * todo Shreya: Note -> please do not make any changes with what data is put or retieved from firebase.
  */
 public class ProctorExamCreationFragment extends Fragment {
     // Bind views
+    // cards
+    @BindView(R.id.cardExamDate)     CardView mCardExamDate;
+    @BindView(R.id.cardAuthDuration) CardView mCardAuthDuration;
+    @BindView(R.id.cardExamStart)    CardView mCardExamStart;
+    @BindView(R.id.cardExamEnd)      CardView mCardExamEnd;
     // Edit Text
     @BindView(R.id.etExamTitle) EditText mEtExamTitle;
     @BindView(R.id.etEST_H) EditText mEtEST_H;
@@ -163,6 +177,11 @@ public class ProctorExamCreationFragment extends Fragment {
         mBtnCreateExam.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // todo Shreya: every time the user clicks the button the fields will be checked for validation
+                // first we reset the card views
+                resetCards();
+
+                // todo Shreya: this function should be the only input validator please move the code from the checkFieldsAreValid() function and move them into the validInput().
                 if (!validInput()) return;
 
                 mStartExamHour = Integer.parseInt(mEtEST_H.getText().toString().trim());
@@ -172,6 +191,7 @@ public class ProctorExamCreationFragment extends Fragment {
                 mAuthHour = Integer.parseInt(mEtAD_H.getText().toString().trim());
                 mAuthMin = Integer.parseInt(mEtAD_M.getText().toString().trim());
 
+                // todo Shreya: once the function is merged we do not need this if statement
                 if (checkFieldsAreValid()) {
 
                     // Convert times to dates
@@ -235,6 +255,7 @@ public class ProctorExamCreationFragment extends Fragment {
         mExamSessionEdit = examSession;
     }
 
+    // todo shreya: thise should be the only input validator function
     private boolean validInput() {
         boolean pass = true;
         String est_h = mEtEST_H.getText().toString().trim();
@@ -245,6 +266,8 @@ public class ProctorExamCreationFragment extends Fragment {
         String ad_m = mEtAD_M.getText().toString().trim();
 
         if (est_h.isEmpty() | est_m.isEmpty()) {
+            // todo shreya: makre to mark the card fields with errors by setting their card colour. For example, if there is an error here then the card field for exam start time has an error
+            errorInExamStart(); // todo shreya: call this function to set the error.
             Toast.makeText(getActivity(), "Exam start fields cannot be empty", Toast.LENGTH_SHORT).show();
             pass = false;
         }
@@ -270,6 +293,7 @@ public class ProctorExamCreationFragment extends Fragment {
             int ad_h_val = Integer.parseInt(ad_h);
             int ad_m_val = Integer.parseInt(ad_m);
 
+            // todo Shreya: make sure to set the error colours here to... pretty much for every if, the error colour should be set.
             if (!validTime(est_h_val, est_m_val)) {
                 Toast.makeText(getActivity(), "Invalid time start time", Toast.LENGTH_SHORT).show();
                 pass = false;
@@ -315,6 +339,8 @@ public class ProctorExamCreationFragment extends Fragment {
     }
 
     // Checks if the exam creation fields are valid
+    // todo Shreya: merge this could with the validInput() function, please think about what you are checking, what could be added or removed if we have redundecies
+    // todo continued -> maksure to set to error card colours with the utiity functions
     private boolean checkFieldsAreValid() {
         if (mEtExamTitle.getText().toString().trim().isEmpty()) {
             Toast.makeText(getActivity(), R.string.exam_title_error, Toast.LENGTH_SHORT).show();
@@ -365,5 +391,31 @@ public class ProctorExamCreationFragment extends Fragment {
                         Toast.makeText(getActivity(), R.string.general_error, Toast.LENGTH_SHORT).show();
                     }
                 });
+    }
+
+    // todo use these error functions to indicate to the user that a field has errors (use toast messages to let them know also)
+
+    private void errorInExamDate() {
+        mCardExamDate.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.card_error));
+    }
+
+    private void errorInAuthDuration() {
+        mCardAuthDuration.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.card_error));
+    }
+
+    private void errorInExamStart() {
+        mCardExamStart.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.card_error));
+    }
+
+    private void errorInExamEnd() {
+        mCardExamEnd.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.card_error));
+    }
+
+    // reset the card colors
+    private void resetCards() {
+        mCardExamDate.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.white));
+        mCardAuthDuration.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.white));
+        mCardExamEnd.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.white));
+        mCardExamEnd.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.white));
     }
 }

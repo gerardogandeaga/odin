@@ -4,19 +4,22 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.bumptech.glide.util.Util;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.math.MathUtils;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -36,6 +39,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import butterknife.BindDimen;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /*
  * Created by: Gerardo Gandeaga
  * Created on: 2020-11-05
@@ -46,23 +53,19 @@ import java.util.Map;
  * Updated by: Shreya Jain
  */
 public class ExamineeExamSessionActivity extends AppCompatActivity {
+    @BindView(R.id.pbTime) ProgressBar mPbTime;
+
     private FirebaseFirestore mFirestore;
     private static FragmentManager mFragmentManager;
     private static FragmentTransaction mFragmentTransaction;
-    public static boolean InExam;
-
-    public static String Uid = OdinFirebase.UserProfileContext.getUserId();
-
-    private Runnable mClockRunnable;
-    private Handler mClockHandler;
-    private boolean mAuthEnded;
-    private boolean mExamEnded;
-    private boolean mListenForActivity;
+    public boolean mInExam;
+    public boolean mUploadedAuthPhoto;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_container_view);
+        setContentView(R.layout.examinee_exam_session_container_view);
+        ButterKnife.bind(this);
 
         // Setup fragment manager
         mFragmentManager = getSupportFragmentManager();
@@ -70,6 +73,9 @@ public class ExamineeExamSessionActivity extends AppCompatActivity {
         // create a new handler for the clock
         mClockHandler = new Handler();
         mListenForActivity = true;
+
+        mPbTime.setMax(100);
+        mPbTime.setMin(0);
 
         //check if auth time has ended
         if (Utils.isCurrentTimeBeforeTime(OdinFirebase.ExamSessionContext.getAuthEndTime())) {
@@ -82,7 +88,7 @@ public class ExamineeExamSessionActivity extends AppCompatActivity {
                 @Override
                 public void onSuccess(Uri uri) {
                     // auth photo exists in storage
-                    showExamSessionHome();
+                    showExamSessionHome(false);
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
@@ -93,8 +99,10 @@ public class ExamineeExamSessionActivity extends AppCompatActivity {
             });
         }
         else {
-            showExamSessionHome();
+            showExamSessionHome(false);
         }
+
+        // from anywhere in the exam session, back pressed will take you home
     }
 
     private ExamineeAuthPhotoSubmissionFragment mAuthFrag;
@@ -102,24 +110,27 @@ public class ExamineeExamSessionActivity extends AppCompatActivity {
     private ExamineeExamEndFragment mEndFrag;
 
     public void showAuthPhotoSubmission() {
-        InExam = false;
+        mInExam = false;
+        mUploadedAuthPhoto = false;
         mFragmentTransaction = mFragmentManager.beginTransaction();
         mAuthFrag = new ExamineeAuthPhotoSubmissionFragment();
         mFragmentTransaction.replace(R.id.container, mAuthFrag);
         mFragmentTransaction.commit();
     }
 
-    public void showExamSessionHome() {
-        InExam = true;
+    public void showExamSessionHome(boolean report) {
+        mInExam = true;
+        mUploadedAuthPhoto = true;
         mFragmentTransaction = mFragmentManager.beginTransaction();
         mSessionFrag = new ExamineeExamSessionHomeFragment();
         mFragmentTransaction.replace(R.id.container, mSessionFrag);
         mFragmentTransaction.commit();
-        onResume();
+        if (report) onResume();
     }
 
     public void showExamEndScreen() {
-        InExam = false;
+        mInExam = false;
+        mUploadedAuthPhoto = true;
         mFragmentTransaction = mFragmentManager.beginTransaction();
         mEndFrag = new ExamineeExamEndFragment();
         mFragmentTransaction.replace(R.id.container, mEndFrag);
@@ -129,7 +140,7 @@ public class ExamineeExamSessionActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         startClock();
-        if (InExam) {
+        if (mInExam) {
             if (mFirestore == null) mFirestore = FirebaseFirestore.getInstance();
             System.out.println(R.string.resume);
             updateActivityLog();
@@ -140,7 +151,7 @@ public class ExamineeExamSessionActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         killClock(mClockRunnable);
-        if (InExam && mListenForActivity) {
+        if (mInExam && mListenForActivity) {
             if (mFirestore == null) mFirestore = FirebaseFirestore.getInstance();
             System.out.println(R.string.pause);
             updateActivityLog();
@@ -193,12 +204,19 @@ public class ExamineeExamSessionActivity extends AppCompatActivity {
 
     // Exam session timer ==========================================================================
 
+    private Runnable mClockRunnable;
+    private Handler mClockHandler;
+    private boolean mAuthEnded;
+    private boolean mExamEnded;
+    private boolean mListenForActivity;
+
     public void killClock(Runnable runnable) {
         System.out.println("Killing exam clock...");
         mClockHandler.removeCallbacks(runnable);
     }
 
     public void startClock() {
+        final Date examStart = OdinFirebase.ExamSessionContext.getExamStartTime();
         final Date examEnd = OdinFirebase.ExamSessionContext.getExamEndTime();
         final Date authEnd = OdinFirebase.ExamSessionContext.getAuthEndTime();
 
@@ -206,27 +224,33 @@ public class ExamineeExamSessionActivity extends AppCompatActivity {
         mClockRunnable = new Runnable() {
             @Override
             public void run() {
-                mClockHandler.postDelayed(this, 1000);
+                mClockHandler.postDelayed(mClockRunnable, 1000);
                 try {
+                    long timeLength = (examEnd.getTime() - examStart.getTime()) / 1000;
                     long timeLeft =  (examEnd.getTime() - Utils.getCurrentTime().getTime()) / 1000; // time left in seconds
-                    if (timeLeft < 1) {
+                    float rat = 1.f - ((float)timeLeft / timeLength);
+                    System.out.println("rat -> " + rat);
+
+                    if (timeLeft < 2) {
                         mListenForActivity = false; // cancel listening for examinee activity
                     }
 
-                    mSessionFrag.updateTime(examEnd.getTime() - Utils.getCurrentTime().getTime());
+                    if (mSessionFrag != null) {
+                        mSessionFrag.updateTime(examEnd.getTime() - Utils.getCurrentTime().getTime());
+                    }
 
                     // end auth time
-                    if (!mAuthEnded && !mExamEnded && Utils.isCurrentTimeAfterTime(authEnd)) {
+                    if (!mUploadedAuthPhoto && !mAuthEnded && !mExamEnded && Utils.isCurrentTimeAfterTime(authEnd)) {
                         Toast.makeText(ExamineeExamSessionActivity.this, R.string.auth_ended, Toast.LENGTH_SHORT).show();
-                        showExamSessionHome();
+                        showExamSessionHome(true);
                     }
 
                     // end exam session
                     if (mAuthEnded && !mExamEnded && Utils.isCurrentTimeAfterTime(examEnd)) {
-                        // stop the clock
-                        killClock(this);
                         //go to exam session end screen
                         showExamEndScreen();
+                        // stop the clock
+                        killClock(this);
                     }
 
                     if (Utils.isCurrentTimeAfterTime(examEnd)) {
@@ -235,11 +259,19 @@ public class ExamineeExamSessionActivity extends AppCompatActivity {
 
                     mAuthEnded = Utils.isCurrentTimeAfterTime(authEnd);
                     mExamEnded = Utils.isCurrentTimeAfterTime(examEnd);
+
+                    mPbTime.setProgress((int)(rat * 100));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         };
         mClockHandler.postDelayed(mClockRunnable, 1000);
+    }
+
+    @Override
+    public void onBackPressed() {
+        killClock(mClockRunnable);
+        startActivity(new Intent(getApplicationContext(), ExamineeHomeActivity.class));
     }
 }

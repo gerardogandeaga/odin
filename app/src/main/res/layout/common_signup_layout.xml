@@ -66,8 +66,7 @@
                         style="@style/inputStyle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="textPersonName"
-                        android:textColor="@color/colorTextField" />
+                        android:inputType="textPersonName" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -82,8 +81,7 @@
                         style="@style/inputStyle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="textPersonName"
-                        android:textColor="@color/colorTextField" />
+                        android:inputType="textPersonName" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -98,8 +96,7 @@
                         style="@style/inputStyle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="textPersonName"
-                        android:textColor="@color/colorTextField" />
+                        android:inputType="textPersonName" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -115,8 +112,7 @@
                         style="@style/inputStyle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="textVisiblePassword"
-                        android:textColor="@color/colorTextField" />
+                        android:inputType="textVisiblePassword" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -132,8 +128,7 @@
                         style="@style/inputStyle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="textVisiblePassword"
-                        android:textColor="@color/colorTextField" />
+                        android:inputType="textVisiblePassword" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 

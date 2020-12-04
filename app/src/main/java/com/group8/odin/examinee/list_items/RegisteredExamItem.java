@@ -5,11 +5,9 @@ import android.view.View;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.content.res.AppCompatResources;
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 
-import com.bumptech.glide.util.Util;
 import com.group8.odin.OdinFirebase;
 import com.group8.odin.R;
 import com.group8.odin.Utils;
@@ -19,7 +17,6 @@ import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.items.AbstractItem;
 
 import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
@@ -85,12 +82,12 @@ public class RegisteredExamItem extends AbstractItem<RegisteredExamItem, Registe
                 examId.setVisibility(View.GONE);
             }
             else {
-                examId.setText("ID: " + item.examSession.getExamId());
+                examId.setText("Session ID: " + item.examSession.getExamId());
             }
 
-            examStartTime.setText("Starts: " + item.examSession.getExamStartTime().toString());
-            examEndTime.setText("Ends: " + item.examSession.getExamEndTime().toString());
-            authTime.setText("ID check ends at " + Utils.getTimeStringFromDate(item.examSession.getAuthEndTime()));
+            examStartTime.setText("Starts: " + Utils.getFullDateFromDate(item.examSession.getExamStartTime()) + " at " + Utils.getTimeNoSecondsStringFromDate(item.examSession.getExamStartTime()));
+            examEndTime.setText("Ends: " + Utils.getFullDateFromDate(item.examSession.getExamEndTime()) + " at " + Utils.getTimeNoSecondsStringFromDate(item.examSession.getExamEndTime()));
+            authTime.setText("ID check ends at " + Utils.getTimeNoSecondsStringFromDate(item.examSession.getAuthEndTime()));
 
             // set the card status
             if (Utils.isCurrentTimeBeforeTime(item.examSession.getExamStartTime())) {
@@ -104,8 +101,8 @@ public class RegisteredExamItem extends AbstractItem<RegisteredExamItem, Registe
             }
             else
             if (Utils.isCurrentTimeAfterTime(item.examSession.getExamEndTime())) {
-                status.setText("Passed");
-                cardStatus.setBackgroundColor(ContextCompat.getColor(context, R.color.passed));
+                status.setText("Ended");
+                cardStatus.setBackgroundColor(ContextCompat.getColor(context, R.color.ended));
             }
         }
 

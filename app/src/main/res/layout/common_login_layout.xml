@@ -84,7 +84,7 @@
             android:layout_gravity="center_horizontal"
             android:text="@string/signup_mess"
             android:textAllCaps="false"
-            android:textColor="@color/colorTextField"
+            android:textColor="@color/black"
             android:textStyle="italic"
             android:background="@android:color/transparent"/>
 

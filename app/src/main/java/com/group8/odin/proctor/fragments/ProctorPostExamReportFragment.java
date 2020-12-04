@@ -67,12 +67,13 @@ public class ProctorPostExamReportFragment extends Fragment {
     private ItemAdapter mHeaderAdapter;
     private FastAdapter<ExamineeItem> mFastAdapter;
 
-    private int examineeCount =0;
+    private int mExamineeCount;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mActivity = (ProctorExamSessionActivity) getActivity();
+        mExamineeCount = 0;
     }
 
     @Nullable
@@ -159,25 +160,26 @@ public class ProctorPostExamReportFragment extends Fragment {
         mItemAdapter.clear();
         mItemAdapter.add(items);
         mFastAdapter.notifyAdapterDataSetChanged();
+
+        updateTitle();
     }
 
-    //TODO: Gerardo, please Update examinee count. Current code not working?
+    // display the fragment title and show examinee count.
+    // only update when the fragment is not hidden
+    private void updateTitle() {
+        if (!isHidden()) {
+            mExamineeCount = mItemAdapter.getAdapterItems().size();
+            String title = getString(R.string.post_exam_report) + ": " + mExamineeCount + " Examinees";
+            getActivity().setTitle(title);
+        }
+    }
+
     @Override
     public void onHiddenChanged(boolean hidden) {
         if (!hidden) {
-            examineeCount = mItemAdapter.getAdapterItems().size();
-            String title = getString(R.string.post_exam_report) + ": " + Integer.toString(examineeCount);
-            getActivity().setTitle(title);
+            updateTitle();
             mActivity.getSupportActionBar().setHomeButtonEnabled(false);
             mActivity.getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-
-            getActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
-                @Override
-                public void handleOnBackPressed() {
-                    // exit the exam session and go to report
-                    getActivity().startActivity(new Intent(getActivity(), ProctorHomeActivity.class));
-                }
-            });
         }
         super.onHiddenChanged(hidden);
     }
