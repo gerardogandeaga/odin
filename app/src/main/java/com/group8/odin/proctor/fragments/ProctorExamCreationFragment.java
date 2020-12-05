@@ -320,7 +320,7 @@ public class ProctorExamCreationFragment extends Fragment {
 
         if(!validExamDate(examDate)) {
             errorInExamDate();
-            Toast.makeText(getActivity(), "Date cannot be in the past", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), R.string.date_error, Toast.LENGTH_SHORT).show();
             pass = false;
         }
 
@@ -341,7 +341,7 @@ public class ProctorExamCreationFragment extends Fragment {
     private boolean validExamDate(Date examDate) {
         Date today = Utils.getCurrentTime();
 
-        // if the the exam is in a futuer year
+        // if the the exam is in a future year
         if (examDate.getYear() > today.getYear()) return true;
         // if they exam is the year of
         if (examDate.getYear() == today.getYear()) {
