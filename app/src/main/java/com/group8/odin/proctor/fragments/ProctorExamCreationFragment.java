@@ -126,10 +126,12 @@ public class ProctorExamCreationFragment extends Fragment {
             mEtAD_H.setText(Integer.toString(new Date(mExamSessionEdit.getAuthDuration()).getHours()));
             mEtAD_M.setText(Integer.toString(new Date(mExamSessionEdit.getAuthDuration()).getMinutes()));
             mTvExamDate.setText(Utils.getDateStringFromDate(mExamSessionEdit.getExamStartTime()));
+            Calendar cal = Calendar.getInstance();
             Date examDate = mExamSessionEdit.getExamStartTime();
-            mYear = examDate.getYear();
-            mMonth = examDate.getMonth();
-            mDay = examDate.getDay();
+            cal.setTime(examDate);
+            mYear = cal.get(Calendar.YEAR);
+            mMonth = cal.get(Calendar.MONTH);
+            mDay = cal.get(Calendar.DAY_OF_MONTH);
             mExamDateSet = true;
             mEtExamTitle.setText(mExamSessionEdit.getTitle());
             mBtnCreateExam.setText(R.string.update_exam);
