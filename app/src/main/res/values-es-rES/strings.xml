@@ -137,4 +137,5 @@
     <string name="exam_end_time_error">Los campos de fin de examen no pueden estar vacíos</string>
     <string name="exam_start_time_error">Los campos de inicio del examen no pueden estar vacíos</string>
     <string name="exam_duration_error">La duración del examen no puede ser de 0 minutos.</string>
+    <string name="date_error">La fecha no puede ser pasada</string>
 </resources>

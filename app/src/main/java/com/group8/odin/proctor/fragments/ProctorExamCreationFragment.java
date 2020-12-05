@@ -59,7 +59,6 @@ import butterknife.ButterKnife;
  * Updated on 2020-12-01
  * Description: fixed time format display and changed icons appearances
  * Updated by: Shreya Jain - added validation programming
- * TODO: Gerardo please check the code for validExamDate. Currently, date before current date is accepted which shouldn't be. Everything else working fine. Please fix it.
  */
 public class ProctorExamCreationFragment extends Fragment {
     // Bind views

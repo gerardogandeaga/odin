@@ -137,4 +137,5 @@
     <string name="eet_error">Heure de fin d\'examen non valide</string>
     <string name="ad_error">Durée d\'authentification non valide</string>
     <string name="exam_duration_error">La durée de l\'examen ne peut pas être de 0 minute.</string>
+    <string name="date_error">La date ne peut pas être dans le passé</string>
 </resources>
