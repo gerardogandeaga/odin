@@ -128,9 +128,10 @@ public class ProctorExamCreationFragment extends Fragment {
             mEtAD_M.setText(Integer.toString(new Date(mExamSessionEdit.getAuthDuration()).getMinutes()));
             mTvExamDate.setText(Utils.getDateStringFromDate(mExamSessionEdit.getExamStartTime()));
             Date examDate = mExamSessionEdit.getExamStartTime();
-            mYear = examDate.getYear();
+            mYear = examDate.getYear() + 1900;
             mMonth = examDate.getMonth();
-            mDay = examDate.getDay();
+            mDay = examDate.getDay() - 1;
+            System.out.println("Day " + mYear);
             mExamDateSet = true;
             mEtExamTitle.setText(mExamSessionEdit.getTitle());
             mBtnCreateExam.setText(R.string.update_exam);
@@ -150,9 +151,6 @@ public class ProctorExamCreationFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 final Calendar c = Calendar.getInstance();
-                mYear = c.get(Calendar.YEAR);
-                mMonth = c.get(Calendar.MONTH);
-                mDay = c.get(Calendar.DAY_OF_MONTH);
 
                 // build date dialog
                 DatePickerDialog dialog = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
@@ -164,7 +162,7 @@ public class ProctorExamCreationFragment extends Fragment {
                         mTvExamDate.setText(Utils.getDateStringFromDate(new Date(mYear - 1900, mMonth, mDay)));
                         mExamDateSet = true;
                     }
-                }, mYear, mMonth, mDay);
+                }, c.get(Calendar.YEAR), c.get(Calendar.MONDAY), c.get(Calendar.DAY_OF_MONTH));
 
                 // show date dialog
                 dialog.show();
@@ -191,11 +189,10 @@ public class ProctorExamCreationFragment extends Fragment {
 
                 // Convert times to dates
                 //The year is taken as (Year+1900) by the date picker.
-                mYear = mYear - 1900;
                 Date examStart, examEnd;
-                examStart = new Date(mYear, mMonth, mDay, mStartExamHour, mStartExamMinute);
-                examEnd = new Date(mYear, mMonth, mDay, mEndExamHour, mEndExamMinute);
-                long authDuration = new Date(mYear , mMonth, mDay, Integer.parseInt(mEtAD_H.getText().toString().trim()), Integer.parseInt(mEtAD_M.getText().toString().trim()), 0).getTime();
+                examStart = new Date(mYear - 1900, mMonth, mDay, mStartExamHour, mStartExamMinute);
+                examEnd = new Date(mYear - 1900, mMonth, mDay, mEndExamHour, mEndExamMinute);
+                long authDuration = new Date(mYear  - 1900, mMonth, mDay, Integer.parseInt(mEtAD_H.getText().toString().trim()), Integer.parseInt(mEtAD_M.getText().toString().trim()), 0).getTime();
 
                 // Add a new document with a generated id.
                 Map<String, Object> data = new HashMap<>();
@@ -258,7 +255,7 @@ public class ProctorExamCreationFragment extends Fragment {
         String eet_m = mEtEET_M.getText().toString().trim();
         String ad_h = mEtAD_H.getText().toString().trim();
         String ad_m = mEtAD_M.getText().toString().trim();
-        Date examDate = new Date(mYear - 1900, mMonth, mDay, Integer.parseInt(est_h), Integer.parseInt(est_m));
+        Date examDate = new Date(mYear, mMonth, mDay, Integer.parseInt(est_h), Integer.parseInt(est_m));
 
         if (est_h.isEmpty() | est_m.isEmpty()) {
             errorInExamStart();
@@ -341,7 +338,7 @@ public class ProctorExamCreationFragment extends Fragment {
     // check that the date date is not before the current date
     private boolean validExamDate(Date examDate) {
         Date today = Utils.getCurrentTime();
-
+        System.out.println(examDate.getYear());
         // if the the exam is in a futuer year
         if (examDate.getYear() > today.getYear()) return true;
         // if they exam is the year of
@@ -352,7 +349,21 @@ public class ProctorExamCreationFragment extends Fragment {
             }
             // if the month is right now and a now date or future date
             else {
-                return examDate.getMonth() == today.getMonth() && examDate.getDay() >= today.getDay();
+                // if time
+                if (examDate.getMonth() == today.getMonth()) {
+                    if (examDate.getDay() == today.getDay()) {
+                        if (invalidStartEndTimes(today.getHours(), today.getMinutes(), examDate.getHours(), examDate.getMinutes())) {
+                            errorInExamEnd();
+                            return false;
+                        }
+                        else {
+                            return true;
+                        }
+                    }
+                    else {
+                        return examDate.getDay() > today.getDay();
+                    }
+                }
             }
         }
         return false;
