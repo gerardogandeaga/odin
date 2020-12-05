@@ -52,6 +52,7 @@
     <string name="auth_longer_than_exam">"Authentication needs to end before the exam ends"</string>
     <string name="general_error">Something went wrong…Please refresh.</string>
     <string name="auth_ended">Auth time has ended.</string>
+    <string name="date_error">Date cannot be in the past</string>
 
     <string name="permissions_success">Permissions Granted!</string>
     <string name="permissions_denied">Permission Denied. Please grant permissions and try again!</string>
