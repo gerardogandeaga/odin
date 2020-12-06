@@ -17,7 +17,7 @@ import java.util.Comparator;
  * Description: Object representation of activity logs
  */
 public class ActivityLog {
-    private ArrayList<Timestamp> activity;
+    public static ArrayList<Timestamp> activity;
     private boolean status;
 
     public ActivityLog(DocumentSnapshot activityLog) {
@@ -32,7 +32,7 @@ public class ActivityLog {
         }
     }
 
-    public boolean isValid() {
+    public static boolean isValid() {
         return activity != null;
     }
 
@@ -40,7 +40,7 @@ public class ActivityLog {
 
     // if there is only one entry in the activity that means the examinee how only logged in
     // therefore their overall activity will be true, meaning they have been active the whole time
-    public boolean getOverallStatus() { return activity.size() == 1; }
+    public static boolean getOverallStatus() { return activity.size() == 1; }
 
     @Override
     public String toString() {

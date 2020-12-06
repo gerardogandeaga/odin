@@ -28,8 +28,8 @@ import butterknife.ButterKnife;
  */
 public class ExamineeItem extends AbstractItem<ExamineeItem, ExamineeItem.ViewHolder> {
     // Data view item will actually hold
-    private Pair<UserProfile, ActivityLog> examinee;
-    private String header;
+    public Pair<UserProfile, ActivityLog> examinee;
+    public String header;
     private boolean live;
 
     public ExamineeItem setExaminee(Pair<UserProfile, ActivityLog> examinee, boolean live) {
