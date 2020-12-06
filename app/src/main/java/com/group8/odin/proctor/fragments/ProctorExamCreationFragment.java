@@ -127,11 +127,9 @@ public class ProctorExamCreationFragment extends Fragment {
             mEtAD_H.setText(Integer.toString(new Date(mExamSessionEdit.getAuthDuration()).getHours()));
             mEtAD_M.setText(Integer.toString(new Date(mExamSessionEdit.getAuthDuration()).getMinutes()));
             mTvExamDate.setText(Utils.getDateStringFromDate(mExamSessionEdit.getExamStartTime()));
-            Date examDate = mExamSessionEdit.getExamStartTime();
-            mYear = examDate.getYear() + 1900;
-            mMonth = examDate.getMonth();
-            mDay = examDate.getDay() - 1;
-            System.out.println("Day " + mYear);
+            mYear = mExamSessionEdit.getExamStartTime().getYear() + 1900;
+            mMonth = mExamSessionEdit.getExamStartTime().getMonth();
+            mDay = mExamSessionEdit.getExamStartTime().getDate();
             mExamDateSet = true;
             mEtExamTitle.setText(mExamSessionEdit.getTitle());
             mBtnCreateExam.setText(R.string.update_exam);
@@ -189,11 +187,13 @@ public class ProctorExamCreationFragment extends Fragment {
 
                 // Convert times to dates
                 //The year is taken as (Year+1900) by the date picker.
+                System.out.println("Day -> " + mDay);
                 Date examStart, examEnd;
                 examStart = new Date(mYear - 1900, mMonth, mDay, mStartExamHour, mStartExamMinute);
                 examEnd = new Date(mYear - 1900, mMonth, mDay, mEndExamHour, mEndExamMinute);
                 long authDuration = new Date(mYear  - 1900, mMonth, mDay, Integer.parseInt(mEtAD_H.getText().toString().trim()), Integer.parseInt(mEtAD_M.getText().toString().trim()), 0).getTime();
 
+                System.out.println("start -> " + examStart.toString());
                 // Add a new document with a generated id.
                 Map<String, Object> data = new HashMap<>();
                 data.put(OdinFirebase.FirestoreExamSession.TITLE, mEtExamTitle.getText().toString().trim());
@@ -351,7 +351,7 @@ public class ProctorExamCreationFragment extends Fragment {
             else {
                 // if time
                 if (examDate.getMonth() == today.getMonth()) {
-                    if (examDate.getDay() == today.getDay()) {
+                    if (examDate.getDate() == today.getDate()) {
                         if (invalidStartEndTimes(today.getHours(), today.getMinutes(), examDate.getHours(), examDate.getMinutes())) {
                             errorInExamEnd();
                             return false;
@@ -360,8 +360,9 @@ public class ProctorExamCreationFragment extends Fragment {
                             return true;
                         }
                     }
+                    if (examDate.getDate() > examDate.getDate()) { return true; }
                     else {
-                        return examDate.getDay() > today.getDay();
+                        return examDate.getDate() > today.getDate();
                     }
                 }
             }

@@ -6,6 +6,7 @@ import android.content.ClipboardManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,6 +42,7 @@ import com.mikepenz.fastadapter.listeners.OnClickListener;
 import com.mikepenz.fastadapter.listeners.OnLongClickListener;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -58,12 +60,15 @@ public class ProctorDashboardFragment extends Fragment {
     @BindView(R2.id.fabAction)     ExtendedFloatingActionButton mFabCreateExam;
 
     private ItemAdapter mItemAdapter;
+    private FastAdapter<RegisteredExamItem> mFastAdapter;
     private FirebaseFirestore mFirestore;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mFirestore = FirebaseFirestore.getInstance();
+        mClockHandler = new Handler();
+        startClock();
     }
 
     @Nullable
@@ -81,15 +86,15 @@ public class ProctorDashboardFragment extends Fragment {
 
         // Setup recycler view with fast adapter
         mItemAdapter = new ItemAdapter();
-        FastAdapter<RegisteredExamItem> fastAdapter = FastAdapter.with(mItemAdapter);
+        mFastAdapter = FastAdapter.with(mItemAdapter);
 
         GridLayoutManager gridLayout = new GridLayoutManager(getActivity(), 1);
 
         mRvCreatedExams.setLayoutManager(gridLayout);
-        mRvCreatedExams.setAdapter(fastAdapter); // bind adapter
+        mRvCreatedExams.setAdapter(mFastAdapter); // bind adapter
 
         // Open the auth photo bucket
-        fastAdapter.withOnClickListener(new OnClickListener<RegisteredExamItem>() {
+        mFastAdapter.withOnClickListener(new OnClickListener<RegisteredExamItem>() {
             @Override
             public boolean onClick(View v, IAdapter<RegisteredExamItem> adapter, RegisteredExamItem item, int position) {
                 OdinFirebase.ExamSessionContext = item.getExamSession();
@@ -106,7 +111,7 @@ public class ProctorDashboardFragment extends Fragment {
         });
 
         // Copy id into clipboard so user can share it
-        fastAdapter.withOnLongClickListener(new OnLongClickListener<RegisteredExamItem>() {
+        mFastAdapter.withOnLongClickListener(new OnLongClickListener<RegisteredExamItem>() {
             @Override
             public boolean onLongClick(View v, IAdapter<RegisteredExamItem> adapter, RegisteredExamItem item, int position) {
                 ClipboardManager clipboard = getActivity().getSystemService(ClipboardManager.class);
@@ -148,29 +153,6 @@ public class ProctorDashboardFragment extends Fragment {
     }
 
     // Load user exam sessions
-//    public void loadExamSessions() {
-//        for (String id : OdinFirebase.UserProfileContext.getExamSessionIds()) {
-//            DocumentReference exam = mFirestore.collection(OdinFirebase.FirestoreCollections.EXAM_SESSIONS).document(id);
-//            exam.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-//                @Override
-//                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-//                    if (task.isSuccessful()) {
-//                        DocumentSnapshot examSessionDoc = task.getResult();
-//                        ExamSession session = new ExamSession(examSessionDoc);
-//                        OdinFirebase.UserProfileContext.getExamSessions().add(session);
-//
-//                        // Display exam sessions in recycler view
-//                        mItemAdapter.add(new RegisteredExamItem().setExamSession(session));
-//                    }
-//                    else {
-//                        Log.e("UserProfile -> LoadExamSessions: ", "Error loading exam sessions");
-//                    }
-//                }
-//            });
-//        }
-//    }
-
-    // Load user exam sessions
     public void loadExamSessions() {
         OdinFirebase.UserProfileContext.setExamSessions(new ArrayList<ExamSession>()); // clear exam sessions list for re-population
         System.out.println("loading exam sessions");
@@ -203,5 +185,50 @@ public class ProctorDashboardFragment extends Fragment {
                 }
             });
         }
+    }
+
+    // Clock for updating exam item status =========================================================
+    private Runnable mClockRunnable;
+    private Handler mClockHandler;
+    private boolean mClockStarted;
+
+    public void killClock(Runnable runnable) {
+        if (mClockHandler != null) mClockHandler.removeCallbacks(runnable);
+        mClockStarted = false;
+    }
+
+    public void startClock() {
+        if (!mClockStarted) {
+            if (mClockHandler == null) mClockHandler = new Handler();
+            mClockRunnable = new Runnable() {
+                @Override
+                public void run() {
+                    mClockHandler.postDelayed(mClockRunnable, 1000);
+                    if (mFastAdapter != null && mFastAdapter.getItemCount() > 0) {
+                        mFastAdapter.notifyAdapterDataSetChanged();
+                    }
+                }
+            };
+            mClockStarted = true;
+            mClockHandler.postDelayed(mClockRunnable, 1000);
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        startClock();
+    }
+
+    @Override
+    public void onPause() {
+        killClock(mClockRunnable);
+        super.onPause();
+    }
+
+    @Override
+    public void onDestroy() {
+        killClock(mClockRunnable);
+        super.onDestroy();
     }
 }

@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -61,6 +62,13 @@ public class ExamineeDashboardFragment extends Fragment {
     ExtendedFloatingActionButton mFabRegister;
 
     private ItemAdapter mItemAdapter;
+    private FastAdapter<RegisteredExamItem> mFastAdapter;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        startClock();
+    }
 
     @Nullable
     @Override
@@ -77,9 +85,9 @@ public class ExamineeDashboardFragment extends Fragment {
 
         // Setup recycler view with fastadapter
         mItemAdapter = new ItemAdapter();
-        FastAdapter<RegisteredExamItem> fastAdapter = FastAdapter.with(mItemAdapter);
+        mFastAdapter = FastAdapter.with(mItemAdapter);
 
-        fastAdapter.withOnClickListener(new OnClickListener<RegisteredExamItem>() {
+        mFastAdapter.withOnClickListener(new OnClickListener<RegisteredExamItem>() {
             @Override
             public boolean onClick(View v, IAdapter<RegisteredExamItem> adapter, RegisteredExamItem item, int position) {
                 // set exam context
@@ -103,7 +111,7 @@ public class ExamineeDashboardFragment extends Fragment {
         GridLayoutManager gridLayout = new GridLayoutManager(getActivity(), 1);
 
         mRvRegisteredExams.setLayoutManager(gridLayout);
-        mRvRegisteredExams.setAdapter(fastAdapter); // bind adapter
+        mRvRegisteredExams.setAdapter(mFastAdapter); // bind adapter
 
         // adapter button clicks
 
@@ -174,5 +182,50 @@ public class ExamineeDashboardFragment extends Fragment {
                 }
             });
         }
+    }
+
+    // Clock for updating exam item status =========================================================
+    private Runnable mClockRunnable;
+    private Handler mClockHandler;
+    private boolean mClockStarted;
+
+    public void killClock(Runnable runnable) {
+        if (mClockHandler != null) mClockHandler.removeCallbacks(runnable);
+        mClockStarted = false;
+    }
+
+    public void startClock() {
+        if (!mClockStarted) {
+            if (mClockHandler == null) mClockHandler = new Handler();
+            mClockRunnable = new Runnable() {
+                @Override
+                public void run() {
+                    mClockHandler.postDelayed(mClockRunnable, 1000);
+                    if (mFastAdapter != null && mFastAdapter.getItemCount() > 0) {
+                        mFastAdapter.notifyAdapterDataSetChanged();
+                    }
+                }
+            };
+            mClockStarted = true;
+            mClockHandler.postDelayed(mClockRunnable, 1000);
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        startClock();
+    }
+
+    @Override
+    public void onPause() {
+        killClock(mClockRunnable);
+        super.onPause();
+    }
+
+    @Override
+    public void onDestroy() {
+        killClock(mClockRunnable);
+        super.onDestroy();
     }
 }
