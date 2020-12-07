@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
@@ -14,26 +13,18 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.ListResult;
 import com.google.firebase.storage.StorageReference;
 import com.group8.odin.OdinFirebase;
 import com.group8.odin.R;
 import com.group8.odin.common.models.UserProfile;
-import com.group8.odin.examinee.activities.ExamineeHomeActivity;
 import com.group8.odin.examinee.list_items.AuthPhotoItem;
 import com.group8.odin.examinee.list_items.RegisteredExamItem;
 import com.group8.odin.proctor.activities.ProctorExamSessionActivity;
 import com.group8.odin.proctor.activities.ProctorHomeActivity;
-import com.group8.odin.proctor.list_items.ExamineeItem;
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.adapters.ItemAdapter;
-
-import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -63,16 +54,6 @@ public class ProctorAuthPhotosFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        // Handle on back button pressed in the fragment
-        getActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
-            @Override
-            public void handleOnBackPressed() {
-                // return to the exminee dashboard
-                Intent back = new Intent(getActivity(), ProctorHomeActivity.class);
-                startActivity(back);
-            }
-        });
-
         return inflater.inflate(R.layout.common_dashboard_layout, container, false);
     }
 
@@ -110,12 +91,9 @@ public class ProctorAuthPhotosFragment extends Fragment {
 
     @Override
     public void onHiddenChanged(boolean hidden) {
-        if (!hidden) getActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
-            @Override
-            public void handleOnBackPressed() {
-                getActivity().startActivity(new Intent(getActivity(), ProctorHomeActivity.class));
-            }
-        });
+        if (!hidden) {
+            getActivity().setTitle(R.string.auth_photo_submission);
+        }
         super.onHiddenChanged(hidden);
     }
 }

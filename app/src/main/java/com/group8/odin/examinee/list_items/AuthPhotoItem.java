@@ -1,6 +1,8 @@
 package com.group8.odin.examinee.list_items;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.ColorFilter;
 import android.graphics.drawable.Drawable;
 import android.media.Image;
 import android.net.Uri;
@@ -9,7 +11,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.content.res.AppCompatResources;
 
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.google.firebase.storage.StorageReference;
 import com.group8.odin.GlideApp;
 import com.group8.odin.MyAppGlideModule;
@@ -83,6 +91,19 @@ public class AuthPhotoItem extends AbstractItem<AuthPhotoItem, AuthPhotoItem.Vie
             // populate the item with content
             GlideApp.with(context)
                     .load(item.getPhotoReference())
+                    .placeholder(R.drawable.ic_profile)
+                    .addListener(new RequestListener<Drawable>() {
+                        @Override
+                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                            authPhoto.setColorFilter(Color.TRANSPARENT);
+                            return false;
+                        }
+                    })
                     .into(authPhoto);
             name.setText(item.mName);
         }

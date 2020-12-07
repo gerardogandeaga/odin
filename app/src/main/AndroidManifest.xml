@@ -3,7 +3,7 @@
 DO NOT MAKE CHANGES TO THE ANDROID MANIFEST ON GITHUB, THE ONLY MAJOR CHANGES YOU SHOULD MAKE ARE
 ADDING YOUR ACTIVITIES.
 
-YOU MAY CHANGE THIS FOR TESTING BUT AKE SURE TO REVERT!!!!!!!!!!!!!
+YOU MAY CHANGE THIS FOR TESTING BUT MAKE SURE TO REVERT!!!!!!!!!!!!!
 -->
 <manifest
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -20,10 +20,12 @@ YOU MAY CHANGE THIS FOR TESTING BUT AKE SURE TO REVERT!!!!!!!!!!!!!
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/Theme.Odin">
 
 <!--        <activity android:name=".common.activities.LoginActivity">-->
-        <activity android:name=".common.activities.LoginActivity">
+        <activity
+            android:windowSoftInputMode="adjustPan"
+            android:name=".common.activities.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -32,15 +34,25 @@ YOU MAY CHANGE THIS FOR TESTING BUT AKE SURE TO REVERT!!!!!!!!!!!!!
         </activity>
 
         <!-- common -->
-        <activity android:name=".common.activities.SignUpActivity"/>
+        <activity
+            android:windowSoftInputMode="adjustPan"
+            android:name=".common.activities.SignUpActivity"/>
 
         <!-- proctor -->
-        <activity android:name=".proctor.activities.ProctorHomeActivity"/>
-        <activity android:name=".proctor.activities.ProctorExamSessionActivity"/>
+        <activity
+            android:windowSoftInputMode="adjustPan"
+            android:name=".proctor.activities.ProctorHomeActivity"/>
+        <activity
+            android:windowSoftInputMode="adjustPan"
+            android:name=".proctor.activities.ProctorExamSessionActivity"/>
 
         <!-- examinee -->
-        <activity android:name=".examinee.activities.ExamineeHomeActivity"/>
-        <activity android:name=".examinee.activities.ExamineeExamSessionActivity"/>
+        <activity
+            android:windowSoftInputMode="adjustPan"
+            android:name=".examinee.activities.ExamineeHomeActivity"/>
+        <activity
+            android:windowSoftInputMode="adjustPan"
+            android:name=".examinee.activities.ExamineeExamSessionActivity"/>
 
         <!-- file provider to save image : credit -> https://rodrigolmti.medium.com/android-get-camera-thumbnail-and-full-image-1bddfdc5347e -->
         <provider

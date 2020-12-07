@@ -1,13 +1,9 @@
 package com.group8.odin.proctor.fragments;
 
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
+
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.text.format.DateUtils;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,11 +16,12 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
-import com.google.android.gms.tasks.OnCompleteListener;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -32,7 +29,6 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.group8.odin.GlideApp;
-import com.group8.odin.MyAppGlideModule;
 import com.group8.odin.OdinFirebase;
 import com.group8.odin.R;
 import com.group8.odin.Utils;
@@ -40,8 +36,6 @@ import com.group8.odin.common.models.ActivityLog;
 import com.group8.odin.common.models.UserProfile;
 import com.group8.odin.proctor.activities.ProctorExamSessionActivity;
 
-import java.text.MessageFormat;
-import java.util.ArrayList;
 import java.util.Date;
 
 import butterknife.BindView;
@@ -58,6 +52,7 @@ import butterknife.ButterKnife;
 
 public class ProctorExamineeProfileFragment extends Fragment {
     @BindView(R.id.imgAuthPhoto)    ImageView mImgAuthPhoto;
+    @BindView(R.id.imgFailed)       ImageView mImgFailed;
     @BindView(R.id.tvAuthTimeStamp) TextView mTvAuthPhotoTimestamp;
     @BindView(R.id.tvEmail)         TextView mTvEmail;
     @BindView(R.id.tvId)            TextView mTvId;
@@ -94,20 +89,44 @@ public class ProctorExamineeProfileFragment extends Fragment {
     private void displayProfileAndActivityData() {
         // set fields
         mTvEmail.setText("Email: " + mExaminee.getEmail());
-        mTvId.setText("ID: " + mExaminee.getUserId());
+        mTvId.setText("ID: " + mExaminee.getEduId());
 
         // get the auth photo
-        StorageReference authPhoto = mStorage.getReference().child(OdinFirebase.ExamSessionContext.getExamId() + "/" + mExaminee.getUserId() + ".jpg");
+        final StorageReference authPhoto = mStorage.getReference().child(OdinFirebase.ExamSessionContext.getExamId() + "/" + mExaminee.getUserId() + ".jpg");
         authPhoto.getMetadata().addOnSuccessListener(new OnSuccessListener<StorageMetadata>() {
             @Override
             public void onSuccess(StorageMetadata storageMetadata) {
                 Date date = new Date(storageMetadata.getUpdatedTimeMillis());
                 mTvAuthPhotoTimestamp.setText("Submitted at: " + Utils.getDateTimeStringFromDate(date));
             }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                mTvAuthPhotoTimestamp.setText("Did not submit ID");
+            }
         });
 
         // load auth photo into imageview
-        GlideApp.with(mActivity).load(authPhoto).into(mImgAuthPhoto);
+        GlideApp.with(mActivity)
+                .load(authPhoto)
+//                .placeholder(R.drawable.ic_profile)
+                .addListener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        mImgAuthPhoto.setVisibility(View.GONE);
+                        mImgFailed.setVisibility(View.VISIBLE);
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        mImgAuthPhoto.setVisibility(View.VISIBLE);
+                        mImgFailed.setVisibility(View.GONE);
+                        mImgAuthPhoto.setColorFilter(Color.TRANSPARENT);
+                        return false;
+                    }
+                })
+                .into(mImgAuthPhoto);
         mActivity.getSupportActionBar().setHomeButtonEnabled(true);
         mActivity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -126,7 +145,7 @@ public class ProctorExamineeProfileFragment extends Fragment {
 
         // set icon
         Drawable icon = ContextCompat.getDrawable(mActivity, R.drawable.ic_small_dot);
-        icon.setTint(Utils.getExamineeStatusColour(mActivity, mExamineeActivityLog.getStatus()));
+        icon.setTint(Utils.getExamineeStatusColour(mActivity, ((ProctorExamSessionActivity) getActivity()).IsLive ? mExamineeActivityLog.getStatus() : mExamineeActivityLog.getOverallStatus()));
         mActivity.getSupportActionBar().setHomeAsUpIndicator(icon);
     }
 
@@ -138,8 +157,6 @@ public class ProctorExamineeProfileFragment extends Fragment {
             // load data into views
             displayProfileAndActivityData();
 
-
-            // todo: change activity title
             getActivity().setTitle(mExaminee.getName());
             // get user profile
             DocumentReference userProfile = mFirestore.collection(OdinFirebase.FirestoreCollections.USERS).document(mExaminee.getUserId());

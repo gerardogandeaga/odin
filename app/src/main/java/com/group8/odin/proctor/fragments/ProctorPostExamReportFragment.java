@@ -2,10 +2,13 @@ package com.group8.odin.proctor.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.ContactsContract;
+import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
@@ -16,6 +19,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
+import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.auth.User;
+import com.group8.odin.OdinFirebase;
 import com.group8.odin.R;
 import com.group8.odin.common.models.ActivityLog;
 import com.group8.odin.common.models.UserProfile;
@@ -43,7 +55,8 @@ import butterknife.ButterKnife;
  * Updated by: Shreya Jain
  * Updated on: 2020-11-22 and 2020-11-28
  */
-public class ProctorLiveMonitoringFragment extends Fragment {
+public class ProctorPostExamReportFragment extends Fragment {
+    private static final String TAG = "ProctorPostExamReportFr";
     @BindView(R.id.fabAction) ExtendedFloatingActionButton mFab;
     @BindView(R.id.recycler_view) RecyclerView mRvExaminees;
 
@@ -75,19 +88,17 @@ public class ProctorLiveMonitoringFragment extends Fragment {
         ButterKnife.bind(this, view);
 
         //set up the button
-        mFab.setText(R.string.photo_submission);
+        mFab.setText(R.string.back_to_dashboard);
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Load and go to photo submissions fragment
-                getActivity().setTitle(R.string.photo_submission);
-                ((ProctorExamSessionActivity) getActivity()).showAuthPhotos();
+                getActivity().startActivity(new Intent(getActivity(), ProctorHomeActivity.class));
             }
         });
 
 
         // Setup recycler view with fastadapter
-        HeaderAdapter headerAdapter = new HeaderAdapter(true);
+        HeaderAdapter headerAdapter = new HeaderAdapter(false);
         mHeaderAdapter = new ItemAdapter();
         mItemAdapter = new ItemAdapter();
 
@@ -126,16 +137,16 @@ public class ProctorLiveMonitoringFragment extends Fragment {
 
     public void updateRecyclerView() {
         // get examinees from activity
-        ArrayList<Pair<UserProfile, ActivityLog>> examinees = ((ProctorExamSessionActivity) getActivity()).getExaminees(true);
+        ArrayList<Pair<UserProfile, ActivityLog>> examinees = ((ProctorExamSessionActivity) getActivity()).getExaminees(false);
 
         // create list items
         ArrayList<ExamineeItem> items = new ArrayList<>();
         int inactiveId = 2; // start the inactive ids
         int activeId = 1001; // start of active ids
         for (Pair<UserProfile, ActivityLog> examinee : examinees) {
-            ExamineeItem item = new ExamineeItem().setExaminee(getActivity(), examinee, true);
+            ExamineeItem item = new ExamineeItem().setExaminee(getActivity(), examinee, false);
 
-            if (!item.getExaminee().second.getStatus()) {
+            if (!item.getExaminee().second.getOverallStatus()) {
                 item.withIdentifier(inactiveId);
                 inactiveId++;
             } else {
@@ -158,7 +169,7 @@ public class ProctorLiveMonitoringFragment extends Fragment {
     private void updateTitle() {
         if (!isHidden()) {
             mExamineeCount = mItemAdapter.getAdapterItems().size();
-            String title = getString(R.string.live_monitor) + ": " + mExamineeCount + " Examinees";
+            String title = getString(R.string.post_exam_report) + ": " + mExamineeCount + " Examinees";
             getActivity().setTitle(title);
         }
     }
@@ -169,16 +180,6 @@ public class ProctorLiveMonitoringFragment extends Fragment {
             updateTitle();
             mActivity.getSupportActionBar().setHomeButtonEnabled(false);
             mActivity.getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-
-            // Handle on back button pressed in the fragment
-            getActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
-                @Override
-                public void handleOnBackPressed() {
-                    // return to the exminee dashboard
-                    Intent back = new Intent(getActivity(), ProctorHomeActivity.class);
-                    startActivity(back);
-                }
-            });
         }
         super.onHiddenChanged(hidden);
     }

@@ -6,7 +6,6 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.group8.odin.OdinFirebase;
 import com.group8.odin.Utils;
-import com.group8.odin.proctor.fragments.ProctorLiveMonitoringFragment;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -18,7 +17,7 @@ import java.util.Comparator;
  * Description: Object representation of activity logs
  */
 public class ActivityLog {
-    private ArrayList<Timestamp> activity;
+    public ArrayList<Timestamp> activity;
     private boolean status;
 
     public ActivityLog(DocumentSnapshot activityLog) {
@@ -38,6 +37,10 @@ public class ActivityLog {
     }
 
     public boolean getStatus() { return status; }
+
+    // if there is only one entry in the activity that means the examinee how only logged in
+    // therefore their overall activity will be true, meaning they have been active the whole time
+    public boolean getOverallStatus() { return activity.size() == 1; }
 
     @Override
     public String toString() {
@@ -64,10 +67,15 @@ public class ActivityLog {
 
     // custom activity log comparator
     public static class Comparison implements Comparator<Pair<UserProfile, ActivityLog>> {
+        boolean live;
+
+        public Comparison(boolean live) {
+            this.live = live;
+        }
 
         @Override
         public int compare(Pair<UserProfile, ActivityLog> a, Pair<UserProfile, ActivityLog> b) {
-            int comp = Boolean.compare(a.second.getStatus(), b.second.getStatus());
+            int comp = live ? Boolean.compare(a.second.getStatus(), b.second.getStatus()) : Boolean.compare(a.second.getOverallStatus(), b.second.getOverallStatus());
             // if they have the same status value then compare by name
             if (comp == 0) {
                 return a.first.getName().compareTo(b.first.getName());

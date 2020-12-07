@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#6200EE</color>
-    <color name="colorPrimaryDark">#3700B3</color>
-    <color name="colorAccent">#03DAC5</color>
-    <color name="colorTextField">#808080</color>
-
+    <color name="colorPrimary">#15202B</color>
+    <color name="colorPrimaryDark">#101820</color>
+    <color name="colorAccent">#F2AA4C</color>
+    <color name="colorOnPrimary">#0D47A1</color>
+    <color name="colorSecondary">#F2AA4C</color>
 
     <color name="black">#000000</color>
     <color name="white">#FFFFFF</color>
@@ -12,4 +12,12 @@
 
     <color name="online">#43A047</color>
     <color name="offline">#E53935</color>
+
+    <!-- exam item status -->
+    <color name="upcoming">#FFAB00</color>
+    <color name="active">#43A047</color>
+    <color name="ended">#E53935</color>
+
+    <!-- exam create/update errors -->
+    <color name="card_error">#ECA2A0</color>
 </resources>

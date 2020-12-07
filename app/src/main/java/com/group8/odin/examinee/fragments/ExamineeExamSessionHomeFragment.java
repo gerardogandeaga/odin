@@ -2,40 +2,23 @@ package com.group8.odin.examinee.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.group8.odin.OdinFirebase;
 import com.group8.odin.R;
-import com.group8.odin.R2;
 import com.group8.odin.Utils;
-import com.group8.odin.common.activities.LoginActivity;
-import com.group8.odin.common.models.ExamSession;
-import com.group8.odin.examinee.activities.ExamineeExamSessionActivity;
 import com.group8.odin.examinee.activities.ExamineeHomeActivity;
-import com.group8.odin.examinee.list_items.RegisteredExamItem;
-import com.mikepenz.fastadapter.FastAdapter;
-import com.mikepenz.fastadapter.IAdapter;
-import com.mikepenz.fastadapter.adapters.ItemAdapter;
-import com.mikepenz.fastadapter.listeners.OnClickListener;
 
-import org.w3c.dom.Text;
+import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -45,15 +28,26 @@ import butterknife.ButterKnife;
  * Created on: 2020-11-01
  * Description: Examinee dashboard fragment. Fragment will display the exams that the examinee is registered to.
  * Updated by: Shreya Jain
+ * Updated on 2020-12-01
+ * Updated by: Matthew Tong
+ * Description: removed the displaying of exam end time (mTvExamEndTime)
+ * Updated by: Shreya Jain
  */
-public class ExamineeExamSessionHomeFragment extends Fragment {
-    @BindView(R.id.tvExamInfo) TextView mTvExamInfo;
-    @BindView(R.id.tvExamName) TextView mTvExamName;
-    @BindView(R.id.textView3) TextView mTvExamID;
-    @BindView(R.id.textView4) TextView mTvExamStartTime;
-    @BindView(R.id.textView5) TextView mTvExamEndTime;
 
-    private FirebaseFirestore mFirestore;
+public class ExamineeExamSessionHomeFragment extends Fragment {
+    @BindView(R.id.tvExamTitle) TextView mTvExamTitle;
+    @BindView(R.id.tvExamStartTime) TextView mTvExamStartTime;
+    @BindView(R.id.tvExamEndTime) TextView mTvExamEndTime;
+    @BindView(R.id.tvTimer) TextView mTvTimer;
+    @BindView(R.id.timer_layout) LinearLayout mTimer_layout;
+    @BindView(R.id.tvHours) TextView mTvHours;
+    @BindView(R.id.tvMinutes) TextView mTvMinutes;
+    @BindView(R.id.tvSeconds) TextView mTvSeconds;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
 
     @Nullable
     @Override
@@ -66,9 +60,26 @@ public class ExamineeExamSessionHomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
         getActivity().setTitle(R.string.exam_progress);
-        mTvExamName.setText(OdinFirebase.ExamSessionContext.getTitle());
-        mTvExamID.setText(OdinFirebase.ExamSessionContext.getExamId());
-        mTvExamStartTime.setText("Start Time: " + Utils.getDateTimeStringFromDate(OdinFirebase.ExamSessionContext.getExamStartTime()));
-        mTvExamEndTime.setText("End Time: " + Utils.getDateTimeStringFromDate(OdinFirebase.ExamSessionContext.getExamEndTime()));
+        mTvExamTitle.setText(OdinFirebase.ExamSessionContext.getTitle());
+        mTvExamStartTime.setText("Started: " + Utils.getDateTimeStringFromDate(OdinFirebase.ExamSessionContext.getExamStartTime()));
+        mTvExamEndTime.setText("Ends: " + Utils.getDateTimeStringFromDate(OdinFirebase.ExamSessionContext.getExamEndTime()));
+    }
+
+    private static int secondsInDay = 24*60*60*1000; //milliseconds in a day
+    private static int secondsInHour = 60*60*1000; //milliseconds in an hour
+    private static int secondsInMinute = 60 * 1000; //milliseconds in a minute
+    private static int secondsInSecond = 1000; //milliseconds in a second
+
+    public void updateTime(long time) {
+        long days = time /secondsInDay;
+        time-= days * secondsInDay;
+        long hours = time /secondsInHour;
+        time -= hours * secondsInHour;
+        long minutes = time / secondsInMinute;
+        time -= minutes * secondsInMinute;
+        long seconds = time /secondsInSecond;
+        mTvHours.setText(String.format("%02d", hours) + ":");
+        mTvMinutes.setText(String.format("%02d", minutes) + ":");
+        mTvSeconds.setText(String.format("%02d", seconds));
     }
 }

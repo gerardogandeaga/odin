@@ -8,6 +8,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.group8.odin.R;
+import com.group8.odin.common.models.ExamSession;
 import com.group8.odin.proctor.fragments.ProctorDashboardFragment;
 import com.group8.odin.proctor.fragments.ProctorExamCreationFragment;
 
@@ -39,9 +40,10 @@ public class ProctorHomeActivity extends AppCompatActivity {
         mFragmentTransaction.commit();
     }
 
-    public void showProctorExamCreation() {
+    public void showProctorExamCreateOrEdit(ExamSession examSessionEdit) {
         mFragmentTransaction = mFragmentManager.beginTransaction();
         ProctorExamCreationFragment fragment = new ProctorExamCreationFragment();
+        if (examSessionEdit != null) fragment.editExamSession(examSessionEdit); // set exam session edit mode
         mFragmentTransaction.replace(R.id.container, fragment);
         mFragmentTransaction.commit();
     }

@@ -3,6 +3,7 @@ package com.group8.odin.common.models;
 
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.auth.User;
 import com.group8.odin.OdinFirebase;
 
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 public class UserProfile {
     public enum Role { PROCTOR, EXAMINEE }
     private String userId;
+    private String eduId;
     private String name;
     private String email;
     private Role role;
@@ -33,6 +35,7 @@ public class UserProfile {
         userId = userProfileDocument.getId();
         name = userProfileDocument.get(OdinFirebase.FirestoreUserProfile.NAME).toString();
         email  = userProfileDocument.get(OdinFirebase.FirestoreUserProfile.EMAIL).toString();
+        eduId = userProfileDocument.get(OdinFirebase.FirestoreUserProfile.EDU_ID).toString();
         role = (boolean)userProfileDocument.get(OdinFirebase.FirestoreUserProfile.ROLE) ? Role.PROCTOR : Role.EXAMINEE;
         examSessionIds = (ArrayList<String>)userProfileDocument.get(OdinFirebase.FirestoreUserProfile.EXAM_IDS);
         examSessions = new ArrayList<>();
@@ -52,6 +55,12 @@ public class UserProfile {
         this.email = email;
         return this;
     }
+
+    public UserProfile setEduId(String eduId) {
+        this.eduId = eduId;
+        return this;
+    }
+
     public UserProfile setRole(Role role) {
         this.role = role;
         return this;
@@ -71,6 +80,9 @@ public class UserProfile {
     }
     public String getEmail() {
         return email;
+    }
+    public String getEduId() {
+        return eduId;
     }
     public Role getRole() {
         return role;

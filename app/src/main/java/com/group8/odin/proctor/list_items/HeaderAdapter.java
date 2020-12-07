@@ -5,12 +5,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.group8.odin.R;
-import com.group8.odin.common.models.UserProfile;
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IItem;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter;
@@ -23,19 +21,36 @@ import java.util.List;
  * Description:
  */
 public class HeaderAdapter<Item extends IItem> extends RecyclerView.Adapter implements StickyRecyclerHeadersAdapter {
+    boolean live;
+
+    public HeaderAdapter(boolean live) {
+        this.live = live;
+    }
 
     @Override
     public long getHeaderId(int position) {
         IItem item = getItem(position);
         if (item instanceof ExamineeItem && ((ExamineeItem) item).getExaminee() != null) {
             ExamineeItem examineeItem = (ExamineeItem)item;
-            // if active
-            if (examineeItem.getExaminee().second.getStatus()) {
-                return 1000;
+            if (live) {
+                // if active
+                if (examineeItem.getExaminee().second.getStatus()) {
+                    return 1000;
+                }
+                // if inactive
+                else {
+                    return 1;
+                }
             }
-            // if inactive
             else {
-                return 1;
+                // if active
+                if (examineeItem.getExaminee().second.getOverallStatus()) {
+                    return 1000;
+                }
+                // if inactive
+                else {
+                    return 1;
+                }
             }
         }
         return -1;
@@ -54,15 +69,29 @@ public class HeaderAdapter<Item extends IItem> extends RecyclerView.Adapter impl
         IItem item = getItem(position);
         if (item instanceof ExamineeItem && ((ExamineeItem) item).getExaminee() != null) {
             ExamineeItem examineeItem = (ExamineeItem)item;
-            // if active
-            if (examineeItem.getExaminee().second.getStatus()) {
-                textView.setText("Active");
-                holder.itemView.setBackgroundColor(ContextCompat.getColor(textView.getContext(), R.color.online));
+            if (live) {
+                // if active
+                if (examineeItem.getExaminee().second.getStatus()) {
+                    textView.setText(R.string.active);
+                    holder.itemView.setBackgroundColor(ContextCompat.getColor(textView.getContext(), R.color.online));
+                }
+                // if inactive
+                else {
+                    textView.setText(R.string.inactive);
+                    holder.itemView.setBackgroundColor(ContextCompat.getColor(textView.getContext(), R.color.offline));
+                }
             }
-            // if inactive
             else {
-                textView.setText("Inactive");
-                holder.itemView.setBackgroundColor(ContextCompat.getColor(textView.getContext(), R.color.offline));
+                // if active
+                if (examineeItem.getExaminee().second.getOverallStatus()) {
+                    textView.setText(R.string.no_activity);
+                    holder.itemView.setBackgroundColor(ContextCompat.getColor(textView.getContext(), R.color.online));
+                }
+                // if inactive
+                else {
+                    textView.setText(R.string.reported_activity);
+                    holder.itemView.setBackgroundColor(ContextCompat.getColor(textView.getContext(), R.color.offline));
+                }
             }
         }
     }

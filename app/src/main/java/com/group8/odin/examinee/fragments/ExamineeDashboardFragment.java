@@ -1,7 +1,10 @@
 package com.group8.odin.examinee.fragments;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,19 +27,18 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.group8.odin.OdinFirebase;
 import com.group8.odin.R;
 import com.group8.odin.R2;
+import com.group8.odin.Utils;
 import com.group8.odin.common.activities.LoginActivity;
 import com.group8.odin.examinee.activities.ExamineeExamSessionActivity;
 import com.group8.odin.examinee.list_items.RegisteredExamItem;
 import com.group8.odin.examinee.activities.ExamineeHomeActivity;
 import com.group8.odin.common.models.ExamSession;
-import com.group8.odin.common.models.UserProfile;
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IAdapter;
 import com.mikepenz.fastadapter.adapters.ItemAdapter;
 import com.mikepenz.fastadapter.listeners.OnClickListener;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -46,6 +48,9 @@ import butterknife.ButterKnife;
  * Created on: 2020-11-01
  * Updated by: Shreya Jain
  * Description: Examinee dashboard fragment. Fragment will display the exams that the examinee is registered to.
+ * Updated by: Shreya Jain
+ * Updated on: 2020-11-26
+ * Description: Added time checks
  */
 public class ExamineeDashboardFragment extends Fragment {
     private FirebaseFirestore mFirestore;
@@ -57,6 +62,13 @@ public class ExamineeDashboardFragment extends Fragment {
     ExtendedFloatingActionButton mFabRegister;
 
     private ItemAdapter mItemAdapter;
+    private FastAdapter<RegisteredExamItem> mFastAdapter;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        startClock();
+    }
 
     @Nullable
     @Override
@@ -73,16 +85,25 @@ public class ExamineeDashboardFragment extends Fragment {
 
         // Setup recycler view with fastadapter
         mItemAdapter = new ItemAdapter();
-        FastAdapter<RegisteredExamItem> fastAdapter = FastAdapter.with(mItemAdapter);
+        mFastAdapter = FastAdapter.with(mItemAdapter);
 
-        fastAdapter.withOnClickListener(new OnClickListener<RegisteredExamItem>() {
+        mFastAdapter.withOnClickListener(new OnClickListener<RegisteredExamItem>() {
             @Override
             public boolean onClick(View v, IAdapter<RegisteredExamItem> adapter, RegisteredExamItem item, int position) {
                 // set exam context
-                OdinFirebase.ExamSessionContext = item.getExamSession();
-                // go to exam session activity
-                Intent examSession = new Intent(getActivity(), ExamineeExamSessionActivity.class);
-                startActivity(examSession);
+                if (Utils.isCurrentTimeBeforeTime(item.getExamSession().getExamStartTime())) {
+                    Toast.makeText(getActivity(), "Exam session has not started", Toast.LENGTH_SHORT).show();
+                }
+                else
+                if (Utils.isCurrentTimeBetweenTimes(item.getExamSession().getExamStartTime(), item.getExamSession().getExamEndTime())) {
+                    OdinFirebase.ExamSessionContext = item.getExamSession();
+                    startActivity(new Intent(getActivity(), ExamineeExamSessionActivity.class));
+                }
+                else
+                if (Utils.isCurrentTimeAfterTime(item.getExamSession().getExamEndTime())) {
+                    Toast.makeText(getActivity(), "Exam is over", Toast.LENGTH_SHORT).show();
+                }
+
                 return true;
             }
         });
@@ -90,7 +111,7 @@ public class ExamineeDashboardFragment extends Fragment {
         GridLayoutManager gridLayout = new GridLayoutManager(getActivity(), 1);
 
         mRvRegisteredExams.setLayoutManager(gridLayout);
-        mRvRegisteredExams.setAdapter(fastAdapter); // bind adapter
+        mRvRegisteredExams.setAdapter(mFastAdapter); // bind adapter
 
         // adapter button clicks
 
@@ -109,18 +130,32 @@ public class ExamineeDashboardFragment extends Fragment {
 
         loadExamSessions();
 
-
         // Logout of odin
         getActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
             @Override
-            public void handleOnBackPressed() { startActivity(new Intent(getActivity(), LoginActivity.class)); }
+            public void handleOnBackPressed() {
+                new AlertDialog.Builder(getContext())
+                        .setTitle(R.string.logout)
+                        .setMessage(R.string.logout_confirm)
+                        .setPositiveButton(R.string.logout, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                startActivity(new Intent(getActivity(), LoginActivity.class));
+                            }
+                        })
+                        .setNegativeButton(R.string.cancel, null)
+                        .show();
+            }
         });
     }
 
     // Load user exam sessions
-    public boolean loadExamSessions() {
-        for (String id : OdinFirebase.UserProfileContext.getExamSessionIds()) {
-            DocumentReference exam = mFirestore.collection(OdinFirebase.FirestoreCollections.EXAM_SESSIONS).document(id);
+    public void loadExamSessions() {
+        OdinFirebase.UserProfileContext.setExamSessions(new ArrayList<ExamSession>()); // clear exam sessions list for re-population
+        System.out.println("loading exam sessions");
+        for (String id : OdinFirebase.UserProfileContext.getExamSessionIds())
+        {
+            final DocumentReference exam = mFirestore.collection(OdinFirebase.FirestoreCollections.EXAM_SESSIONS).document(id);
             exam.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -130,14 +165,67 @@ public class ExamineeDashboardFragment extends Fragment {
                         OdinFirebase.UserProfileContext.getExamSessions().add(session);
 
                         // Display exam sessions in recycler view
-                        mItemAdapter.add(new RegisteredExamItem().setExamSession(session));
-                    }
-                    else {
+
+                        if (OdinFirebase.UserProfileContext.getExamSessions().size() == OdinFirebase.UserProfileContext.getExamSessionIds().size()) {
+                            ArrayList<RegisteredExamItem> adapterItems = new ArrayList<>(); // list item (gui)
+
+                            // creates registered exam sessions and puts them in list
+                            for (ExamSession examSession: OdinFirebase.UserProfileContext.getExamSessions()) adapterItems.add(new RegisteredExamItem().setExamSession(examSession));
+
+                            // sort
+                            adapterItems.sort(new RegisteredExamItem.Comparison());
+                            // add to adapter
+                            mItemAdapter.add(adapterItems);
+                        }
+                    } else
                         Log.e("UserProfile -> LoadExamSessions: ", "Error loading exam sessions");
-                    }
                 }
             });
         }
-        return true;
+    }
+
+    // Clock for updating exam item status =========================================================
+    private Runnable mClockRunnable;
+    private Handler mClockHandler;
+    private boolean mClockStarted;
+
+    public void killClock(Runnable runnable) {
+        if (mClockHandler != null) mClockHandler.removeCallbacks(runnable);
+        mClockStarted = false;
+    }
+
+    public void startClock() {
+        if (!mClockStarted) {
+            if (mClockHandler == null) mClockHandler = new Handler();
+            mClockRunnable = new Runnable() {
+                @Override
+                public void run() {
+                    mClockHandler.postDelayed(mClockRunnable, 1000);
+                    if (mFastAdapter != null && mFastAdapter.getItemCount() > 0) {
+                        mFastAdapter.notifyAdapterDataSetChanged();
+                    }
+                }
+            };
+            mClockStarted = true;
+            mClockHandler.postDelayed(mClockRunnable, 1000);
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        startClock();
+    }
+
+    @Override
+    public void onPause() {
+        killClock(mClockRunnable);
+        super.onPause();
+    }
+
+    @Override
+    public void onDestroy() {
+        killClock(mClockRunnable);
+        super.onDestroy();
     }
 }

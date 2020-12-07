@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
@@ -33,11 +34,12 @@ import com.google.firebase.storage.UploadTask;
 import com.group8.odin.OdinFirebase;
 import com.group8.odin.R;
 import com.group8.odin.R2;
+import com.group8.odin.Utils;
+import com.group8.odin.common.activities.LoginActivity;
 import com.group8.odin.examinee.activities.ExamineeExamSessionActivity;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import butterknife.BindView;
@@ -181,34 +183,33 @@ public class ExamineeAuthPhotoSubmissionFragment extends Fragment {
         mBtnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                    Uri uri = Uri.fromFile(new File(mAuthPhotoUri));
 
-                Uri uri = Uri.fromFile(new File(mAuthPhotoUri));
-
-                // store photo in exam session folder
-                mReference.child(OdinFirebase.ExamSessionContext.getExamId() + "/" + OdinFirebase.UserProfileContext.getUserId() + ".jpg").putFile(uri)// todo : when uploading files rename file to userid_time.jpg
-                        .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                            @Override
-                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                Toast.makeText(getActivity(), R.string.upload_success, Toast.LENGTH_SHORT).show();
-                                mPbProgress.setVisibility(View.VISIBLE);
-                                ((ExamineeExamSessionActivity) getActivity()).showExamSessionHome();
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                mPbProgress.setVisibility(View.INVISIBLE);
-                                mPbProgress.setProgress(0);
-                            }
-                        })
-                        .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                            @Override
-                            public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
-                                int progress = (int)(100 * (snapshot.getBytesTransferred() / snapshot.getTotalByteCount()));
-                                mPbProgress.setProgress(progress);
-                            }
-                        });
-            }
+                    // store photo in exam session folder in the form "examineeID.jpg"
+                    mReference.child(OdinFirebase.ExamSessionContext.getExamId() + "/" + OdinFirebase.UserProfileContext.getUserId() + ".jpg").putFile(uri)
+                            .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                @Override
+                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                    Toast.makeText(getContext(), R.string.upload_success, Toast.LENGTH_SHORT).show();
+                                    mPbProgress.setVisibility(View.VISIBLE);
+                                    ((ExamineeExamSessionActivity) getActivity()).showExamSessionHome(true);
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    mPbProgress.setVisibility(View.INVISIBLE);
+                                    mPbProgress.setProgress(0);
+                                }
+                            })
+                            .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                                @Override
+                                public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
+                                    int progress = (int) (100 * (snapshot.getBytesTransferred() / snapshot.getTotalByteCount()));
+                                    mPbProgress.setProgress(progress);
+                                }
+                            });
+                }
         });
 
         // Hide progress bar

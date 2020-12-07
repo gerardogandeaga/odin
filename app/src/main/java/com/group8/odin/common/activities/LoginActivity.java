@@ -10,11 +10,13 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.content.res.AppCompatResources;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -39,16 +41,12 @@ import butterknife.ButterKnife;
     Description: Fixed design bugs, removed redundant part
 */
 public class LoginActivity extends AppCompatActivity {
-    private static final int PERMISSIONS_REQUEST_CODE = 100;
-
-    @BindView(R.id.btnLogin)
-    Button mBtnLogIn;
-    @BindView(R.id.btnSignUp)
-    Button mBtnSignUp;
-    @BindView(R.id.editTextEmailAddress)
-    EditText etMyLogInEmail;
-    @BindView(R.id.editTextPassword)
-    EditText etMyLogInPassword;
+    @BindView(R.id.btnLogin)   Button mBtnLogIn;
+    @BindView(R.id.btnSignUp)  Button mBtnSignUp;
+    @BindView(R.id.etEmail)    EditText mEtEmail;
+    @BindView(R.id.etPassword) EditText mEtPassword;
+    @BindView(R.id.tilEmail)    TextInputLayout mTilEmail;
+    @BindView(R.id.tilPassword) TextInputLayout mTilPassword;
 
     private FirebaseAuth mAuth;
 
@@ -60,6 +58,9 @@ public class LoginActivity extends AppCompatActivity {
 
             setTitle(R.string.login);
 
+            mTilPassword.setPasswordVisibilityToggleEnabled(true);
+            
+
             // Initialize Firebase Auth
             mAuth = FirebaseAuth.getInstance();
 
@@ -67,21 +68,11 @@ public class LoginActivity extends AppCompatActivity {
             mBtnLogIn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    String myLogInEmail = etMyLogInEmail.getText().toString();
-                    String myLogInPassword = etMyLogInPassword.getText().toString();
-
-                    if(myLogInEmail.isEmpty()){
-                        Toast.makeText(LoginActivity.this, R.string.email_error, Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-
-                    if(myLogInPassword.isEmpty()){
-                        Toast.makeText(LoginActivity.this, R.string.password_error, Toast.LENGTH_SHORT).show();
-                        return;
-                    }
+                    resetInputs();
+                    if (!validInput()) return;
 
                     //Begin firebase authentication (log in)
-                    mAuth.signInWithEmailAndPassword(myLogInEmail, myLogInPassword)
+                    mAuth.signInWithEmailAndPassword(mEtEmail.getText().toString().trim(), mEtPassword.getText().toString().trim())
                             .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
                                 private final String TAG = LoginActivity.class.getName();
 
@@ -121,8 +112,7 @@ public class LoginActivity extends AppCompatActivity {
                                     } else {
                                         // If sign in fails, display a message to the user.
                                         Log.w(TAG, "signInWithEmail:failure", task.getException());
-                                        Toast.makeText(LoginActivity.this, R.string.auth_fail,
-                                                Toast.LENGTH_SHORT).show();
+                                        mTilEmail.setError(getString(R.string.signIn_fail));
                                     }
                                 }
                             });
@@ -140,7 +130,30 @@ public class LoginActivity extends AppCompatActivity {
                 }
             });
     }
-    
+
+    // valid the input fields
+    private boolean validInput() {
+        boolean pass = true;
+        String myLogInEmail = mEtEmail.getText().toString().trim();
+        String myLogInPassword = mEtPassword.getText().toString().trim();
+
+        if(myLogInEmail.isEmpty()){
+            mTilEmail.setError(getString(R.string.email_error));
+            pass = false;
+        }
+
+        if(myLogInPassword.isEmpty()){
+            mTilPassword.setError(getString(R.string.password_error));
+            pass = false;
+        }
+
+        return pass;
+    }
+
+    private void resetInputs() {
+        mTilEmail.setError(null);
+        mTilPassword.setError(null);
+    }
 
     // send user out of application
     @Override
@@ -152,5 +165,3 @@ public class LoginActivity extends AppCompatActivity {
     }
 }
 
-/*TODO:  create fragment for forgot password
- */

@@ -3,21 +3,23 @@
     <!--
     This string is used for square devices and overridden by hello_world in
     values-round/strings.xml for round devices.
-    Updated by: Shreya Jain
-    Updated on: 2020-11-21
+    Updated by: Matthew Tong
+    Updated on: 2020-12-01
     -->
 
     <!--Toast Messages and Errors-->
     <string name="auth_success">Authentication Success. Welcome.</string>
     <string name="auth_fail">Invalid credentials. Please try again!</string>
     <string name="auth_profile_fail">Profile fetch failed…</string>
+    <string name="signIn_fail">SignIn failed with this email. Please try again</string>
 
-    <string name="first_name_error">First name cannot be empty. Please enter your first name.</string>
-    <string name="last_name_error">Last name cannot be empty. Please enter your last name.</string>
-    <string name="email_error">Email address cannot be empty. Please enter your email address.</string>
+    <string name="first_name_error">First name cannot be empty.</string>
+    <string name="last_name_error">Last name cannot be empty.</string>
+    <string name="eduId_error">Personal ID cannot be empty</string>
+    <string name="email_error">Email address cannot be empty.</string>
     <string name="email_error_valid">Please enter a valid email address.</string>
-    <string name="password_error">Password cannot be empty. Please enter your Password.</string>
-    <!-- <string name="password_error_valid">Invalid Password. Please try again.</string> -->
+    <string name="password_error">Password cannot be empty.</string>
+    <string name="password_error_valid">Invalid Password. Please try again.</string>
     <string name="confirm_pass_error">Please confirm your password.</string>
     <string name="confirm_pass_error_valid">Passwords do not match. Please try again.</string>
     <string name="password_length_error">Password must be at least 6 characters.</string>
@@ -32,14 +34,25 @@
 
     <string name="copy_message">Exam ID Copied to Clipboard</string>
 
+    <string name="exam_edit_success">Exam info updated!.</string>
+    <string name="exam_edit_error">Failed to edit Exam! Please try again.</string>
     <string name="exam_create_error">Exam creation failed! Please try again.</string>
     <string name="exam_title_error">Exam Title cannot be empty. Please try again.</string>
     <string name="exam_date_error">Exam date not set!</string>
-    <string name="exam_time_error">Exam time not set!</string>
-    <string name="auth_time_error">Auth time not set!</string>
+    <string name="exam_start_time_error">Exam start fields cannot be empty</string>
+    <string name="exam_end_time_error">Exam end fields cannot be empty</string>
+    <string name="ad_time_error">Authentication duration fields cannot be empty</string>
+    <string name="est_error">Invalid exam start time</string>
+    <string name="eet_error">Invalid exam end time</string>
+    <string name="ad_error">Invalid Authentication Duration</string>
+    <string name="exam_duration_error">Exam duration cannot be 0 minutes.</string>
     <string name="time_error">Invalid time period! Please verify that the end time is after start time.</string>
     <string name="time_logic_error">Invalid exam and auth times! Auth time cannot be outside exam session</string>
+    <string name="auth_start_after_exam_ends_error">"Authentication needs to start before the exam ends"</string>
+    <string name="auth_longer_than_exam">"Authentication needs to end before the exam ends"</string>
     <string name="general_error">Something went wrong…Please refresh.</string>
+    <string name="auth_ended">Auth time has ended.</string>
+    <string name="date_error">Date cannot be in the past</string>
 
     <string name="permissions_success">Permissions Granted!</string>
     <string name="permissions_denied">Permission Denied. Please grant permissions and try again!</string>
@@ -48,6 +61,12 @@
 
     <string name="register_success">Registered for exam!</string>
     <string name="get_exam_error">Could not get exam session</string>
+    <string name="exam_not_started">Exam has not yet started. Please try later.</string>
+    <string name="exam_finished_error">Exam has finished. Please contact proctor for further details.</string>
+    <string name="auth_not_started">Authentication time period has not yet started. Please try later.</string>
+    <string name="auth_finished">Authentication time has passed. Please contact proctor for next steps.</string>
+    <string name="exam_finished">Thank you! The exam has ended and you may now exit.</string>
+    <string name="auth_time_error_for_submission">Authentication period is currently inactive.</string>
 
     <string name="exam_not_found">Exam Session Not Found. Please Retry.</string>
 
@@ -64,20 +83,26 @@
     <string name="signup">Sign Up</string>
     <string name="dashboard">Dashboard</string>
     <string name="exam_creation">Exam Session Creation</string>
+    <string name= "exam_edit">Edit Exam Session</string>>
     <string name="photo_submission">Auth Photo Submissions</string>
     <string name="live_monitor">Live Monitoring</string>
     <string name="auth_photo_submission">Authentication Photo Submission</string>
     <string name="exam_register">Exam Registration</string>
     <string name="exam_progress">Exam In Progress</string>
+    <string name="exam_finished_title">Exam Ended</string>
+    <string name="post_exam_report">Post Exam Report</string>
 
     <!--Form Hints-->
-    <string name="email_hint">Type your E-mail</string>
-    <string name="password_hint">Type your Password</string>
-    <string name="first_name_hint">Type your first name</string>
-    <string name="last_name_hint">Type your last name</string>
+    <string name="email_hint">E-mail</string>
+    <string name="password_hint">Password</string>
+    <string name="first_name_hint">First Name</string>
+    <string name="last_name_hint">Last Name</string>
     <string name="confirm_pass_hint">Confirm your password</string>
     <string name="exam_time_hint">Exam Time (From - To)</string>
+    <string name="exam_duration_hint">Exam Duration</string>
     <string name="auth_time_hint">Auth Time (From - To)</string>
+    <string name="id_hint">Personal Id</string>
+    <string name="auth_duration_hint">Auth Duration</string>
 
     <!--Form Elements-->
     <string name="email">Email</string>
@@ -99,11 +124,22 @@
 
     <string name="exam_details">Enter Exam Details</string>
 
+    <string name="submitAuthPhoto">Submit Auth Photo</string>
+
+    <string name="back_to_dashboard">Back to Dashboard</string>
+
 
     <!--Misc strings-->
     <string name="exam_info">Exam Information</string>
     <string name="header_title">Header Title</string>
+    <string name="hello_blank_fragment">Hello World</string>
     <string name="info">Information</string>
+    <string name="logout">Logout</string>
+    <string name="logout_confirm">Are you sure you want to logout?</string>
+    <string name="cancel">Cancel</string>
+    <string name="update_exam">Update Exam</string>
+    <string name="hours">Hours</string>
+    <string name="mins" translatable="false">Min</string>
 
     <!--Exam Item -->
     <string name="id">Exam ID</string>
@@ -112,6 +148,9 @@
     <string name="exam_auth_time">Exam Authentication Time</string>
     <string name="exam_date">Exam Date</string>
     <string name="auth_time">Auth Time</string>
+    <string name="time_left">Time Left: </string>
+    <string name="exam_start">Exam Start Time</string>
+    <string name="exam_end">Exam End Time</string>
 
 
     <!--Examinee Item-->
@@ -120,6 +159,8 @@
     <string name="inactive">Inactive</string>
     <string name="id_sample">ID: 1234XCvbn4567B</string>
     <string name="email_sample">Email: sampleexaminee@gmail.com</string>
+    <string name="no_activity">No Activity</string>
+    <string name="reported_activity">Reported Activity</string>
 
     <!--Activity Log Item-->
     <string name="examinee_activity">(hh:mm:ss) Examinee logged in\n(hh:mm:ss) Examinee sent app to background</string>
