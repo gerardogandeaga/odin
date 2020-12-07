@@ -32,13 +32,25 @@ public class HeaderAdapter<Item extends IItem> extends RecyclerView.Adapter impl
         IItem item = getItem(position);
         if (item instanceof ExamineeItem && ((ExamineeItem) item).getExaminee() != null) {
             ExamineeItem examineeItem = (ExamineeItem)item;
-            // if active
-            if (examineeItem.getExaminee().second.getStatus()) {
-                return 1000;
+            if (live) {
+                // if active
+                if (examineeItem.getExaminee().second.getStatus()) {
+                    return 1000;
+                }
+                // if inactive
+                else {
+                    return 1;
+                }
             }
-            // if inactive
             else {
-                return 1;
+                // if active
+                if (examineeItem.getExaminee().second.getOverallStatus()) {
+                    return 1000;
+                }
+                // if inactive
+                else {
+                    return 1;
+                }
             }
         }
         return -1;

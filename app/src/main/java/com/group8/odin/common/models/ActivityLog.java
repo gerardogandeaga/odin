@@ -17,7 +17,7 @@ import java.util.Comparator;
  * Description: Object representation of activity logs
  */
 public class ActivityLog {
-    public static ArrayList<Timestamp> activity;
+    public ArrayList<Timestamp> activity;
     private boolean status;
 
     public ActivityLog(DocumentSnapshot activityLog) {
@@ -32,7 +32,7 @@ public class ActivityLog {
         }
     }
 
-    public static boolean isValid() {
+    public boolean isValid() {
         return activity != null;
     }
 
@@ -40,7 +40,7 @@ public class ActivityLog {
 
     // if there is only one entry in the activity that means the examinee how only logged in
     // therefore their overall activity will be true, meaning they have been active the whole time
-    public static boolean getOverallStatus() { return activity.size() == 1; }
+    public boolean getOverallStatus() { return activity.size() == 1; }
 
     @Override
     public String toString() {
@@ -67,10 +67,15 @@ public class ActivityLog {
 
     // custom activity log comparator
     public static class Comparison implements Comparator<Pair<UserProfile, ActivityLog>> {
+        boolean live;
+
+        public Comparison(boolean live) {
+            this.live = live;
+        }
 
         @Override
         public int compare(Pair<UserProfile, ActivityLog> a, Pair<UserProfile, ActivityLog> b) {
-            int comp = Boolean.compare(a.second.getStatus(), b.second.getStatus());
+            int comp = live ? Boolean.compare(a.second.getStatus(), b.second.getStatus()) : Boolean.compare(a.second.getOverallStatus(), b.second.getOverallStatus());
             // if they have the same status value then compare by name
             if (comp == 0) {
                 return a.first.getName().compareTo(b.first.getName());

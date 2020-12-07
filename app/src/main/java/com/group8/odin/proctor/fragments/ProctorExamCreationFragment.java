@@ -255,7 +255,7 @@ public class ProctorExamCreationFragment extends Fragment {
         String eet_m = mEtEET_M.getText().toString().trim();
         String ad_h = mEtAD_H.getText().toString().trim();
         String ad_m = mEtAD_M.getText().toString().trim();
-        Date examDate = new Date(mYear, mMonth, mDay, Integer.parseInt(est_h), Integer.parseInt(est_m));
+        Date examDate = new Date(mYear - 1900, mMonth, mDay, Integer.parseInt(est_h), Integer.parseInt(est_m));
 
         if (est_h.isEmpty() | est_m.isEmpty()) {
             errorInExamStart();
@@ -338,7 +338,7 @@ public class ProctorExamCreationFragment extends Fragment {
     // check that the date date is not before the current date
     private boolean validExamDate(Date examDate) {
         Date today = Utils.getCurrentTime();
-        System.out.println(examDate.getYear());
+        System.out.println("today: " + today.toString() + " exam: " + examDate.toString());
         // if the the exam is in a futuer year
         if (examDate.getYear() > today.getYear()) return true;
         // if they exam is the year of
@@ -360,7 +360,6 @@ public class ProctorExamCreationFragment extends Fragment {
                             return true;
                         }
                     }
-                    if (examDate.getDate() > examDate.getDate()) { return true; }
                     else {
                         return examDate.getDate() > today.getDate();
                     }

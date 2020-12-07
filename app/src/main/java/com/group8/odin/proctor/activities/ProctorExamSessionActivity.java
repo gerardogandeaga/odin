@@ -214,6 +214,7 @@ public class ProctorExamSessionActivity extends AppCompatActivity {
                     if (log.isValid()) {
                         // examinee has logged in
                         loadUserProfileToReport(snapshot.getId(), log);
+                        System.out.println("User -> " + snapshot.getId() + " overall -> " + log.getOverallStatus());
                     }
                 }
 
@@ -234,9 +235,9 @@ public class ProctorExamSessionActivity extends AppCompatActivity {
     }
 
     // convert hash-map to list
-    public ArrayList<Pair<UserProfile, ActivityLog>> getExaminees() {
+    public ArrayList<Pair<UserProfile, ActivityLog>> getExaminees(boolean live) {
         ArrayList<Pair<UserProfile, ActivityLog>> examinees = new ArrayList<>(mExaminees.values());
-        examinees.sort(new ActivityLog.Comparison());
+        examinees.sort(new ActivityLog.Comparison(live));
         return examinees;
     }
 

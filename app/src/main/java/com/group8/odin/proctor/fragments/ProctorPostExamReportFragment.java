@@ -137,14 +137,14 @@ public class ProctorPostExamReportFragment extends Fragment {
 
     public void updateRecyclerView() {
         // get examinees from activity
-        ArrayList<Pair<UserProfile, ActivityLog>> examinees = ((ProctorExamSessionActivity) getActivity()).getExaminees();
+        ArrayList<Pair<UserProfile, ActivityLog>> examinees = ((ProctorExamSessionActivity) getActivity()).getExaminees(false);
 
         // create list items
         ArrayList<ExamineeItem> items = new ArrayList<>();
         int inactiveId = 2; // start the inactive ids
         int activeId = 1001; // start of active ids
         for (Pair<UserProfile, ActivityLog> examinee : examinees) {
-            ExamineeItem item = new ExamineeItem().setExaminee(examinee, false);
+            ExamineeItem item = new ExamineeItem().setExaminee(getActivity(), examinee, false);
 
             if (!item.getExaminee().second.getOverallStatus()) {
                 item.withIdentifier(inactiveId);

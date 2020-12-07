@@ -32,13 +32,13 @@ public class ExamineeItem extends AbstractItem<ExamineeItem, ExamineeItem.ViewHo
     public String header;
     private boolean live;
 
-    public ExamineeItem setExaminee(Pair<UserProfile, ActivityLog> examinee, boolean live) {
+    public ExamineeItem setExaminee(Context context, Pair<UserProfile, ActivityLog> examinee, boolean live) {
         this.examinee = examinee;
         this.live = live;
         if (this.live) {
-            this.header = examinee.second.getStatus() ? "Active" : "Inactive";
+            this.header = examinee.second.getStatus() ? context.getResources().getString(R.string.active) : context.getResources().getString(R.string.inactive);
         } else {
-            this.header = examinee.second.getStatus() ? "No Activity" : "Reported Activity";
+            this.header = examinee.second.getOverallStatus() ? context.getResources().getString(R.string.no_activity) :   context.getResources().getString(R.string.reported_activity);
         }
         return this;
     }
